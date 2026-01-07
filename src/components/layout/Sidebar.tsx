@@ -1,7 +1,8 @@
-import { NavLink, useLocation } from 'react-router-dom'
+import { NavLink, useLocation, useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { cn } from '@/lib/utils'
+import { useAuthStore } from '@/stores/authStore'
 import {
   LayoutDashboard,
   Users,
@@ -29,16 +30,25 @@ const navItems: NavItem[] = [
 
 export function Sidebar() {
   const location = useLocation()
+  const navigate = useNavigate()
+  const { user, logout } = useAuthStore()
+
+  const handleLogout = () => {
+    logout()
+    navigate('/login')
+  }
 
   return (
     <aside className="fixed left-0 top-0 z-40 flex h-screen w-64 flex-col bg-[#0a1a0f] text-white">
       <div className="flex items-center gap-3 border-b border-white/10 p-5">
         <Avatar className="h-10 w-10 bg-emerald-600">
-          <AvatarFallback className="bg-emerald-600 text-white text-lg font-bold">A</AvatarFallback>
+          <AvatarFallback className="bg-emerald-600 text-white text-lg font-bold">
+            {user?.name?.charAt(0) || 'A'}
+          </AvatarFallback>
         </Avatar>
         <div>
-          <h2 className="font-semibold">Admin Keuangan</h2>
-          <p className="text-xs text-gray-400">PESANTREN AL-IKHLAS</p>
+          <h2 className="font-semibold">{user?.name || 'Admin Keuangan'}</h2>
+          <p className="text-xs text-gray-400">{user?.lembagaName || 'PESANTREN AL-IKHLAS'}</p>
         </div>
       </div>
 
@@ -65,7 +75,11 @@ export function Sidebar() {
       </nav>
 
       <div className="border-t border-white/10 p-4">
-        <Button variant="ghost" className="w-full justify-start gap-3 text-gray-300 hover:bg-white/5 hover:text-white">
+        <Button 
+          variant="ghost" 
+          className="w-full justify-start gap-3 text-gray-300 hover:bg-white/5 hover:text-white"
+          onClick={handleLogout}
+        >
           <LogOut size={20} />
           Keluar
         </Button>

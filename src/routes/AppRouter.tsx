@@ -1,12 +1,18 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
-import { AdminLayout } from '@/components/layout'
+import { AdminLayout, AuthLayout } from '@/components/layout'
 import { DashboardPage } from '@/pages/admin'
+import { LoginPage, RegisterPage } from '@/pages/auth'
 
 export function AppRouter() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Navigate to="/admin" replace />} />
+        <Route path="/" element={<Navigate to="/login" replace />} />
+
+        <Route element={<AuthLayout />}>
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+        </Route>
 
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<DashboardPage />} />
@@ -17,13 +23,12 @@ export function AppRouter() {
           <Route path="pengaturan" element={<PlaceholderPage title="Pengaturan" />} />
         </Route>
 
-        <Route path="*" element={<Navigate to="/admin" replace />} />
+        <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     </BrowserRouter>
   )
 }
 
-// Temporary placeholder component
 function PlaceholderPage({ title }: { title: string }) {
   return (
     <div className="flex h-64 items-center justify-center rounded-xl border border-white/10 bg-white/5">
