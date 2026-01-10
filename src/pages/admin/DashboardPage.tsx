@@ -3,6 +3,7 @@ import { StatCard } from '@/components/dashboard/StatCard'
 import { CashFlowChart } from '@/components/dashboard/CashFlowChart'
 import { TransactionTable } from '@/components/dashboard/TransactionTable'
 import { QuickActions } from '@/components/dashboard/QuickActions'
+import {motion} from 'framer-motion'
 import {
   mockDashboardStats,
   mockCashFlowData,
@@ -21,7 +22,12 @@ export function DashboardPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <motion.div 
+      className="space-y-6" 
+      initial={{ opacity: 0, y: 20 }} 
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4 }}
+    >
       <div className="grid grid-cols-4 gap-4">
         <StatCard
           title="Total Pemasukan"
@@ -68,6 +74,6 @@ export function DashboardPage() {
         title="Transaksi Terakhir"
         onViewAll={() => console.log('View all transactions')}
       />
-    </div>
+    </motion.div>
   )
 }

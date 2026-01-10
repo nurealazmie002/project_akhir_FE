@@ -1,4 +1,6 @@
 import { Outlet } from 'react-router-dom'
+import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { User } from 'lucide-react'
 
 export function AuthLayout() {
   return (
@@ -13,9 +15,11 @@ export function AuthLayout() {
             "Sistem pengelolaan keuangan pesantren yang terintegrasi untuk memudahkan administrasi dan transparansi."
           </blockquote>
           <div className="flex items-center gap-4">
-            <div className="h-10 w-10 rounded-full bg-emerald-500/20 flex items-center justify-center">
-              <span className="text-emerald-400 font-bold">AI</span>
-            </div>
+            <Avatar className="h-12 w-12 bg-emerald-500/20">
+              <AvatarFallback className="bg-emerald-500/20">
+                <User className="h-6 w-6 text-emerald-400" />
+              </AvatarFallback>
+            </Avatar>
             <div>
               <p className="font-medium text-white">Admin Pesantren</p>
               <p className="text-sm text-gray-400">Kelola dengan mudah</p>

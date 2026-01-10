@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { AdminLayout, AuthLayout } from '@/components/layout'
-import { DashboardPage } from '@/pages/admin'
-import { LoginPage, RegisterPage } from '@/pages/auth'
+import { DashboardPage, SantriPage } from '@/pages/admin'
+import { LoginPage, RegisterPage, OtpVerificationPage } from '@/pages/auth'
 
 export function AppRouter() {
   return (
@@ -12,11 +12,12 @@ export function AppRouter() {
         <Route element={<AuthLayout />}>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
+          <Route path="/verify-otp" element={<OtpVerificationPage />} />
         </Route>
 
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<DashboardPage />} />
-          <Route path="santri" element={<PlaceholderPage title="Data Santri" />} />
+          <Route path="santri" element={<SantriPage />} />
           <Route path="pemasukan" element={<PlaceholderPage title="Pemasukan" />} />
           <Route path="pengeluaran" element={<PlaceholderPage title="Pengeluaran" />} />
           <Route path="laporan" element={<PlaceholderPage title="Laporan" />} />

@@ -20,12 +20,10 @@ export interface LoginRequest {
 }
 
 export interface RegisterAdminRequest {
+  username: string
   email: string
   password: string
-  name: string
-  lembagaName: string
-  phone: string
-  address: string
+  institution: string
 }
 
 export interface AuthState {
