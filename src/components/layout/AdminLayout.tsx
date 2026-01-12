@@ -9,7 +9,7 @@ interface AdminLayoutProps {
 
 export function AdminLayout({ title = 'Selamat Datang, Admin', subtitle = 'Ringkasan keuangan pesantren hari ini,' }: AdminLayoutProps) {
   return (
-    <div className="min-h-screen bg-[#0d1f12]">
+    <div className="min-h-screen bg-background text-foreground">
       <Sidebar />
       <div className="ml-64">
         <Header title={title} subtitle={subtitle} />

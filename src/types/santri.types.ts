@@ -1,12 +1,14 @@
 export interface Santri {
-  id: string
+  id: string | number
   fullname: string
   nis: string
   kelas: string
   gender: 'Laki-laki' | 'Perempuan'
-  institutionId: string
+  institutionId?: string
+  institutionName?: string
   waliName: string
-  status: 'ACTIVE' | 'INACTIVE' | 'GRADUATED'
+  isActive?: boolean
+  status?: 'ACTIVE' | 'INACTIVE' | 'GRADUATED'
   createdAt: string
   updatedAt?: string
 }

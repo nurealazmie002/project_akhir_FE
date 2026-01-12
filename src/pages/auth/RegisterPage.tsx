@@ -47,7 +47,6 @@ export function RegisterPage() {
         institution: data.institution,
       })
       console.log('✅ Register berhasil:', registerResponse)
-      console.log('📧 OTP (jika ada):', registerResponse)
       
       navigate('/verify-otp', { state: { email: data.email } })
     } catch (err: any) {
@@ -64,18 +63,18 @@ export function RegisterPage() {
       variants={fadeInUp}
       transition={{ duration: 0.4 }}
     >
-      <Card className="border-white/10 bg-white/5">
+      <Card className="border-border bg-card">
         <CardHeader className="space-y-1 text-center">
           <motion.div 
-            className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-emerald-500/20"
+            className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary/20"
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
           >
-            <UserPlus className="h-6 w-6 text-emerald-400" />
+            <UserPlus className="h-6 w-6 text-primary" />
           </motion.div>
-          <CardTitle className="text-2xl text-white">Daftar Admin Lembaga</CardTitle>
-          <CardDescription className="text-gray-400">
+          <CardTitle className="text-2xl text-foreground">Daftar Admin Lembaga</CardTitle>
+          <CardDescription className="text-muted-foreground">
             Buat akun untuk mengelola keuangan lembaga Anda
           </CardDescription>
         </CardHeader>
@@ -100,10 +99,9 @@ export function RegisterPage() {
             )}
 
             <motion.div variants={staggerItem} className="space-y-2">
-              <label className="text-sm font-medium text-gray-300">Username</label>
+              <label className="text-sm font-medium text-foreground">Username</label>
               <Input
                 placeholder="admin_alikhlas"
-                className="border-white/10 bg-white/5 text-white placeholder:text-gray-500"
                 {...register('username')}
               />
               {errors.username && (
@@ -119,11 +117,10 @@ export function RegisterPage() {
             </motion.div>
 
             <motion.div variants={staggerItem} className="space-y-2">
-              <label className="text-sm font-medium text-gray-300">Email</label>
+              <label className="text-sm font-medium text-foreground">Email</label>
               <Input
                 type="email"
                 placeholder="admin@pesantren.com"
-                className="border-white/10 bg-white/5 text-white placeholder:text-gray-500"
                 {...register('email')}
               />
               {errors.email && (
@@ -139,10 +136,9 @@ export function RegisterPage() {
             </motion.div>
 
             <motion.div variants={staggerItem} className="space-y-2">
-              <label className="text-sm font-medium text-gray-300">Nama Lembaga</label>
+              <label className="text-sm font-medium text-foreground">Nama Lembaga</label>
               <Input
                 placeholder="Pesantren Al-Ikhlas"
-                className="border-white/10 bg-white/5 text-white placeholder:text-gray-500"
                 {...register('institution')}
               />
               {errors.institution && (
@@ -153,18 +149,18 @@ export function RegisterPage() {
             </motion.div>
 
             <motion.div variants={staggerItem} className="space-y-2">
-              <label className="text-sm font-medium text-gray-300">Password</label>
+              <label className="text-sm font-medium text-foreground">Password</label>
               <div className="relative">
                 <Input
                   type={showPassword ? 'text' : 'password'}
                   placeholder="••••••••"
-                  className="border-white/10 bg-white/5 pr-10 text-white placeholder:text-gray-500"
+                  className="pr-10"
                   {...register('password')}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
                 >
                   {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
@@ -179,7 +175,7 @@ export function RegisterPage() {
             <motion.div variants={staggerItem}>
               <Button
                 type="submit"
-                className="w-full bg-emerald-600 hover:bg-emerald-700"
+                className="w-full"
                 disabled={isLoading}
               >
                 {isLoading ? 'Memproses...' : 'Daftar'}
@@ -188,13 +184,13 @@ export function RegisterPage() {
           </motion.form>
 
           <motion.div 
-            className="mt-6 text-center text-sm text-gray-400"
+            className="mt-6 text-center text-sm text-muted-foreground"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5 }}
           >
             Sudah punya akun?{' '}
-            <Link to="/login" className="text-emerald-400 hover:text-emerald-300">
+            <Link to="/login" className="text-primary hover:underline">
               Masuk
             </Link>
           </motion.div>

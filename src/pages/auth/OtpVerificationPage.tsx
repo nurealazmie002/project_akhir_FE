@@ -118,20 +118,20 @@ export function OtpVerificationPage() {
       variants={fadeInUp}
       transition={{ duration: 0.4 }}
     >
-      <Card className="border-white/10 bg-white/5">
+      <Card className="border-border bg-card">
         <CardHeader className="space-y-1 text-center">
           <motion.div 
-            className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-emerald-500/20"
+            className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary/20"
             initial={{ scale: 0, rotate: -180 }}
             animate={{ scale: 1, rotate: 0 }}
             transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
           >
-            <KeyRound className="h-6 w-6 text-emerald-400" />
+            <KeyRound className="h-6 w-6 text-primary" />
           </motion.div>
-          <CardTitle className="text-2xl text-white">Verifikasi Email</CardTitle>
-          <CardDescription className="text-gray-400">
+          <CardTitle className="text-2xl text-foreground">Verifikasi Email</CardTitle>
+          <CardDescription className="text-muted-foreground">
             Masukkan 6 digit kode OTP yang dikirim ke<br />
-            <span className="text-emerald-400">{email}</span>
+            <span className="text-primary">{email}</span>
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -164,7 +164,7 @@ export function OtpVerificationPage() {
                     onChange={(e) => handleChange(index, e.target.value)}
                     onKeyDown={(e) => handleKeyDown(index, e)}
                     onPaste={handlePaste}
-                    className="h-14 w-12 border-white/10 bg-white/5 text-center text-2xl font-bold text-white focus:border-emerald-500"
+                    className="h-14 w-12 text-center text-2xl font-bold"
                   />
                 </motion.div>
               ))}
@@ -177,7 +177,7 @@ export function OtpVerificationPage() {
             >
               <Button
                 type="submit"
-                className="w-full bg-emerald-600 hover:bg-emerald-700"
+                className="w-full"
                 disabled={isLoading || otp.join('').length !== 6}
               >
                 {isLoading ? 'Memverifikasi...' : 'Verifikasi'}
@@ -186,7 +186,7 @@ export function OtpVerificationPage() {
           </form>
 
           <motion.div 
-            className="mt-6 text-center text-sm text-gray-400"
+            className="mt-6 text-center text-sm text-muted-foreground"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.7 }}
@@ -196,12 +196,12 @@ export function OtpVerificationPage() {
               <button
                 onClick={handleResend}
                 disabled={isLoading}
-                className="text-emerald-400 hover:text-emerald-300"
+                className="text-primary hover:underline"
               >
                 Kirim ulang
               </button>
             ) : (
-              <span className="text-gray-500">
+              <span className="text-muted-foreground">
                 Kirim ulang dalam {resendTimer}s
               </span>
             )}
@@ -209,7 +209,7 @@ export function OtpVerificationPage() {
 
           <motion.button
             onClick={() => navigate('/register')}
-            className="mt-4 flex w-full items-center justify-center gap-2 text-sm text-gray-400 hover:text-white"
+            className="mt-4 flex w-full items-center justify-center gap-2 text-sm text-muted-foreground hover:text-foreground"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.8 }}

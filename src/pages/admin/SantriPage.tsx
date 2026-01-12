@@ -93,7 +93,7 @@ export function SantriPage() {
     try {
       if (editingSantri) {
 
-        const updatedSantri = await santriService.update(editingSantri.id, data)
+        const updatedSantri = await santriService.update(String(editingSantri.id), data)
         console.log('✏️ Updated santri:', updatedSantri)
       } else {
 
@@ -137,7 +137,7 @@ export function SantriPage() {
     setIsLoading(true)
     try {
 
-      await santriService.delete(deletingSantri.id)
+      await santriService.delete(String(deletingSantri.id))
       console.log('🗑️ Deleted santri:', deletingSantri.id)
       await fetchSantri()
       setDeletingSantri(null)
@@ -161,7 +161,8 @@ export function SantriPage() {
     setShowModal(true)
   }
 
-  const getStatusBadge = (status: Santri['status']) => {
+  const getStatusBadge = (status?: Santri['status']) => {
+    if (!status) return <span className="text-gray-500">-</span>
     const variants = {
       ACTIVE: 'bg-emerald-500/20 text-emerald-400',
       INACTIVE: 'bg-yellow-500/20 text-yellow-400',
@@ -298,12 +299,22 @@ export function SantriPage() {
                     {santri.gender}
                   </TableCell>
                   <TableCell className="text-gray-300 text-xs">
-                    {santri.institutionId}
+                    {santri.institutionName || santri.institutionId || '-'}
                   </TableCell>
                   <TableCell className="text-gray-300 text-xs">
                     {santri.waliName}
                   </TableCell>
-                  <TableCell>{getStatusBadge(santri.status)}</TableCell>
+                  <TableCell>
+                    {santri.isActive !== undefined ? (
+                      <span className={`rounded-full px-2 py-1 text-xs ${santri.isActive ? 'bg-emerald-500/20 text-emerald-400' : 'bg-yellow-500/20 text-yellow-400'}`}>
+                        {santri.isActive ? 'Aktif' : 'Tidak Aktif'}
+                      </span>
+                    ) : santri.status ? (
+                      getStatusBadge(santri.status)
+                    ) : (
+                      <span className="text-gray-500">-</span>
+                    )}
+                  </TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-end gap-2">
                       <Button

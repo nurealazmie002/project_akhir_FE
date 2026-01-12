@@ -57,18 +57,18 @@ export function LoginPage() {
       variants={fadeInUp}
       transition={{ duration: 0.4 }}
     >
-      <Card className="border-white/10 bg-white/5">
+      <Card className="border-border bg-card">
         <CardHeader className="space-y-1 text-center">
           <motion.div 
-            className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-emerald-500/20"
+            className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary/20"
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
           >
-            <LogIn className="h-6 w-6 text-emerald-400" />
+            <LogIn className="h-6 w-6 text-primary" />
           </motion.div>
-          <CardTitle className="text-2xl text-white">Masuk</CardTitle>
-          <CardDescription className="text-gray-400">
+          <CardTitle className="text-2xl text-foreground">Masuk</CardTitle>
+          <CardDescription className="text-muted-foreground">
             Masuk ke akun Admin Lembaga Anda
           </CardDescription>
         </CardHeader>
@@ -93,11 +93,10 @@ export function LoginPage() {
             )}
 
             <motion.div variants={staggerItem} className="space-y-2">
-              <label className="text-sm font-medium text-gray-300">Email</label>
+              <label className="text-sm font-medium text-foreground">Email</label>
               <Input
                 type="email"
                 placeholder="admin@pesantren.com"
-                className="border-white/10 bg-white/5 text-white placeholder:text-gray-500"
                 {...register('email')}
               />
               {errors.email && (
@@ -108,18 +107,18 @@ export function LoginPage() {
             </motion.div>
 
             <motion.div variants={staggerItem} className="space-y-2">
-              <label className="text-sm font-medium text-gray-300">Password</label>
+              <label className="text-sm font-medium text-foreground">Password</label>
               <div className="relative">
                 <Input
                   type={showPassword ? 'text' : 'password'}
                   placeholder="••••••••"
-                  className="border-white/10 bg-white/5 pr-10 text-white placeholder:text-gray-500"
+                  className="pr-10"
                   {...register('password')}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
                 >
                   {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
@@ -134,7 +133,7 @@ export function LoginPage() {
             <motion.div variants={staggerItem}>
               <Button
                 type="submit"
-                className="w-full bg-emerald-600 hover:bg-emerald-700"
+                className="w-full"
                 disabled={isLoading}
               >
                 {isLoading ? 'Memproses...' : 'Masuk'}
@@ -143,13 +142,13 @@ export function LoginPage() {
           </motion.form>
 
           <motion.div 
-            className="mt-6 text-center text-sm text-gray-400"
+            className="mt-6 text-center text-sm text-muted-foreground"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5 }}
           >
             Belum punya akun?{' '}
-            <Link to="/register" className="text-emerald-400 hover:text-emerald-300">
+            <Link to="/register" className="text-primary hover:underline">
               Daftar sebagai Admin Lembaga
             </Link>
           </motion.div>
