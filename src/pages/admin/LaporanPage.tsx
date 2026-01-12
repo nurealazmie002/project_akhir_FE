@@ -69,8 +69,8 @@ export function LaporanPage() {
             <FileText className="h-6 w-6 text-blue-400" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-white">Laporan Keuangan</h1>
-            <p className="text-sm text-gray-400">
+            <h1 className="text-2xl font-bold text-foreground">Laporan Keuangan</h1>
+            <p className="text-sm text-muted-foreground">
               Ringkasan keuangan pesantren
             </p>
           </div>
@@ -79,7 +79,7 @@ export function LaporanPage() {
           <Button
             onClick={() => handleExport('excel')}
             variant="outline"
-            className="gap-2 border-white/10 bg-white/5 text-white hover:bg-white/10"
+            className="gap-2 border-border bg-card text-foreground hover:bg-accent"
           >
             <Download size={18} />
             Export Excel
@@ -95,61 +95,61 @@ export function LaporanPage() {
       </div>
 
       <div className="grid gap-4 md:grid-cols-4">
-        <Card className="border-white/10 bg-white/5">
+        <Card className="border-border bg-card">
           <CardContent className="flex items-center gap-3 p-4">
             <div className="rounded-lg bg-emerald-500/20 p-2">
               <TrendingUp className="h-5 w-5 text-emerald-400" />
             </div>
             <div>
-              <p className="text-xl font-bold text-white">Rp {formatCurrency(totalPemasukan)}</p>
-              <p className="text-xs text-gray-400">Total Pemasukan</p>
+              <p className="text-xl font-bold text-foreground">Rp {formatCurrency(totalPemasukan)}</p>
+              <p className="text-xs text-muted-foreground">Total Pemasukan</p>
             </div>
           </CardContent>
         </Card>
-        <Card className="border-white/10 bg-white/5">
+        <Card className="border-border bg-card">
           <CardContent className="flex items-center gap-3 p-4">
             <div className="rounded-lg bg-red-500/20 p-2">
               <TrendingDown className="h-5 w-5 text-red-400" />
             </div>
             <div>
-              <p className="text-xl font-bold text-white">Rp {formatCurrency(totalPengeluaran)}</p>
-              <p className="text-xs text-gray-400">Total Pengeluaran</p>
+              <p className="text-xl font-bold text-foreground">Rp {formatCurrency(totalPengeluaran)}</p>
+              <p className="text-xs text-muted-foreground">Total Pengeluaran</p>
             </div>
           </CardContent>
         </Card>
-        <Card className="border-white/10 bg-white/5">
+        <Card className="border-border bg-card">
           <CardContent className="flex items-center gap-3 p-4">
             <div className="rounded-lg bg-blue-500/20 p-2">
               <Wallet className="h-5 w-5 text-blue-400" />
             </div>
             <div>
               <p className="text-xl font-bold text-emerald-400">Rp {formatCurrency(totalSaldo)}</p>
-              <p className="text-xs text-gray-400">Saldo Bersih</p>
+              <p className="text-xs text-muted-foreground">Saldo Bersih</p>
             </div>
           </CardContent>
         </Card>
-        <Card className="border-white/10 bg-white/5">
+        <Card className="border-border bg-card">
           <CardContent className="flex items-center gap-3 p-4">
             <div className="rounded-lg bg-purple-500/20 p-2">
               <Calendar className="h-5 w-5 text-purple-400" />
             </div>
             <div>
-              <p className="text-xl font-bold text-white">{mockLaporanBulanan.length}</p>
-              <p className="text-xs text-gray-400">Periode Tercatat</p>
+              <p className="text-xl font-bold text-foreground">{mockLaporanBulanan.length}</p>
+              <p className="text-xs text-muted-foreground">Periode Tercatat</p>
             </div>
           </CardContent>
         </Card>
       </div>
 
-      <Card className="border-white/10 bg-white/5">
+      <Card className="border-border bg-card">
         <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle className="text-white">Ringkasan Per Periode</CardTitle>
+          <CardTitle className="text-foreground">Ringkasan Per Periode</CardTitle>
           <div className="flex gap-2">
             <Button 
               variant={periodeFilter === 'bulanan' ? 'default' : 'ghost'}
               size="sm"
               onClick={() => setPeriodeFilter('bulanan')}
-              className={periodeFilter === 'bulanan' ? 'bg-emerald-600' : 'text-gray-400'}
+              className={periodeFilter === 'bulanan' ? 'bg-emerald-600' : 'text-muted-foreground'}
             >
               <Filter size={14} className="mr-1" />
               Bulanan
@@ -158,7 +158,7 @@ export function LaporanPage() {
               variant={periodeFilter === 'semester' ? 'default' : 'ghost'}
               size="sm"
               onClick={() => setPeriodeFilter('semester')}
-              className={periodeFilter === 'semester' ? 'bg-emerald-600' : 'text-gray-400'}
+              className={periodeFilter === 'semester' ? 'bg-emerald-600' : 'text-muted-foreground'}
             >
               Semester
             </Button>
@@ -166,7 +166,7 @@ export function LaporanPage() {
               variant={periodeFilter === 'tahunan' ? 'default' : 'ghost'}
               size="sm"
               onClick={() => setPeriodeFilter('tahunan')}
-              className={periodeFilter === 'tahunan' ? 'bg-emerald-600' : 'text-gray-400'}
+              className={periodeFilter === 'tahunan' ? 'bg-emerald-600' : 'text-muted-foreground'}
             >
               Tahunan
             </Button>
@@ -175,22 +175,22 @@ export function LaporanPage() {
         <CardContent>
           <Table>
             <TableHeader>
-              <TableRow className="border-white/10 hover:bg-transparent">
-                <TableHead className="text-gray-400">Periode</TableHead>
-                <TableHead className="text-gray-400">Pemasukan</TableHead>
-                <TableHead className="text-gray-400">Pengeluaran</TableHead>
-                <TableHead className="text-gray-400">Saldo</TableHead>
-                <TableHead className="text-gray-400">Status</TableHead>
-                <TableHead className="text-right text-gray-400">Aksi</TableHead>
+              <TableRow className="border-border hover:bg-transparent">
+                <TableHead className="text-muted-foreground">Periode</TableHead>
+                <TableHead className="text-muted-foreground">Pemasukan</TableHead>
+                <TableHead className="text-muted-foreground">Pengeluaran</TableHead>
+                <TableHead className="text-muted-foreground">Saldo</TableHead>
+                <TableHead className="text-muted-foreground">Status</TableHead>
+                <TableHead className="text-right text-muted-foreground">Aksi</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {mockLaporanBulanan.map((item, index) => (
                 <TableRow
                   key={index}
-                  className="border-white/10 hover:bg-white/5"
+                  className="border-border hover:bg-card"
                 >
-                  <TableCell className="font-medium text-white">{item.bulan}</TableCell>
+                  <TableCell className="font-medium text-foreground">{item.bulan}</TableCell>
                   <TableCell className="text-emerald-400">Rp {formatCurrency(item.pemasukan)}</TableCell>
                   <TableCell className="text-red-400">Rp {formatCurrency(item.pengeluaran)}</TableCell>
                   <TableCell className={item.saldo >= 0 ? 'text-emerald-400 font-medium' : 'text-red-400 font-medium'}>
@@ -206,7 +206,7 @@ export function LaporanPage() {
                       variant="ghost"
                       size="sm"
                       onClick={() => handleExport('pdf')}
-                      className="h-8 gap-1 text-gray-400 hover:text-white"
+                      className="h-8 gap-1 text-muted-foreground hover:text-foreground"
                     >
                       <Download size={14} />
                       Detail
@@ -220,59 +220,59 @@ export function LaporanPage() {
       </Card>
 
       <div className="grid gap-4 md:grid-cols-2">
-        <Card className="border-white/10 bg-white/5">
+        <Card className="border-border bg-card">
           <CardHeader>
-            <CardTitle className="text-white text-lg">Kategori Pemasukan Terbesar</CardTitle>
+            <CardTitle className="text-foreground text-lg">Kategori Pemasukan Terbesar</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-gray-300">SPP Bulanan</span>
+              <span className="text-muted-foreground">SPP Bulanan</span>
               <span className="text-emerald-400 font-medium">Rp 35.000.000</span>
             </div>
-            <div className="h-2 rounded-full bg-white/10">
+            <div className="h-2 rounded-full bg-accent">
               <div className="h-2 rounded-full bg-emerald-500" style={{ width: '78%' }} />
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-gray-300">Daftar Ulang</span>
+              <span className="text-muted-foreground">Daftar Ulang</span>
               <span className="text-emerald-400 font-medium">Rp 7.500.000</span>
             </div>
-            <div className="h-2 rounded-full bg-white/10">
+            <div className="h-2 rounded-full bg-accent">
               <div className="h-2 rounded-full bg-emerald-500" style={{ width: '17%' }} />
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-gray-300">Infaq</span>
+              <span className="text-muted-foreground">Infaq</span>
               <span className="text-emerald-400 font-medium">Rp 2.500.000</span>
             </div>
-            <div className="h-2 rounded-full bg-white/10">
+            <div className="h-2 rounded-full bg-accent">
               <div className="h-2 rounded-full bg-emerald-500" style={{ width: '5%' }} />
             </div>
           </CardContent>
         </Card>
 
-        <Card className="border-white/10 bg-white/5">
+        <Card className="border-border bg-card">
           <CardHeader>
-            <CardTitle className="text-white text-lg">Kategori Pengeluaran Terbesar</CardTitle>
+            <CardTitle className="text-foreground text-lg">Kategori Pengeluaran Terbesar</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-gray-300">Gaji Pengajar</span>
+              <span className="text-muted-foreground">Gaji Pengajar</span>
               <span className="text-red-400 font-medium">Rp 18.000.000</span>
             </div>
-            <div className="h-2 rounded-full bg-white/10">
+            <div className="h-2 rounded-full bg-accent">
               <div className="h-2 rounded-full bg-red-500" style={{ width: '56%' }} />
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-gray-300">Listrik & Air</span>
+              <span className="text-muted-foreground">Listrik & Air</span>
               <span className="text-red-400 font-medium">Rp 8.500.000</span>
             </div>
-            <div className="h-2 rounded-full bg-white/10">
+            <div className="h-2 rounded-full bg-accent">
               <div className="h-2 rounded-full bg-red-500" style={{ width: '27%' }} />
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-gray-300">Operasional</span>
+              <span className="text-muted-foreground">Operasional</span>
               <span className="text-red-400 font-medium">Rp 5.500.000</span>
             </div>
-            <div className="h-2 rounded-full bg-white/10">
+            <div className="h-2 rounded-full bg-accent">
               <div className="h-2 rounded-full bg-red-500" style={{ width: '17%' }} />
             </div>
           </CardContent>

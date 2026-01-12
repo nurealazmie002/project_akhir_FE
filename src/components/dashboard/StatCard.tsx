@@ -27,10 +27,10 @@ export function StatCard({
   }[icon || 'check']
 
   const iconColors = {
-    up: 'text-red-400 bg-red-500/20',
-    down: 'text-emerald-400 bg-emerald-500/20',
-    warning: 'text-amber-400 bg-amber-500/20',
-    check: 'text-emerald-400 bg-emerald-500/20',
+    up: 'text-red-500 bg-red-500/20',
+    down: 'text-emerald-500 bg-emerald-500/20',
+    warning: 'text-amber-500 bg-amber-500/20',
+    check: 'text-emerald-500 bg-emerald-500/20',
   }
 
   return (
@@ -39,17 +39,17 @@ export function StatCard({
         'border py-4',
         variant === 'warning'
           ? 'border-amber-500/30 bg-amber-500/10'
-          : 'border-white/10 bg-white/5'
+          : 'border-border bg-card'
       )}
     >
       <CardContent className="p-0 px-5">
         <div className="flex items-start justify-between">
           <div>
-            <p className="text-sm text-gray-400">{title}</p>
+            <p className="text-sm text-muted-foreground">{title}</p>
             <p
               className={cn(
                 'mt-2 text-2xl font-bold',
-                variant === 'warning' ? 'text-amber-400' : 'text-white'
+                variant === 'warning' ? 'text-amber-500' : 'text-foreground'
               )}
             >
               {value}
@@ -58,7 +58,7 @@ export function StatCard({
               <p
                 className={cn(
                   'mt-1 text-xs',
-                  change && change > 0 ? 'text-emerald-400' : 'text-red-400'
+                  change && change > 0 ? 'text-emerald-500' : 'text-red-500'
                 )}
               >
                 {change !== undefined && (
@@ -67,7 +67,7 @@ export function StatCard({
                     {change}%{' '}
                   </span>
                 )}
-                <span className="text-gray-500">{changeLabel}</span>
+                <span className="text-muted-foreground">{changeLabel}</span>
               </p>
             )}
           </div>

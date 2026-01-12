@@ -162,7 +162,7 @@ export function SantriPage() {
   }
 
   const getStatusBadge = (status?: Santri['status']) => {
-    if (!status) return <span className="text-gray-500">-</span>
+    if (!status) return <span className="text-muted-foreground">-</span>
     const variants = {
       ACTIVE: 'bg-emerald-500/20 text-emerald-400',
       INACTIVE: 'bg-yellow-500/20 text-yellow-400',
@@ -197,8 +197,8 @@ export function SantriPage() {
             <Users className="h-6 w-6 text-emerald-400" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-white">Data Santri</h1>
-            <p className="text-sm text-gray-400">
+            <h1 className="text-2xl font-bold text-foreground">Data Santri</h1>
+            <p className="text-sm text-muted-foreground">
               Kelola data santri pesantren
             </p>
           </div>
@@ -214,40 +214,40 @@ export function SantriPage() {
 
 
       <div className="grid gap-4 md:grid-cols-4">
-        <Card className="border-white/10 bg-white/5 md:col-span-2">
+        <Card className="border-border bg-card md:col-span-2">
           <CardContent className="p-4">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input
                 placeholder="Cari nama, NIS, atau kelas..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="border-white/10 bg-white/5 pl-10 text-white placeholder:text-gray-500"
+                className="border-border bg-card pl-10 text-foreground placeholder:text-muted-foreground"
               />
             </div>
           </CardContent>
         </Card>
-        <Card className="border-white/10 bg-white/5">
+        <Card className="border-border bg-card">
           <CardContent className="flex items-center gap-3 p-4">
             <div className="rounded-lg bg-emerald-500/20 p-2">
               <Users className="h-5 w-5 text-emerald-400" />
             </div>
             <div>
-              <p className="text-2xl font-bold text-white">{santriList.length}</p>
-              <p className="text-xs text-gray-400">Total Santri</p>
+              <p className="text-2xl font-bold text-foreground">{santriList.length}</p>
+              <p className="text-xs text-muted-foreground">Total Santri</p>
             </div>
           </CardContent>
         </Card>
-        <Card className="border-white/10 bg-white/5">
+        <Card className="border-border bg-card">
           <CardContent className="flex items-center gap-3 p-4">
             <div className="rounded-lg bg-blue-500/20 p-2">
               <UserPlus className="h-5 w-5 text-blue-400" />
             </div>
             <div>
-              <p className="text-2xl font-bold text-white">
+              <p className="text-2xl font-bold text-foreground">
                 {santriList.filter((s) => s.status === 'ACTIVE').length}
               </p>
-              <p className="text-xs text-gray-400">Santri Aktif</p>
+              <p className="text-xs text-muted-foreground">Santri Aktif</p>
             </div>
           </CardContent>
         </Card>
@@ -266,42 +266,42 @@ export function SantriPage() {
       )}
 
 
-      <Card className="border-white/10 bg-white/5">
+      <Card className="border-border bg-card">
         <CardHeader>
-          <CardTitle className="text-white">Daftar Santri</CardTitle>
+          <CardTitle className="text-foreground">Daftar Santri</CardTitle>
         </CardHeader>
         <CardContent>
           <Table>
             <TableHeader>
-              <TableRow className="border-white/10 hover:bg-transparent">
-                <TableHead className="text-gray-400">NIS</TableHead>
-                <TableHead className="text-gray-400">Nama</TableHead>
-                <TableHead className="text-gray-400">Kelas</TableHead>
-                <TableHead className="text-gray-400">Gender</TableHead>
-                <TableHead className="text-gray-400">Institution ID</TableHead>
-                <TableHead className="text-gray-400">Nama Wali</TableHead>
-                <TableHead className="text-gray-400">Status</TableHead>
-                <TableHead className="text-right text-gray-400">Aksi</TableHead>
+              <TableRow className="border-border hover:bg-transparent">
+                <TableHead className="text-muted-foreground">NIS</TableHead>
+                <TableHead className="text-muted-foreground">Nama</TableHead>
+                <TableHead className="text-muted-foreground">Kelas</TableHead>
+                <TableHead className="text-muted-foreground">Gender</TableHead>
+                <TableHead className="text-muted-foreground">Institution ID</TableHead>
+                <TableHead className="text-muted-foreground">Nama Wali</TableHead>
+                <TableHead className="text-muted-foreground">Status</TableHead>
+                <TableHead className="text-right text-muted-foreground">Aksi</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {filteredSantri.map((santri) => (
                 <TableRow
                   key={santri.id}
-                  className="border-white/10 hover:bg-white/5"
+                  className="border-border hover:bg-card"
                 >
                   <TableCell className="font-medium text-amber-400">
                     {santri.nis}
                   </TableCell>
-                  <TableCell className="text-white">{santri.fullname}</TableCell>
-                  <TableCell className="text-gray-300">{santri.kelas}</TableCell>
-                  <TableCell className="text-gray-300">
+                  <TableCell className="text-foreground">{santri.fullname}</TableCell>
+                  <TableCell className="text-muted-foreground">{santri.kelas}</TableCell>
+                  <TableCell className="text-muted-foreground">
                     {santri.gender}
                   </TableCell>
-                  <TableCell className="text-gray-300 text-xs">
+                  <TableCell className="text-muted-foreground text-xs">
                     {santri.institutionName || santri.institutionId || '-'}
                   </TableCell>
-                  <TableCell className="text-gray-300 text-xs">
+                  <TableCell className="text-muted-foreground text-xs">
                     {santri.waliName}
                   </TableCell>
                   <TableCell>
@@ -312,7 +312,7 @@ export function SantriPage() {
                     ) : santri.status ? (
                       getStatusBadge(santri.status)
                     ) : (
-                      <span className="text-gray-500">-</span>
+                      <span className="text-muted-foreground">-</span>
                     )}
                   </TableCell>
                   <TableCell className="text-right">
@@ -321,7 +321,7 @@ export function SantriPage() {
                         variant="ghost"
                         size="sm"
                         onClick={() => handleEdit(santri)}
-                        className="h-8 w-8 p-0 text-gray-400 hover:text-white"
+                        className="h-8 w-8 p-0 text-muted-foreground hover:text-foreground"
                       >
                         <Edit size={16} />
                       </Button>
@@ -329,7 +329,7 @@ export function SantriPage() {
                         variant="ghost"
                         size="sm"
                         onClick={() => handleDelete(santri)}
-                        className="h-8 w-8 p-0 text-gray-400 hover:text-red-400"
+                        className="h-8 w-8 p-0 text-muted-foreground hover:text-red-400"
                       >
                         <Trash2 size={16} />
                       </Button>
@@ -341,7 +341,7 @@ export function SantriPage() {
                 <TableRow>
                   <TableCell
                     colSpan={7}
-                    className="h-24 text-center text-gray-400"
+                    className="h-24 text-center text-muted-foreground"
                   >
                     {searchQuery
                       ? 'Tidak ada santri yang ditemukan'
@@ -365,18 +365,18 @@ export function SantriPage() {
           <motion.div
             initial={{ scale: 0.95, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            className="w-full max-w-lg rounded-xl border border-white/10 bg-[#0d1f12] p-6"
+            className="w-full max-w-lg rounded-xl border border-border bg-background p-6"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="mb-6 flex items-center justify-between">
-              <h2 className="text-xl font-bold text-white">
+              <h2 className="text-xl font-bold text-foreground">
                 {editingSantri ? 'Edit Santri' : 'Tambah Santri Baru'}
               </h2>
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => setShowModal(false)}
-                className="h-8 w-8 p-0 text-gray-400 hover:text-white"
+                className="h-8 w-8 p-0 text-muted-foreground hover:text-foreground"
               >
                 <X size={20} />
               </Button>
@@ -384,14 +384,14 @@ export function SantriPage() {
 
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-300">
+                <label className="text-sm font-medium text-muted-foreground">
                   Nama Lengkap <span className="text-red-400">*</span>
                 </label>
                 <div className="relative">
-                  <User className="absolute left-3 top-2.5 h-4 w-4 text-gray-500" />
+                  <User className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
                   <Input
                     placeholder="Masukkan nama lengkap"
-                    className="border-white/10 bg-white/5 pl-9 text-white placeholder:text-gray-500"
+                    className="border-border bg-card pl-9 text-foreground placeholder:text-muted-foreground"
                     {...register('fullname')}
                   />
                 </div>
@@ -404,12 +404,12 @@ export function SantriPage() {
 
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-300">
+                  <label className="text-sm font-medium text-muted-foreground">
                     NIS <span className="text-red-400">*</span>
                   </label>
                   <Input
                     placeholder="2024001"
-                    className="border-white/10 bg-white/5 text-white placeholder:text-gray-500"
+                    className="border-border bg-card text-foreground placeholder:text-muted-foreground"
                     {...register('nis')}
                   />
                   {errors.nis && (
@@ -420,12 +420,12 @@ export function SantriPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-300">
+                  <label className="text-sm font-medium text-muted-foreground">
                     Kelas <span className="text-red-400">*</span>
                   </label>
                   <Input
                     placeholder="VII-A"
-                    className="border-white/10 bg-white/5 text-white placeholder:text-gray-500"
+                    className="border-border bg-card text-foreground placeholder:text-muted-foreground"
                     {...register('kelas')}
                   />
                   {errors.kelas && (
@@ -437,11 +437,11 @@ export function SantriPage() {
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-300">
+                <label className="text-sm font-medium text-muted-foreground">
                   Jenis Kelamin <span className="text-red-400">*</span>
                 </label>
                   <select
-                    className="flex h-10 w-full rounded-md border border-white/10 bg-white/5 px-3 py-2 text-sm text-white ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                    className="flex h-10 w-full rounded-md border border-border bg-card px-3 py-2 text-sm text-foreground ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                     {...register('gender')}
                   >
                     <option value="Laki-laki" className="bg-gray-900">
@@ -460,12 +460,12 @@ export function SantriPage() {
 
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-300">
+                  <label className="text-sm font-medium text-muted-foreground">
                     Institution ID <span className="text-red-400">*</span>
                   </label>
                   <Input
                     placeholder="pesantren-al-ikhlas"
-                    className="border-white/10 bg-white/5 text-white placeholder:text-gray-500"
+                    className="border-border bg-card text-foreground placeholder:text-muted-foreground"
                     {...register('institutionId')}
                   />
                   {errors.institutionId && (
@@ -476,12 +476,12 @@ export function SantriPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-300">
+                  <label className="text-sm font-medium text-muted-foreground">
                     Nama Wali <span className="text-red-400">*</span>
                   </label>
                   <Input
                     placeholder="Nama lengkap wali santri"
-                    className="border-white/10 bg-white/5 text-white placeholder:text-gray-500"
+                    className="border-border bg-card text-foreground placeholder:text-muted-foreground"
                     {...register('waliName')}
                   />
                   {errors.waliName && (
@@ -497,7 +497,7 @@ export function SantriPage() {
                   type="button"
                   variant="ghost"
                   onClick={() => setShowModal(false)}
-                  className="text-gray-400 hover:text-white"
+                  className="text-muted-foreground hover:text-foreground"
                 >
                   Batal
                 </Button>
@@ -529,7 +529,7 @@ export function SantriPage() {
           <motion.div
             initial={{ scale: 0.95, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            className="w-full max-w-md rounded-xl border border-white/10 bg-[#0d1f12] p-6"
+            className="w-full max-w-md rounded-xl border border-border bg-background p-6"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="mb-4 flex items-center gap-3">
@@ -537,21 +537,21 @@ export function SantriPage() {
                 <Trash2 className="h-6 w-6 text-red-400" />
               </div>
               <div>
-                <h2 className="text-xl font-bold text-white">Hapus Santri</h2>
-                <p className="text-sm text-gray-400">Tindakan ini tidak dapat dibatalkan</p>
+                <h2 className="text-xl font-bold text-foreground">Hapus Santri</h2>
+                <p className="text-sm text-muted-foreground">Tindakan ini tidak dapat dibatalkan</p>
               </div>
             </div>
 
-            <p className="mb-6 text-gray-300">
+            <p className="mb-6 text-muted-foreground">
               Apakah Anda yakin ingin menghapus santri{' '}
-              <span className="font-semibold text-white">{deletingSantri.fullname}</span> (NIS: {deletingSantri.nis})?
+              <span className="font-semibold text-foreground">{deletingSantri.fullname}</span> (NIS: {deletingSantri.nis})?
             </p>
 
             <div className="flex justify-end gap-3">
               <Button
                 variant="ghost"
                 onClick={() => setDeletingSantri(null)}
-                className="text-gray-400 hover:text-white"
+                className="text-muted-foreground hover:text-foreground"
               >
                 Batal
               </Button>

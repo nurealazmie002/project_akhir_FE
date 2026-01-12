@@ -170,8 +170,8 @@ export function PemasukanPage() {
             <ArrowDownCircle className="h-6 w-6 text-emerald-400" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-white">Pemasukan</h1>
-            <p className="text-sm text-gray-400">
+            <h1 className="text-2xl font-bold text-foreground">Pemasukan</h1>
+            <p className="text-sm text-muted-foreground">
               Kelola data pemasukan pesantren
             </p>
           </div>
@@ -186,70 +186,70 @@ export function PemasukanPage() {
       </div>
 
       <div className="grid gap-4 md:grid-cols-4">
-        <Card className="border-white/10 bg-white/5 md:col-span-2">
+        <Card className="border-border bg-card md:col-span-2">
           <CardContent className="p-4">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input
                 placeholder="Cari nama, kategori, atau keterangan..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="border-white/10 bg-white/5 pl-10 text-white placeholder:text-gray-500"
+                className="border-border bg-card pl-10 text-foreground placeholder:text-muted-foreground"
               />
             </div>
           </CardContent>
         </Card>
-        <Card className="border-white/10 bg-white/5">
+        <Card className="border-border bg-card">
           <CardContent className="flex items-center gap-3 p-4">
             <div className="rounded-lg bg-emerald-500/20 p-2">
               <ArrowDownCircle className="h-5 w-5 text-emerald-400" />
             </div>
             <div>
-              <p className="text-2xl font-bold text-white">Rp {formatCurrency(totalPemasukan)}</p>
-              <p className="text-xs text-gray-400">Total Pemasukan</p>
+              <p className="text-2xl font-bold text-foreground">Rp {formatCurrency(totalPemasukan)}</p>
+              <p className="text-xs text-muted-foreground">Total Pemasukan</p>
             </div>
           </CardContent>
         </Card>
-        <Card className="border-white/10 bg-white/5">
+        <Card className="border-border bg-card">
           <CardContent className="flex items-center gap-3 p-4">
             <div className="rounded-lg bg-blue-500/20 p-2">
               <TrendingUp className="h-5 w-5 text-blue-400" />
             </div>
             <div>
-              <p className="text-2xl font-bold text-white">Rp {formatCurrency(totalLunas)}</p>
-              <p className="text-xs text-gray-400">Sudah Lunas</p>
+              <p className="text-2xl font-bold text-foreground">Rp {formatCurrency(totalLunas)}</p>
+              <p className="text-xs text-muted-foreground">Sudah Lunas</p>
             </div>
           </CardContent>
         </Card>
       </div>
 
-      <Card className="border-white/10 bg-white/5">
+      <Card className="border-border bg-card">
         <CardHeader>
-          <CardTitle className="text-white">Daftar Pemasukan</CardTitle>
+          <CardTitle className="text-foreground">Daftar Pemasukan</CardTitle>
         </CardHeader>
         <CardContent>
           <Table>
             <TableHeader>
-              <TableRow className="border-white/10 hover:bg-transparent">
-                <TableHead className="text-gray-400">Tanggal</TableHead>
-                <TableHead className="text-gray-400">Nama Santri</TableHead>
-                <TableHead className="text-gray-400">Kategori</TableHead>
-                <TableHead className="text-gray-400">Keterangan</TableHead>
-                <TableHead className="text-gray-400">Jumlah</TableHead>
-                <TableHead className="text-gray-400">Status</TableHead>
-                <TableHead className="text-right text-gray-400">Aksi</TableHead>
+              <TableRow className="border-border hover:bg-transparent">
+                <TableHead className="text-muted-foreground">Tanggal</TableHead>
+                <TableHead className="text-muted-foreground">Nama Santri</TableHead>
+                <TableHead className="text-muted-foreground">Kategori</TableHead>
+                <TableHead className="text-muted-foreground">Keterangan</TableHead>
+                <TableHead className="text-muted-foreground">Jumlah</TableHead>
+                <TableHead className="text-muted-foreground">Status</TableHead>
+                <TableHead className="text-right text-muted-foreground">Aksi</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {filteredPemasukan.map((item) => (
                 <TableRow
                   key={item.id}
-                  className="border-white/10 hover:bg-white/5"
+                  className="border-border hover:bg-card"
                 >
-                  <TableCell className="text-gray-300">{item.tanggal}</TableCell>
-                  <TableCell className="font-medium text-white">{item.santriName}</TableCell>
-                  <TableCell className="text-gray-300">{item.kategori}</TableCell>
-                  <TableCell className="text-gray-300">{item.keterangan}</TableCell>
+                  <TableCell className="text-muted-foreground">{item.tanggal}</TableCell>
+                  <TableCell className="font-medium text-foreground">{item.santriName}</TableCell>
+                  <TableCell className="text-muted-foreground">{item.kategori}</TableCell>
+                  <TableCell className="text-muted-foreground">{item.keterangan}</TableCell>
                   <TableCell className="text-emerald-400 font-medium">Rp {formatCurrency(item.jumlah)}</TableCell>
                   <TableCell>{getStatusBadge(item.status)}</TableCell>
                   <TableCell className="text-right">
@@ -258,7 +258,7 @@ export function PemasukanPage() {
                         variant="ghost"
                         size="sm"
                         onClick={() => handleEdit(item)}
-                        className="h-8 w-8 p-0 text-gray-400 hover:text-white"
+                        className="h-8 w-8 p-0 text-muted-foreground hover:text-foreground"
                       >
                         <Edit size={16} />
                       </Button>
@@ -266,7 +266,7 @@ export function PemasukanPage() {
                         variant="ghost"
                         size="sm"
                         onClick={() => setDeletingPemasukan(item)}
-                        className="h-8 w-8 p-0 text-gray-400 hover:text-red-400"
+                        className="h-8 w-8 p-0 text-muted-foreground hover:text-red-400"
                       >
                         <Trash2 size={16} />
                       </Button>
@@ -278,7 +278,7 @@ export function PemasukanPage() {
                 <TableRow>
                   <TableCell
                     colSpan={7}
-                    className="h-24 text-center text-gray-400"
+                    className="h-24 text-center text-muted-foreground"
                   >
                     {searchQuery
                       ? 'Tidak ada pemasukan yang ditemukan'
@@ -301,18 +301,18 @@ export function PemasukanPage() {
           <motion.div
             initial={{ scale: 0.95, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            className="w-full max-w-lg rounded-xl border border-white/10 bg-[#0d1f12] p-6"
+            className="w-full max-w-lg rounded-xl border border-border bg-background p-6"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="mb-6 flex items-center justify-between">
-              <h2 className="text-xl font-bold text-white">
+              <h2 className="text-xl font-bold text-foreground">
                 {editingPemasukan ? 'Edit Pemasukan' : 'Input Pemasukan Baru'}
               </h2>
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => setShowModal(false)}
-                className="h-8 w-8 p-0 text-gray-400 hover:text-white"
+                className="h-8 w-8 p-0 text-muted-foreground hover:text-foreground"
               >
                 <X size={20} />
               </Button>
@@ -320,12 +320,12 @@ export function PemasukanPage() {
 
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-300">
+                <label className="text-sm font-medium text-muted-foreground">
                   Nama Santri <span className="text-red-400">*</span>
                 </label>
                 <Input
                   placeholder="Pilih atau ketik nama santri"
-                  className="border-white/10 bg-white/5 text-white placeholder:text-gray-500"
+                  className="border-border bg-card text-foreground placeholder:text-muted-foreground"
                   {...register('santriName')}
                 />
                 {errors.santriName && (
@@ -337,11 +337,11 @@ export function PemasukanPage() {
 
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-300">
+                  <label className="text-sm font-medium text-muted-foreground">
                     Kategori <span className="text-red-400">*</span>
                   </label>
                   <select
-                    className="flex h-10 w-full rounded-md border border-white/10 bg-white/5 px-3 py-2 text-sm text-white"
+                    className="flex h-10 w-full rounded-md border border-border bg-card px-3 py-2 text-sm text-foreground"
                     {...register('kategori')}
                   >
                     <option value="SPP" className="bg-gray-900">SPP</option>
@@ -357,12 +357,12 @@ export function PemasukanPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-300">
+                  <label className="text-sm font-medium text-muted-foreground">
                     Tanggal <span className="text-red-400">*</span>
                   </label>
                   <Input
                     type="date"
-                    className="border-white/10 bg-white/5 text-white"
+                    className="border-border bg-card text-foreground"
                     {...register('tanggal')}
                   />
                   {errors.tanggal && (
@@ -374,13 +374,13 @@ export function PemasukanPage() {
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-300">
+                <label className="text-sm font-medium text-muted-foreground">
                   Jumlah (Rp) <span className="text-red-400">*</span>
                 </label>
                 <Input
                   type="number"
                   placeholder="500000"
-                  className="border-white/10 bg-white/5 text-white placeholder:text-gray-500"
+                  className="border-border bg-card text-foreground placeholder:text-muted-foreground"
                   {...register('jumlah')}
                 />
                 {errors.jumlah && (
@@ -391,12 +391,12 @@ export function PemasukanPage() {
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-300">
+                <label className="text-sm font-medium text-muted-foreground">
                   Keterangan <span className="text-red-400">*</span>
                 </label>
                 <Input
                   placeholder="Pembayaran SPP Bulan Januari"
-                  className="border-white/10 bg-white/5 text-white placeholder:text-gray-500"
+                  className="border-border bg-card text-foreground placeholder:text-muted-foreground"
                   {...register('keterangan')}
                 />
                 {errors.keterangan && (
@@ -411,7 +411,7 @@ export function PemasukanPage() {
                   type="button"
                   variant="ghost"
                   onClick={() => setShowModal(false)}
-                  className="text-gray-400 hover:text-white"
+                  className="text-muted-foreground hover:text-foreground"
                 >
                   Batal
                 </Button>
@@ -437,7 +437,7 @@ export function PemasukanPage() {
           <motion.div
             initial={{ scale: 0.95, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            className="w-full max-w-md rounded-xl border border-white/10 bg-[#0d1f12] p-6"
+            className="w-full max-w-md rounded-xl border border-border bg-background p-6"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="mb-4 flex items-center gap-3">
@@ -445,21 +445,21 @@ export function PemasukanPage() {
                 <Trash2 className="h-6 w-6 text-red-400" />
               </div>
               <div>
-                <h2 className="text-xl font-bold text-white">Hapus Pemasukan</h2>
-                <p className="text-sm text-gray-400">Tindakan ini tidak dapat dibatalkan</p>
+                <h2 className="text-xl font-bold text-foreground">Hapus Pemasukan</h2>
+                <p className="text-sm text-muted-foreground">Tindakan ini tidak dapat dibatalkan</p>
               </div>
             </div>
 
-            <p className="mb-6 text-gray-300">
+            <p className="mb-6 text-muted-foreground">
               Apakah Anda yakin ingin menghapus pemasukan dari{' '}
-              <span className="font-semibold text-white">{deletingPemasukan.santriName}</span>?
+              <span className="font-semibold text-foreground">{deletingPemasukan.santriName}</span>?
             </p>
 
             <div className="flex justify-end gap-3">
               <Button
                 variant="ghost"
                 onClick={() => setDeletingPemasukan(null)}
-                className="text-gray-400 hover:text-white"
+                className="text-muted-foreground hover:text-foreground"
               >
                 Batal
               </Button>

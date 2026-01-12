@@ -75,8 +75,8 @@ export function PengaturanPage() {
             <Settings className="h-6 w-6 text-purple-400" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-white">Pengaturan</h1>
-            <p className="text-sm text-gray-400">
+            <h1 className="text-2xl font-bold text-foreground">Pengaturan</h1>
+            <p className="text-sm text-muted-foreground">
               Kelola pengaturan akun dan lembaga
             </p>
           </div>
@@ -92,7 +92,7 @@ export function PengaturanPage() {
       </div>
 
       <div className="grid gap-6 md:grid-cols-4">
-        <Card className="border-white/10 bg-white/5 md:col-span-1">
+        <Card className="border-border bg-card md:col-span-1">
           <CardContent className="p-4">
             <nav className="space-y-1">
               {tabs.map((tab) => {
@@ -103,8 +103,8 @@ export function PengaturanPage() {
                     variant={activeTab === tab.id ? 'default' : 'ghost'}
                     className={`w-full justify-start gap-3 ${
                       activeTab === tab.id
-                        ? 'bg-emerald-600 text-white'
-                        : 'text-gray-400 hover:text-white hover:bg-white/5'
+                        ? 'bg-emerald-600 text-foreground'
+                        : 'text-muted-foreground hover:text-foreground hover:bg-card'
                     }`}
                     onClick={() => setActiveTab(tab.id)}
                   >
@@ -117,9 +117,9 @@ export function PengaturanPage() {
           </CardContent>
         </Card>
 
-        <Card className="border-white/10 bg-white/5 md:col-span-3">
+        <Card className="border-border bg-card md:col-span-3">
           <CardHeader>
-            <CardTitle className="text-white">
+            <CardTitle className="text-foreground">
               {tabs.find(t => t.id === activeTab)?.label}
             </CardTitle>
           </CardHeader>
@@ -128,49 +128,49 @@ export function PengaturanPage() {
               <>
                 <div className="flex items-center gap-6">
                   <div className="relative">
-                    <div className="h-24 w-24 rounded-full bg-emerald-600 flex items-center justify-center text-white text-3xl font-bold">
+                    <div className="h-24 w-24 rounded-full bg-emerald-600 flex items-center justify-center text-foreground text-3xl font-bold">
                       {profilData.name.charAt(0)}
                     </div>
                     <Button
                       size="sm"
-                      className="absolute -bottom-2 -right-2 h-8 w-8 rounded-full bg-white/10 p-0 hover:bg-white/20"
+                      className="absolute -bottom-2 -right-2 h-8 w-8 rounded-full bg-accent p-0 hover:bg-white/20"
                     >
-                      <Camera size={14} className="text-white" />
+                      <Camera size={14} className="text-foreground" />
                     </Button>
                   </div>
                   <div>
-                    <h3 className="text-lg font-semibold text-white">{profilData.name}</h3>
-                    <p className="text-sm text-gray-400">{profilData.email}</p>
+                    <h3 className="text-lg font-semibold text-foreground">{profilData.name}</h3>
+                    <p className="text-sm text-muted-foreground">{profilData.email}</p>
                     <Badge className="mt-2 bg-emerald-500/20 text-emerald-400">Admin</Badge>
                   </div>
                 </div>
 
-                <Separator className="bg-white/10" />
+                <Separator className="bg-accent" />
 
                 <div className="grid gap-4 md:grid-cols-2">
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-gray-300">Nama Lengkap</label>
+                    <label className="text-sm font-medium text-muted-foreground">Nama Lengkap</label>
                     <Input
                       value={profilData.name}
                       onChange={(e) => setProfilData({ ...profilData, name: e.target.value })}
-                      className="border-white/10 bg-white/5 text-white"
+                      className="border-border bg-card text-foreground"
                     />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-gray-300">Email</label>
+                    <label className="text-sm font-medium text-muted-foreground">Email</label>
                     <Input
                       type="email"
                       value={profilData.email}
                       onChange={(e) => setProfilData({ ...profilData, email: e.target.value })}
-                      className="border-white/10 bg-white/5 text-white"
+                      className="border-border bg-card text-foreground"
                     />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-gray-300">No. Telepon</label>
+                    <label className="text-sm font-medium text-muted-foreground">No. Telepon</label>
                     <Input
                       value={profilData.phone}
                       onChange={(e) => setProfilData({ ...profilData, phone: e.target.value })}
-                      className="border-white/10 bg-white/5 text-white"
+                      className="border-border bg-card text-foreground"
                     />
                   </div>
                 </div>
@@ -180,36 +180,36 @@ export function PengaturanPage() {
             {activeTab === 'lembaga' && (
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="space-y-2 md:col-span-2">
-                  <label className="text-sm font-medium text-gray-300">Nama Lembaga</label>
+                  <label className="text-sm font-medium text-muted-foreground">Nama Lembaga</label>
                   <Input
                     value={lembagaData.name}
                     onChange={(e) => setLembagaData({ ...lembagaData, name: e.target.value })}
-                    className="border-white/10 bg-white/5 text-white"
+                    className="border-border bg-card text-foreground"
                   />
                 </div>
                 <div className="space-y-2 md:col-span-2">
-                  <label className="text-sm font-medium text-gray-300">Alamat</label>
+                  <label className="text-sm font-medium text-muted-foreground">Alamat</label>
                   <Input
                     value={lembagaData.address}
                     onChange={(e) => setLembagaData({ ...lembagaData, address: e.target.value })}
-                    className="border-white/10 bg-white/5 text-white"
+                    className="border-border bg-card text-foreground"
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-300">No. Telepon</label>
+                  <label className="text-sm font-medium text-muted-foreground">No. Telepon</label>
                   <Input
                     value={lembagaData.phone}
                     onChange={(e) => setLembagaData({ ...lembagaData, phone: e.target.value })}
-                    className="border-white/10 bg-white/5 text-white"
+                    className="border-border bg-card text-foreground"
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-300">Email Lembaga</label>
+                  <label className="text-sm font-medium text-muted-foreground">Email Lembaga</label>
                   <Input
                     type="email"
                     value={lembagaData.email}
                     onChange={(e) => setLembagaData({ ...lembagaData, email: e.target.value })}
-                    className="border-white/10 bg-white/5 text-white"
+                    className="border-border bg-card text-foreground"
                   />
                 </div>
               </div>
@@ -230,7 +230,7 @@ export function PengaturanPage() {
                     >
                       <div className="flex flex-col items-center gap-3">
                         <div className="h-12 w-12 rounded-full bg-gradient-to-br from-gray-700 to-gray-900 flex items-center justify-center">
-                          <Moon className="h-6 w-6 text-white" />
+                          <Moon className="h-6 w-6 text-foreground" />
                         </div>
                         <div className="text-center">
                           <p className="font-medium text-foreground">Gelap</p>
@@ -249,7 +249,7 @@ export function PengaturanPage() {
                     >
                       <div className="flex flex-col items-center gap-3">
                         <div className="h-12 w-12 rounded-full bg-gradient-to-br from-yellow-300 to-orange-400 flex items-center justify-center">
-                          <Sun className="h-6 w-6 text-white" />
+                          <Sun className="h-6 w-6 text-foreground" />
                         </div>
                         <div className="text-center">
                           <p className="font-medium text-foreground">Terang</p>
@@ -272,46 +272,46 @@ export function PengaturanPage() {
 
             {activeTab === 'notifikasi' && (
               <div className="space-y-4">
-                <div className="flex items-center justify-between rounded-lg border border-white/10 bg-white/5 p-4">
+                <div className="flex items-center justify-between rounded-lg border border-border bg-card p-4">
                   <div>
-                    <h4 className="font-medium text-white">Email Pembayaran</h4>
-                    <p className="text-sm text-gray-400">Terima notifikasi email saat ada pembayaran masuk</p>
+                    <h4 className="font-medium text-foreground">Email Pembayaran</h4>
+                    <p className="text-sm text-muted-foreground">Terima notifikasi email saat ada pembayaran masuk</p>
                   </div>
                   <Button
                     variant={notifikasiSettings.emailPembayaran ? 'default' : 'outline'}
                     size="sm"
                     onClick={() => setNotifikasiSettings({ ...notifikasiSettings, emailPembayaran: !notifikasiSettings.emailPembayaran })}
-                    className={notifikasiSettings.emailPembayaran ? 'bg-emerald-600' : 'border-white/10 text-gray-400'}
+                    className={notifikasiSettings.emailPembayaran ? 'bg-emerald-600' : 'border-border text-muted-foreground'}
                   >
                     {notifikasiSettings.emailPembayaran ? 'Aktif' : 'Nonaktif'}
                   </Button>
                 </div>
 
-                <div className="flex items-center justify-between rounded-lg border border-white/10 bg-white/5 p-4">
+                <div className="flex items-center justify-between rounded-lg border border-border bg-card p-4">
                   <div>
-                    <h4 className="font-medium text-white">Email Laporan</h4>
-                    <p className="text-sm text-gray-400">Terima laporan bulanan via email</p>
+                    <h4 className="font-medium text-foreground">Email Laporan</h4>
+                    <p className="text-sm text-muted-foreground">Terima laporan bulanan via email</p>
                   </div>
                   <Button
                     variant={notifikasiSettings.emailLaporan ? 'default' : 'outline'}
                     size="sm"
                     onClick={() => setNotifikasiSettings({ ...notifikasiSettings, emailLaporan: !notifikasiSettings.emailLaporan })}
-                    className={notifikasiSettings.emailLaporan ? 'bg-emerald-600' : 'border-white/10 text-gray-400'}
+                    className={notifikasiSettings.emailLaporan ? 'bg-emerald-600' : 'border-border text-muted-foreground'}
                   >
                     {notifikasiSettings.emailLaporan ? 'Aktif' : 'Nonaktif'}
                   </Button>
                 </div>
 
-                <div className="flex items-center justify-between rounded-lg border border-white/10 bg-white/5 p-4">
+                <div className="flex items-center justify-between rounded-lg border border-border bg-card p-4">
                   <div>
-                    <h4 className="font-medium text-white">Push Notifikasi</h4>
-                    <p className="text-sm text-gray-400">Terima push notification di browser</p>
+                    <h4 className="font-medium text-foreground">Push Notifikasi</h4>
+                    <p className="text-sm text-muted-foreground">Terima push notification di browser</p>
                   </div>
                   <Button
                     variant={notifikasiSettings.pushNotifikasi ? 'default' : 'outline'}
                     size="sm"
                     onClick={() => setNotifikasiSettings({ ...notifikasiSettings, pushNotifikasi: !notifikasiSettings.pushNotifikasi })}
-                    className={notifikasiSettings.pushNotifikasi ? 'bg-emerald-600' : 'border-white/10 text-gray-400'}
+                    className={notifikasiSettings.pushNotifikasi ? 'bg-emerald-600' : 'border-border text-muted-foreground'}
                   >
                     {notifikasiSettings.pushNotifikasi ? 'Aktif' : 'Nonaktif'}
                   </Button>
@@ -322,44 +322,44 @@ export function PengaturanPage() {
             {activeTab === 'keamanan' && (
               <div className="space-y-6">
                 <div className="space-y-4">
-                  <h4 className="font-medium text-white">Ubah Password</h4>
+                  <h4 className="font-medium text-foreground">Ubah Password</h4>
                   <div className="grid gap-4 md:grid-cols-2">
                     <div className="space-y-2">
-                      <label className="text-sm font-medium text-gray-300">Password Lama</label>
+                      <label className="text-sm font-medium text-muted-foreground">Password Lama</label>
                       <Input
                         type="password"
                         placeholder="••••••••"
-                        className="border-white/10 bg-white/5 text-white"
+                        className="border-border bg-card text-foreground"
                       />
                     </div>
                     <div className="space-y-2">
-                      <label className="text-sm font-medium text-gray-300">Password Baru</label>
+                      <label className="text-sm font-medium text-muted-foreground">Password Baru</label>
                       <Input
                         type="password"
                         placeholder="••••••••"
-                        className="border-white/10 bg-white/5 text-white"
+                        className="border-border bg-card text-foreground"
                       />
                     </div>
                     <div className="space-y-2">
-                      <label className="text-sm font-medium text-gray-300">Konfirmasi Password</label>
+                      <label className="text-sm font-medium text-muted-foreground">Konfirmasi Password</label>
                       <Input
                         type="password"
                         placeholder="••••••••"
-                        className="border-white/10 bg-white/5 text-white"
+                        className="border-border bg-card text-foreground"
                       />
                     </div>
                   </div>
                 </div>
 
-                <Separator className="bg-white/10" />
+                <Separator className="bg-accent" />
 
                 <div className="space-y-4">
-                  <h4 className="font-medium text-white">Sesi Aktif</h4>
-                  <div className="rounded-lg border border-white/10 bg-white/5 p-4">
+                  <h4 className="font-medium text-foreground">Sesi Aktif</h4>
+                  <div className="rounded-lg border border-border bg-card p-4">
                     <div className="flex items-center justify-between">
                       <div>
-                        <p className="font-medium text-white">Browser Saat Ini</p>
-                        <p className="text-sm text-gray-400">Chrome - Windows • Aktif sekarang</p>
+                        <p className="font-medium text-foreground">Browser Saat Ini</p>
+                        <p className="text-sm text-muted-foreground">Chrome - Windows • Aktif sekarang</p>
                       </div>
                       <Badge className="bg-emerald-500/20 text-emerald-400">Aktif</Badge>
                     </div>

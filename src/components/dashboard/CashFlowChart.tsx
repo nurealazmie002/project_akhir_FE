@@ -15,16 +15,16 @@ export function CashFlowChart({ data, title, period = '6 Bulan Terakhir' }: Cash
   }
 
   return (
-    <Card className="border-white/10 bg-white/5 py-4 h-full flex flex-col">
+    <Card className="border-border bg-card py-4 h-full flex flex-col">
       <CardHeader className="pb-2">
-        <CardTitle className="text-lg text-white">{title}</CardTitle>
+        <CardTitle className="text-lg text-foreground">{title}</CardTitle>
         <CardAction>
-          <span className="text-sm text-gray-400">{period}</span>
+          <span className="text-sm text-muted-foreground">{period}</span>
         </CardAction>
       </CardHeader>
       <CardContent>
         <div className="flex">
-          <div className="flex w-12 flex-col justify-between pr-2 text-right text-xs text-gray-500">
+          <div className="flex w-12 flex-col justify-between pr-2 text-right text-xs text-muted-foreground">
             <span>50jt</span>
             <span>25jt</span>
             <span>10jt</span>
@@ -44,7 +44,7 @@ export function CashFlowChart({ data, title, period = '6 Bulan Terakhir' }: Cash
                     style={{ height: `${getBarHeight(item.expense)}%` }}
                   />
                 </div>
-                <span className="text-xs text-gray-400">{item.month}</span>
+                <span className="text-xs text-muted-foreground">{item.month}</span>
               </div>
             ))}
           </div>
@@ -53,11 +53,11 @@ export function CashFlowChart({ data, title, period = '6 Bulan Terakhir' }: Cash
         <div className="mt-6 flex items-center justify-center gap-6">
           <div className="flex items-center gap-2">
             <div className="h-3 w-3 rounded-full bg-emerald-500" />
-            <span className="text-sm text-gray-400">Pemasukan</span>
+            <span className="text-sm text-muted-foreground">Pemasukan</span>
           </div>
           <div className="flex items-center gap-2">
             <div className="h-3 w-3 rounded-full bg-emerald-700" />
-            <span className="text-sm text-gray-400">Pengeluaran</span>
+            <span className="text-sm text-muted-foreground">Pengeluaran</span>
           </div>
         </div>
       </CardContent>
