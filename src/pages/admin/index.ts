@@ -1,0 +1,6 @@
+export { DashboardPage } from './DashboardPage'
+export { SantriPage } from './SantriPage'
+export { PemasukanPage } from './PemasukanPage'
+export { PengeluaranPage } from './PengeluaranPage'
+export { LaporanPage } from './LaporanPage'
+export { PengaturanPage } from './PengaturanPage'
