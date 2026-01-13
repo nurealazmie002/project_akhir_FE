@@ -34,7 +34,7 @@ const santriSchema = z.object({
   nis: z.string().min(1, 'NIS wajib diisi'),
   kelas: z.string().min(1, 'Kelas wajib diisi'),
   gender: z.enum(['Laki-laki', 'Perempuan'], { message: 'Pilih jenis kelamin' }),
-  institutionId: z.string().min(1, 'Institution ID wajib diisi'),
+  institutionName: z.string().min(1, 'Nama Lembaga wajib diisi'),
   waliName: z.string().min(1, 'Nama Wali wajib diisi'),
 })
 
@@ -121,7 +121,7 @@ export function SantriPage() {
       nis: santri.nis,
       kelas: santri.kelas,
       gender: santri.gender,
-      institutionId: santri.institutionId,
+      institutionName: santri.institutionName || '',
       waliName: santri.waliName,
     })
     setShowModal(true)
@@ -155,7 +155,7 @@ export function SantriPage() {
       nis: '',
       kelas: '',
       gender: 'Laki-laki',
-      institutionId: '',
+      institutionName: '',
       waliName: '',
     })
     setShowModal(true)
@@ -461,16 +461,16 @@ export function SantriPage() {
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-muted-foreground">
-                    Institution ID <span className="text-red-400">*</span>
+                    Nama Lembaga <span className="text-red-400">*</span>
                   </label>
                   <Input
-                    placeholder="pesantren-al-ikhlas"
+                    placeholder="Pesantren Al-Ikhlas"
                     className="border-border bg-card text-foreground placeholder:text-muted-foreground"
-                    {...register('institutionId')}
+                    {...register('institutionName')}
                   />
-                  {errors.institutionId && (
+                  {errors.institutionName && (
                     <Badge variant="destructive" className="text-xs">
-                      {errors.institutionId.message}
+                      {errors.institutionName.message}
                     </Badge>
                   )}
                 </div>

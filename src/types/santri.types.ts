@@ -18,12 +18,13 @@ export interface CreateSantriRequest {
   nis: string
   kelas: string
   gender: 'Laki-laki' | 'Perempuan'
-  institutionId: string
+  institutionName: string
   waliName: string
 }
 
 export interface UpdateSantriRequest extends Partial<CreateSantriRequest> {
   status?: 'ACTIVE' | 'INACTIVE' | 'GRADUATED'
+  isActive?: boolean
 }
 
 export interface SantriListResponse {
