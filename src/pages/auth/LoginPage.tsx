@@ -30,6 +30,7 @@ export function LoginPage() {
   const {
     register,
     handleSubmit,
+    getValues,
     formState: { errors },
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
@@ -39,20 +40,30 @@ export function LoginPage() {
     setIsLoading(true)
     setError(null)
 
+    console.log('📤 Memulai login untuk:', data.email)
     try {
       const response = await authService.login(data)
+      console.log('✅ Login berhasil')
+
+      if (!response || !response.user) {
+        throw new Error('Data user tidak ditemukan dalam respons')
+      }
+
       login(response.user, response.token)
 
       // Redirect based on role
-      if (response.user.role === 'ADMIN') {
+      const role = response.user.role
+      if (role === 'ADMIN') {
         navigate('/admin')
-      } else if (response.user.role === 'WALI_SANTRI') {
+      } else if (role === 'WALI_SANTRI') {
         navigate('/user')
       } else {
         navigate('/admin') // fallback
       }
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Login gagal. Silakan coba lagi.')
+      console.error('❌ Login gagal:', err.response?.data || err.message)
+      const message = err.response?.data?.message || err.message || 'Login gagal. Silakan coba lagi.'
+      setError(message)
     } finally {
       setIsLoading(false)
     }
@@ -102,7 +113,7 @@ export function LoginPage() {
                   <Button
                     variant="link"
                     className="w-full text-primary hover:text-primary/80 h-auto p-0"
-                    onClick={() => navigate('/verify-otp', { state: { email: register('email').name ? (document.querySelector('input[name="email"]') as HTMLInputElement)?.value : '' } })}
+                    onClick={() => navigate('/verify-otp', { state: { email: getValues('email'), from: 'login' } })}
                   >
                     Verifikasi sekarang
                   </Button>

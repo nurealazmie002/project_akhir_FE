@@ -11,14 +11,14 @@ import { KeyRound, ArrowLeft } from 'lucide-react'
 
 export function OtpVerificationPage() {
   const [otp, setOtp] = useState(['', '', '', '', '', ''])
+  const navigate = useNavigate()
+  const location = useLocation()
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState<string | null>(null)
-  const [resendTimer, setResendTimer] = useState(60)
-  const [canResend, setCanResend] = useState(false)
+  const [resendTimer, setResendTimer] = useState(location.state?.from === 'login' ? 0 : 60)
+  const [canResend, setCanResend] = useState(location.state?.from === 'login')
   const inputRefs = useRef<(HTMLInputElement | null)[]>([])
-  const navigate = useNavigate()
-  const location = useLocation()
 
   const email = location.state?.email || ''
 
