@@ -42,7 +42,15 @@ export function LoginPage() {
     try {
       const response = await authService.login(data)
       login(response.user, response.token)
-      navigate('/admin')
+      
+      // Redirect based on role
+      if (response.user.role === 'ADMIN') {
+        navigate('/admin')
+      } else if (response.user.role === 'WALI_SANTRI') {
+        navigate('/user')
+      } else {
+        navigate('/admin') // fallback
+      }
     } catch (err: any) {
       setError(err.response?.data?.message || 'Login gagal. Silakan coba lagi.')
     } finally {

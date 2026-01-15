@@ -6,6 +6,7 @@ import { useAuthStore } from '@/stores/authStore'
 import {
   LayoutDashboard,
   Users,
+  UserCheck,
   ArrowDownCircle,
   ArrowUpCircle,
   FileText,
@@ -22,6 +23,7 @@ interface NavItem {
 const navItems: NavItem[] = [
   { label: 'Dashboard', href: '/admin', icon: <LayoutDashboard size={20} /> },
   { label: 'Data Santri', href: '/admin/santri', icon: <Users size={20} /> },
+  { label: 'Data Wali', href: '/admin/wali', icon: <UserCheck size={20} /> },
   { label: 'Pemasukan', href: '/admin/pemasukan', icon: <ArrowDownCircle size={20} /> },
   { label: 'Pengeluaran', href: '/admin/pengeluaran', icon: <ArrowUpCircle size={20} /> },
   { label: 'Laporan', href: '/admin/laporan', icon: <FileText size={20} /> },

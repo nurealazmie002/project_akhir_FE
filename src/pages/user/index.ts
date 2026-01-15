@@ -1,0 +1,5 @@
+export { UserDashboardPage } from './UserDashboardPage'
+export { SantriListPage } from './SantriListPage'
+export { SantriDetailPage } from './SantriDetailPage'
+export { PembayaranPage } from './PembayaranPage'
+export { UserProfilPage } from './UserProfilPage'

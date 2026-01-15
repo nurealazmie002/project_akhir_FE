@@ -64,7 +64,7 @@ export function SantriPage() {
     try {
       const response = await santriService.getAll()
       setSantriList(response.data)
-      console.log('📚 Fetched santri:', response.data)
+      console.log(' Fetched santri:', response.data)
     } catch (err: any) {
       setError(err.response?.data?.message || 'Gagal memuat data santri')
       console.error('Failed to fetch santri:', err)
