@@ -63,7 +63,7 @@ export function LaporanPage() {
       variants={fadeInUp}
       className="space-y-6"
     >
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div className="flex items-center gap-3">
           <div className="rounded-lg bg-blue-500/20 p-2">
             <FileText className="h-6 w-6 text-blue-400" />
@@ -79,22 +79,22 @@ export function LaporanPage() {
           <Button
             onClick={() => handleExport('excel')}
             variant="outline"
-            className="gap-2 border-border bg-card text-foreground hover:bg-accent"
+            className="gap-2 border-border bg-card text-foreground hover:bg-accent flex-1 sm:flex-none"
           >
             <Download size={18} />
-            Export Excel
+            <span className="hidden sm:inline">Export</span> Excel
           </Button>
           <Button
             onClick={() => handleExport('pdf')}
-            className="gap-2 bg-emerald-600 hover:bg-emerald-700"
+            className="gap-2 bg-emerald-600 hover:bg-emerald-700 flex-1 sm:flex-none"
           >
             <Download size={18} />
-            Export PDF
+            <span className="hidden sm:inline">Export</span> PDF
           </Button>
         </div>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-4">
+      <div className="grid gap-4 grid-cols-2 lg:grid-cols-4">
         <Card className="border-border bg-card">
           <CardContent className="flex items-center gap-3 p-4">
             <div className="rounded-lg bg-emerald-500/20 p-2">
@@ -142,9 +142,9 @@ export function LaporanPage() {
       </div>
 
       <Card className="border-border bg-card">
-        <CardHeader className="flex flex-row items-center justify-between">
+        <CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <CardTitle className="text-foreground">Ringkasan Per Periode</CardTitle>
-          <div className="flex gap-2">
+          <div className="flex gap-2 flex-wrap">
             <Button 
               variant={periodeFilter === 'bulanan' ? 'default' : 'ghost'}
               size="sm"
@@ -173,7 +173,8 @@ export function LaporanPage() {
           </div>
         </CardHeader>
         <CardContent>
-          <Table>
+          <div className="overflow-x-auto">
+          <Table className="min-w-[600px]">
             <TableHeader>
               <TableRow className="border-border hover:bg-transparent">
                 <TableHead className="text-muted-foreground">Periode</TableHead>
@@ -216,6 +217,7 @@ export function LaporanPage() {
               ))}
             </TableBody>
           </Table>
+          </div>
         </CardContent>
       </Card>
 

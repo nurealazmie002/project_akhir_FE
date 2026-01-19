@@ -28,7 +28,7 @@ export function DashboardPage() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
     >
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard
           title="Total Pemasukan"
           value={`Rp ${formatCurrency(mockDashboardStats.totalIncome)}`}
@@ -59,8 +59,8 @@ export function DashboardPage() {
         />
       </div>
 
-      <div className="grid grid-cols-3 gap-6 items-stretch">
-        <div className="col-span-2 h-full">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
+        <div className="lg:col-span-2 h-full">
           <CashFlowChart data={mockCashFlowData} title="Arus Kas Semester Ini" />
         </div>
 

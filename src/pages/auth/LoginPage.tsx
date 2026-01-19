@@ -30,6 +30,7 @@ export function LoginPage() {
   const {
     register,
     handleSubmit,
+    getValues,
     formState: { errors },
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
@@ -38,13 +39,31 @@ export function LoginPage() {
   const onSubmit = async (data: LoginFormData) => {
     setIsLoading(true)
     setError(null)
-    
+
+    console.log('📤 Memulai login untuk:', data.email)
     try {
       const response = await authService.login(data)
+      console.log('✅ Login berhasil')
+
+      if (!response || !response.user) {
+        throw new Error('Data user tidak ditemukan dalam respons')
+      }
+
       login(response.user, response.token)
-      navigate('/admin')
+
+      // Redirect based on role
+      const role = response.user.role
+      if (role === 'ADMIN') {
+        navigate('/admin')
+      } else if (role === 'WALI_SANTRI') {
+        navigate('/user')
+      } else {
+        navigate('/admin') // fallback
+      }
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Login gagal. Silakan coba lagi.')
+      console.error('❌ Login gagal:', err.response?.data || err.message)
+      const message = err.response?.data?.message || err.message || 'Login gagal. Silakan coba lagi.'
+      setError(message)
     } finally {
       setIsLoading(false)
     }
@@ -59,7 +78,7 @@ export function LoginPage() {
     >
       <Card className="border-border bg-card">
         <CardHeader className="space-y-1 text-center">
-          <motion.div 
+          <motion.div
             className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary/20"
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
@@ -73,22 +92,32 @@ export function LoginPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <motion.form 
-            onSubmit={handleSubmit(onSubmit)} 
+          <motion.form
+            onSubmit={handleSubmit(onSubmit)}
             className="space-y-4"
             variants={staggerContainer}
             initial="initial"
             animate="animate"
           >
             {error && (
-              <motion.div 
+              <motion.div
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 key={error}
+                className="space-y-2"
               >
                 <Badge variant="destructive" className="w-full justify-center py-2">
                   {error}
                 </Badge>
+                {error.includes('Email not verified') && (
+                  <Button
+                    variant="link"
+                    className="w-full text-primary hover:text-primary/80 h-auto p-0"
+                    onClick={() => navigate('/verify-otp', { state: { email: getValues('email'), from: 'login' } })}
+                  >
+                    Verifikasi sekarang
+                  </Button>
+                )}
               </motion.div>
             )}
 
@@ -141,7 +170,7 @@ export function LoginPage() {
             </motion.div>
           </motion.form>
 
-          <motion.div 
+          <motion.div
             className="mt-6 text-center text-sm text-muted-foreground"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}

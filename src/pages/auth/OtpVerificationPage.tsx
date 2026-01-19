@@ -11,14 +11,15 @@ import { KeyRound, ArrowLeft } from 'lucide-react'
 
 export function OtpVerificationPage() {
   const [otp, setOtp] = useState(['', '', '', '', '', ''])
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [resendTimer, setResendTimer] = useState(60)
-  const [canResend, setCanResend] = useState(false)
-  const inputRefs = useRef<(HTMLInputElement | null)[]>([])
   const navigate = useNavigate()
   const location = useLocation()
-  
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [success, setSuccess] = useState<string | null>(null)
+  const [resendTimer, setResendTimer] = useState(location.state?.from === 'login' ? 0 : 60)
+  const [canResend, setCanResend] = useState(location.state?.from === 'login')
+  const inputRefs = useRef<(HTMLInputElement | null)[]>([])
+
   const email = location.state?.email || ''
 
   useEffect(() => {
@@ -40,12 +41,16 @@ export function OtpVerificationPage() {
     if (value.length > 1) {
       value = value.slice(-1)
     }
-    
+
     if (!/^\d*$/.test(value)) return
 
     const newOtp = [...otp]
     newOtp[index] = value
     setOtp(newOtp)
+
+    // Clear messages when user starts typing
+    if (error) setError(null)
+    if (success) setSuccess(null)
 
     if (value && index < 5) {
       inputRefs.current[index + 1]?.focus()
@@ -62,19 +67,24 @@ export function OtpVerificationPage() {
     e.preventDefault()
     const pastedData = e.clipboardData.getData('text').slice(0, 6)
     if (!/^\d+$/.test(pastedData)) return
-    
+
     const newOtp = [...otp]
     pastedData.split('').forEach((char, index) => {
       if (index < 6) newOtp[index] = char
     })
     setOtp(newOtp)
+
+    // Clear messages
+    if (error) setError(null)
+    if (success) setSuccess(null)
+
     inputRefs.current[Math.min(pastedData.length, 5)]?.focus()
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     const otpCode = otp.join('')
-    
+
     if (otpCode.length !== 6) {
       setError('Masukkan 6 digit kode OTP')
       return
@@ -82,13 +92,17 @@ export function OtpVerificationPage() {
 
     setIsLoading(true)
     setError(null)
-    
+    setSuccess(null)
+
+    console.log('📤 Memverifikasi OTP untuk:', email)
     try {
       await authService.verifyOtp({ email, otpCode: otpCode })
-      navigate('/login', { 
-        state: { message: 'Email berhasil diverifikasi. Silakan login.' } 
+      console.log('✅ Verifikasi berhasil')
+      navigate('/login', {
+        state: { message: 'Email berhasil diverifikasi. Silakan login.' }
       })
     } catch (err: any) {
+      console.error('❌ Verifikasi gagal:', err.response?.data || err.message)
       setError(err.response?.data?.message || 'Kode OTP tidak valid')
     } finally {
       setIsLoading(false)
@@ -97,14 +111,25 @@ export function OtpVerificationPage() {
 
   const handleResend = async () => {
     if (!canResend) return
-    
+
+    if (!email) {
+      setError('Email tidak ditemukan. Silakan register ulang.')
+      return
+    }
+
     setIsLoading(true)
+    setError(null)
+    setSuccess(null)
+
+    console.log('📤 Mengirim ulang OTP ke:', email)
     try {
-      await authService.resendOtp({ email })
+      const response = await authService.resendOtp({ email })
+      console.log('✅ OTP berhasil dikirim ulang:', response)
+      setSuccess(response.message || 'OTP telah dikirim ulang ke email Anda')
       setResendTimer(60)
       setCanResend(false)
-      setError(null)
     } catch (err: any) {
+      console.error('❌ Gagal mengirim ulang OTP:', err.response?.data || err.message)
       setError(err.response?.data?.message || 'Gagal mengirim ulang OTP')
     } finally {
       setIsLoading(false)
@@ -120,7 +145,7 @@ export function OtpVerificationPage() {
     >
       <Card className="border-border bg-card">
         <CardHeader className="space-y-1 text-center">
-          <motion.div 
+          <motion.div
             className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary/20"
             initial={{ scale: 0, rotate: -180 }}
             animate={{ scale: 1, rotate: 0 }}
@@ -143,6 +168,17 @@ export function OtpVerificationPage() {
               >
                 <Badge variant="destructive" className="w-full justify-center py-2">
                   {error}
+                </Badge>
+              </motion.div>
+            )}
+
+            {success && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+              >
+                <Badge className="w-full justify-center py-2 bg-green-500 hover:bg-green-600 text-white border-none">
+                  {success}
                 </Badge>
               </motion.div>
             )}
@@ -185,7 +221,7 @@ export function OtpVerificationPage() {
             </motion.div>
           </form>
 
-          <motion.div 
+          <motion.div
             className="mt-6 text-center text-sm text-muted-foreground"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}

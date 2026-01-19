@@ -38,7 +38,7 @@ export function RegisterPage() {
   const onSubmit = async (data: RegisterFormData) => {
     setIsLoading(true)
     setError(null)
-    
+
     try {
       const registerResponse = await authService.register({
         username: data.username,
@@ -47,9 +47,10 @@ export function RegisterPage() {
         institution: data.institution,
       })
       console.log('✅ Register berhasil:', registerResponse)
-      
+
       navigate('/verify-otp', { state: { email: data.email } })
     } catch (err: any) {
+      console.error('❌ Register gagal:', err.response?.data || err.message)
       setError(err.response?.data?.message || 'Registrasi gagal. Silakan coba lagi.')
     } finally {
       setIsLoading(false)
@@ -65,7 +66,7 @@ export function RegisterPage() {
     >
       <Card className="border-border bg-card">
         <CardHeader className="space-y-1 text-center">
-          <motion.div 
+          <motion.div
             className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary/20"
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
@@ -79,15 +80,15 @@ export function RegisterPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <motion.form 
-            onSubmit={handleSubmit(onSubmit)} 
+          <motion.form
+            onSubmit={handleSubmit(onSubmit)}
             className="space-y-4"
             variants={staggerContainer}
             initial="initial"
             animate="animate"
           >
             {error && (
-              <motion.div 
+              <motion.div
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 key={error}
@@ -183,7 +184,7 @@ export function RegisterPage() {
             </motion.div>
           </motion.form>
 
-          <motion.div 
+          <motion.div
             className="mt-6 text-center text-sm text-muted-foreground"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}

@@ -11,6 +11,7 @@ import {
 import { Button } from '@/components/ui/button'
 import type { Transaction } from '@/types'
 import { cn } from '@/lib/utils'
+import { ArrowRight, Receipt } from 'lucide-react'
 
 interface TransactionTableProps {
   transactions: Transaction[]
@@ -29,64 +30,95 @@ export function TransactionTable({
     return new Intl.NumberFormat('id-ID').format(amount)
   }
 
-  const getStatusVariant = (status: Transaction['status']) => {
+  const getStatusConfig = (status: Transaction['status']) => {
     switch (status) {
       case 'LUNAS':
-        return 'default'
+        return {
+          className: 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20',
+          label: 'Lunas'
+        }
       case 'PENDING':
-        return 'secondary'
+        return {
+          className: 'bg-amber-500/10 text-amber-500 border-amber-500/20',
+          label: 'Pending'
+        }
       case 'GAGAL':
-        return 'destructive'
+        return {
+          className: 'bg-rose-500/10 text-rose-500 border-rose-500/20',
+          label: 'Gagal'
+        }
       default:
-        return 'outline'
+        return {
+          className: 'bg-muted text-muted-foreground',
+          label: status
+        }
     }
   }
 
   return (
-    <Card className="border-border bg-card py-4">
+    <Card className="border-border/50 bg-card hover:shadow-lg hover:shadow-primary/5 transition-all duration-300">
       <CardHeader className="pb-4">
-        <CardTitle className="text-lg text-foreground">{title}</CardTitle>
+        <div className="flex items-center gap-2">
+          <div className="p-2 rounded-lg bg-primary/10">
+            <Receipt size={18} className="text-primary" />
+          </div>
+          <CardTitle className="text-lg font-semibold text-foreground">{title}</CardTitle>
+        </div>
         {showViewAll && (
           <CardAction>
-            <Button variant="link" onClick={onViewAll} className="text-primary p-0 h-auto">
+            <Button 
+              variant="ghost" 
+              onClick={onViewAll} 
+              className="text-primary hover:text-primary hover:bg-primary/10 gap-1 group"
+            >
               Lihat Semua
+              <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
             </Button>
           </CardAction>
         )}
       </CardHeader>
       <CardContent className="p-0">
-        <Table>
-          <TableHeader>
-            <TableRow className="border-border hover:bg-transparent">
-              <TableHead className="text-muted-foreground">TANGGAL</TableHead>
-              <TableHead className="text-muted-foreground">SANTRI</TableHead>
-              <TableHead className="text-muted-foreground">TIPE</TableHead>
-              <TableHead className="text-muted-foreground">JUMLAH</TableHead>
-              <TableHead className="text-muted-foreground">STATUS</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {transactions.map((tx) => (
-              <TableRow key={tx.id} className="border-border hover:bg-accent">
-                <TableCell className="text-muted-foreground">{tx.date}</TableCell>
-                <TableCell className="text-foreground">{tx.studentName}</TableCell>
-                <TableCell className="text-muted-foreground">{tx.type}</TableCell>
-                <TableCell className="text-emerald-600 dark:text-emerald-400">+ Rp {formatCurrency(tx.amount)}</TableCell>
-                <TableCell>
-                  <Badge 
-                    variant={getStatusVariant(tx.status)}
+        <div className="overflow-x-auto">
+          <Table className="min-w-[500px]">
+            <TableHeader>
+              <TableRow className="border-border/50 hover:bg-transparent">
+                <TableHead className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Tanggal</TableHead>
+                <TableHead className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Santri</TableHead>
+                <TableHead className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Tipe</TableHead>
+                <TableHead className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Jumlah</TableHead>
+                <TableHead className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Status</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {transactions.map((tx, index) => {
+                const statusConfig = getStatusConfig(tx.status)
+                return (
+                  <TableRow 
+                    key={tx.id} 
                     className={cn(
-                      tx.status === 'LUNAS' && 'bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border-emerald-500/30',
-                      tx.status === 'PENDING' && 'bg-amber-500/20 text-amber-600 dark:text-amber-400 border-amber-500/30'
+                      'border-border/50 transition-colors',
+                      index % 2 === 0 ? 'bg-muted/20' : 'bg-transparent',
+                      'hover:bg-primary/5'
                     )}
                   >
-                    {tx.status}
-                  </Badge>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+                    <TableCell className="text-sm text-muted-foreground font-medium">{tx.date}</TableCell>
+                    <TableCell className="text-sm font-medium text-foreground">{tx.studentName}</TableCell>
+                    <TableCell className="text-sm text-muted-foreground">{tx.type}</TableCell>
+                    <TableCell className="text-sm font-semibold text-emerald-500">+ Rp {formatCurrency(tx.amount)}</TableCell>
+                    <TableCell>
+                      <Badge 
+                        variant="outline"
+                        className={cn('font-medium border', statusConfig.className)}
+                      >
+                        {statusConfig.label}
+                      </Badge>
+                    </TableCell>
+                  </TableRow>
+                )
+              })}
+            </TableBody>
+          </Table>
+        </div>
       </CardContent>
     </Card>
   )
