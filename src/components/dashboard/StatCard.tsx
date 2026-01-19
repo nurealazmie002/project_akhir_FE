@@ -1,13 +1,13 @@
 import { Card, CardContent } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
-import { ArrowDown, ArrowUp, AlertTriangle, CheckCircle } from 'lucide-react'
+import { ArrowDown, ArrowUp, AlertTriangle, CheckCircle, TrendingUp, TrendingDown } from 'lucide-react'
 
 interface StatCardProps {
   title: string
   value: string
   change?: number
   changeLabel?: string
-  variant?: 'default' | 'warning'
+  variant?: 'default' | 'warning' | 'success' | 'danger'
   icon?: 'up' | 'down' | 'warning' | 'check'
 }
 
@@ -20,63 +20,67 @@ export function StatCard({
   icon,
 }: StatCardProps) {
   const IconComponent = {
-    up: ArrowUp,
-    down: ArrowDown,
+    up: TrendingDown,
+    down: TrendingUp,
     warning: AlertTriangle,
     check: CheckCircle,
   }[icon || 'check']
 
-  const iconColors = {
-    up: 'text-red-500 bg-red-500/20',
-    down: 'text-emerald-500 bg-emerald-500/20',
-    warning: 'text-amber-500 bg-amber-500/20',
-    check: 'text-emerald-500 bg-emerald-500/20',
+  const iconConfig = {
+    up: 'from-rose-500 to-rose-600',
+    down: 'from-emerald-500 to-emerald-600',
+    warning: 'from-amber-500 to-orange-500',
+    check: 'from-emerald-500 to-teal-500',
   }
 
   return (
     <Card
       className={cn(
-        'border py-4',
-        variant === 'warning'
-          ? 'border-amber-500/30 bg-amber-500/10'
-          : 'border-border bg-card'
+        'group border border-border/50 bg-card hover:shadow-lg hover:shadow-primary/5 transition-all duration-300 overflow-hidden',
+        variant === 'warning' && 'border-amber-500/30 bg-gradient-to-br from-amber-500/5 to-transparent'
       )}
     >
-      <CardContent className="p-0 px-5">
-        <div className="flex items-start justify-between">
-          <div>
-            <p className="text-sm text-muted-foreground">{title}</p>
-            <p
-              className={cn(
-                'mt-2 text-2xl font-bold',
-                variant === 'warning' ? 'text-amber-500' : 'text-foreground'
-              )}
-            >
-              {value}
-            </p>
-            {(change !== undefined || changeLabel) && (
-              <p
-                className={cn(
-                  'mt-1 text-xs',
-                  change && change > 0 ? 'text-emerald-500' : 'text-red-500'
-                )}
-              >
-                {change !== undefined && (
-                  <span>
-                    {change > 0 ? '+' : ''}
-                    {change}%{' '}
-                  </span>
-                )}
-                <span className="text-muted-foreground">{changeLabel}</span>
-              </p>
-            )}
-          </div>
+      <CardContent className="p-5">
+        {/* Header: Title + Icon */}
+        <div className="flex items-start justify-between mb-4">
+          <p className="text-sm font-medium text-muted-foreground leading-tight">{title}</p>
           {icon && (
-            <div className={cn('rounded-lg p-2', iconColors[icon])}>
-              <IconComponent size={18} />
+            <div className={cn(
+              'p-2.5 rounded-xl bg-gradient-to-br shadow-md group-hover:scale-105 transition-transform duration-300',
+              iconConfig[icon]
+            )}>
+              <IconComponent size={20} className="text-white" />
             </div>
           )}
         </div>
+
+        {/* Value */}
+        <p
+          className={cn(
+            'text-2xl font-bold tracking-tight mb-2',
+            variant === 'warning' ? 'text-amber-500' : 'text-foreground'
+          )}
+        >
+          {value}
+        </p>
+
+        {/* Change indicator */}
+        {(change !== undefined || changeLabel) && (
+          <div className="flex items-center gap-2 flex-wrap">
+            {change !== undefined && (
+              <span className={cn(
+                'inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full',
+                change > 0 
+                  ? 'bg-emerald-500/10 text-emerald-500' 
+                  : 'bg-rose-500/10 text-rose-500'
+              )}>
+                {change > 0 ? <ArrowUp size={12} /> : <ArrowDown size={12} />}
+                {change > 0 ? '+' : ''}{change}%
+              </span>
+            )}
+            <span className="text-xs text-muted-foreground">{changeLabel}</span>
+          </div>
+        )}
       </CardContent>
     </Card>
   )

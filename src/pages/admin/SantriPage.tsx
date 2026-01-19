@@ -16,6 +16,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { santriService } from '@/services/santriService'
+import { useAuthStore } from '@/stores/authStore'
 import type { Santri } from '@/types'
 import { fadeInUp } from '@/lib/animations'
 import { 
@@ -41,6 +42,7 @@ const santriSchema = z.object({
 type SantriFormData = z.infer<typeof santriSchema>
 
 export function SantriPage() {
+  const { user } = useAuthStore()
   const [santriList, setSantriList] = useState<Santri[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
@@ -62,7 +64,11 @@ export function SantriPage() {
   const fetchSantri = async () => {
     setIsLoading(true)
     try {
-      const response = await santriService.getAll()
+      const params: any = {}
+      if (user?.institutionName) {
+        params.institutionName = user.institutionName
+      }
+      const response = await santriService.getAll(params)
       setSantriList(response.data)
       console.log(' Fetched santri:', response.data)
     } catch (err: any) {
@@ -191,7 +197,7 @@ export function SantriPage() {
       className="space-y-6"
     >
 
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div className="flex items-center gap-3">
           <div className="rounded-lg bg-emerald-500/20 p-2">
             <Users className="h-6 w-6 text-emerald-400" />
@@ -205,7 +211,7 @@ export function SantriPage() {
         </div>
         <Button
           onClick={openAddModal}
-          className="gap-2 bg-emerald-600 hover:bg-emerald-700"
+          className="gap-2 bg-emerald-600 hover:bg-emerald-700 w-full sm:w-auto"
         >
           <Plus size={18} />
           Tambah Santri
@@ -271,7 +277,8 @@ export function SantriPage() {
           <CardTitle className="text-foreground">Daftar Santri</CardTitle>
         </CardHeader>
         <CardContent>
-          <Table>
+          <div className="overflow-x-auto">
+          <Table className="min-w-[800px]">
             <TableHeader>
               <TableRow className="border-border hover:bg-transparent">
                 <TableHead className="text-muted-foreground">NIS</TableHead>
@@ -351,6 +358,7 @@ export function SantriPage() {
               )}
             </TableBody>
           </Table>
+          </div>
         </CardContent>
       </Card>
 

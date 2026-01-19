@@ -59,11 +59,11 @@ export function UserDashboardPage() {
       className="space-y-6"
     >
       {/* Welcome Header */}
-      <div className="rounded-xl bg-gradient-to-r from-primary/20 to-primary/5 p-6 border border-primary/20">
-        <h1 className="text-2xl font-bold text-foreground">
+      <div className="rounded-xl bg-gradient-to-r from-primary/20 to-primary/5 p-4 sm:p-6 border border-primary/20">
+        <h1 className="text-xl sm:text-2xl font-bold text-foreground">
           Selamat Datang, {user?.name || 'User'}! 👋
         </h1>
-        <p className="mt-1 text-muted-foreground">
+        <p className="mt-1 text-sm sm:text-base text-muted-foreground">
           Portal Wali Santri - Pantau perkembangan santri Anda
         </p>
       </div>

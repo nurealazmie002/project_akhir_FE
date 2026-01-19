@@ -160,7 +160,7 @@ export function PengeluaranPage() {
       variants={fadeInUp}
       className="space-y-6"
     >
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div className="flex items-center gap-3">
           <div className="rounded-lg bg-red-500/20 p-2">
             <ArrowUpCircle className="h-6 w-6 text-red-400" />
@@ -174,7 +174,7 @@ export function PengeluaranPage() {
         </div>
         <Button
           onClick={openAddModal}
-          className="gap-2 bg-emerald-600 hover:bg-emerald-700"
+          className="gap-2 bg-emerald-600 hover:bg-emerald-700 w-full sm:w-auto"
         >
           <Plus size={18} />
           Input Pengeluaran
@@ -224,7 +224,8 @@ export function PengeluaranPage() {
           <CardTitle className="text-foreground">Daftar Pengeluaran</CardTitle>
         </CardHeader>
         <CardContent>
-          <Table>
+          <div className="overflow-x-auto">
+          <Table className="min-w-[700px]">
             <TableHeader>
               <TableRow className="border-border hover:bg-transparent">
                 <TableHead className="text-muted-foreground">Tanggal</TableHead>
@@ -282,6 +283,7 @@ export function PengeluaranPage() {
               )}
             </TableBody>
           </Table>
+          </div>
         </CardContent>
       </Card>
 

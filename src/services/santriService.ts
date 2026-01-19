@@ -2,7 +2,7 @@ import api from './api'
 import type { Santri, CreateSantriRequest, UpdateSantriRequest, SantriListResponse } from '@/types/santri.types'
 
 export const santriService = {
-  async getAll(params?: { page?: number; limit?: number; search?: string; institutionId?: string }): Promise<SantriListResponse> {
+  async getAll(params?: { page?: number; limit?: number; search?: string; institutionId?: string; institutionName?: string }): Promise<SantriListResponse> {
     const response = await api.get<SantriListResponse>('/santri', { params })
     return response.data
   },

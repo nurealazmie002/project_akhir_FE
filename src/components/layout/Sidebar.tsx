@@ -12,6 +12,7 @@ import {
   FileText,
   Settings,
   LogOut,
+  X,
 } from 'lucide-react'
 
 interface NavItem {
@@ -29,7 +30,12 @@ const navItems: NavItem[] = [
   { label: 'Laporan', href: '/admin/laporan', icon: <FileText size={20} /> },
 ]
 
-export function Sidebar() {
+interface SidebarProps {
+  isOpen?: boolean
+  onClose?: () => void
+}
+
+export function Sidebar({ isOpen = false, onClose }: SidebarProps) {
   const location = useLocation()
   const navigate = useNavigate()
   const { user, logout } = useAuthStore()
@@ -39,66 +45,123 @@ export function Sidebar() {
     navigate('/login')
   }
 
+  const handleNavClick = () => {
+    onClose?.()
+  }
+
   return (
-    <aside className="fixed left-0 top-0 z-40 flex h-screen w-64 flex-col bg-card border-r border-border text-card-foreground">
-      <div className="flex items-center gap-3 border-b border-border p-5">
-        <Avatar className="h-10 w-10 bg-primary">
-          <AvatarFallback className="bg-primary text-primary-foreground text-lg font-bold">
-            {user?.name?.charAt(0) || 'A'}
-          </AvatarFallback>
-        </Avatar>
-        <div>
-          <h2 className="font-semibold">{user?.name || 'Admin Keuangan'}</h2>
-          <p className="text-xs text-muted-foreground">{user?.lembagaName || 'PESANTREN AL-IKHLAS'}</p>
+    <>
+      {/* Sidebar */}
+      <aside className={cn(
+        "fixed left-0 top-0 z-40 flex h-screen w-72 flex-col bg-gradient-to-b from-card via-card to-card/95 border-r border-border/50 text-card-foreground transition-transform duration-300 ease-in-out lg:translate-x-0 shadow-xl",
+        isOpen ? "translate-x-0" : "-translate-x-full"
+      )}>
+        {/* Header with gradient background */}
+        <div className="relative border-b border-border/50 p-5 overflow-hidden">
+          {/* Subtle gradient overlay */}
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-transparent" />
+          
+          <div className="relative flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <Avatar className="h-12 w-12 ring-2 ring-primary/20 ring-offset-2 ring-offset-background">
+                <AvatarFallback className="bg-gradient-to-br from-primary to-primary/80 text-primary-foreground text-lg font-bold">
+                  {user?.name?.charAt(0) || 'A'}
+                </AvatarFallback>
+              </Avatar>
+              <div className="min-w-0">
+                <h2 className="font-semibold text-foreground truncate">{user?.name || 'Admin Keuangan'}</h2>
+                <p className="text-xs text-muted-foreground truncate">{user?.institutionName || 'Pesantren Al-Ikhlas'}</p>
+              </div>
+            </div>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="lg:hidden shrink-0 hover:bg-destructive/10 hover:text-destructive"
+              onClick={onClose}
+            >
+              <X size={20} />
+            </Button>
+          </div>
         </div>
-      </div>
 
-      <nav className="flex-1 space-y-1 p-4">
-        {navItems.map((item) => {
-          const isActive = location.pathname === item.href
-          return (
-            <NavLink key={item.href} to={item.href}>
-              <Button
-                variant={isActive ? 'default' : 'ghost'}
-                className={cn(
-                  'w-full justify-start gap-3',
-                  isActive
-                    ? 'bg-primary text-primary-foreground hover:bg-primary/90'
-                    : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground'
-                )}
-              >
-                {item.icon}
-                {item.label}
-              </Button>
-            </NavLink>
-          )
-        })}
-      </nav>
+        {/* Navigation */}
+        <nav className="flex-1 p-4 overflow-y-auto">
+          <p className="px-3 mb-3 text-xs font-medium text-muted-foreground uppercase tracking-wider">Menu Utama</p>
+          <div className="space-y-1">
+            {navItems.map((item) => {
+              const isActive = location.pathname === item.href
+              return (
+                <NavLink 
+                  key={item.href} 
+                  to={item.href}
+                  onClick={handleNavClick}
+                >
+                  <div
+                    className={cn(
+                      'group flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200',
+                      isActive
+                        ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/25'
+                        : 'text-muted-foreground hover:bg-accent hover:text-foreground'
+                    )}
+                  >
+                    <div className={cn(
+                      'flex items-center justify-center w-9 h-9 rounded-lg transition-all duration-200',
+                      isActive 
+                        ? 'bg-primary-foreground/20' 
+                        : 'bg-muted/50 group-hover:bg-primary/10 group-hover:text-primary'
+                    )}>
+                      {item.icon}
+                    </div>
+                    {item.label}
+                  </div>
+                </NavLink>
+              )
+            })}
+          </div>
+        </nav>
 
-      <div className="border-t border-border p-4 space-y-1">
-        <NavLink to="/admin/pengaturan">
-          <Button
-            variant={location.pathname === '/admin/pengaturan' ? 'default' : 'ghost'}
-            className={cn(
-              'w-full justify-start gap-3',
-              location.pathname === '/admin/pengaturan'
-                ? 'bg-primary text-primary-foreground hover:bg-primary/90'
-                : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground'
-            )}
+        {/* Footer */}
+        <div className="border-t border-border/50 p-4 space-y-1">
+          <NavLink to="/admin/pengaturan" onClick={handleNavClick}>
+            <div
+              className={cn(
+                'group flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200',
+                location.pathname === '/admin/pengaturan'
+                  ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/25'
+                  : 'text-muted-foreground hover:bg-accent hover:text-foreground'
+              )}
+            >
+              <div className={cn(
+                'flex items-center justify-center w-9 h-9 rounded-lg transition-all duration-200',
+                location.pathname === '/admin/pengaturan' 
+                  ? 'bg-primary-foreground/20' 
+                  : 'bg-muted/50 group-hover:bg-primary/10 group-hover:text-primary'
+              )}>
+                <Settings size={20} />
+              </div>
+              Pengaturan
+            </div>
+          </NavLink>
+          
+          <button 
+            onClick={handleLogout}
+            className="w-full group flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-all duration-200"
           >
-            <Settings size={20} />
-            Pengaturan
-          </Button>
-        </NavLink>
-        <Button 
-          variant="ghost" 
-          className="w-full justify-start gap-3 text-muted-foreground hover:bg-accent hover:text-accent-foreground"
-          onClick={handleLogout}
-        >
-          <LogOut size={20} />
-          Keluar
-        </Button>
-      </div>
-    </aside>
+            <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-muted/50 group-hover:bg-destructive/20 transition-all duration-200">
+              <LogOut size={20} />
+            </div>
+            Keluar
+          </button>
+        </div>
+      </aside>
+
+      {/* Overlay for mobile */}
+      {isOpen && (
+        <div
+          className="fixed inset-0 z-30 bg-black/60 backdrop-blur-sm lg:hidden transition-opacity"
+          onClick={onClose}
+        />
+      )}
+    </>
   )
 }

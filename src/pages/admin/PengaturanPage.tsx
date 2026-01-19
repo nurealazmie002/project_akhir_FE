@@ -34,7 +34,7 @@ export function PengaturanPage() {
   })
 
   const [lembagaData, setLembagaData] = useState({
-    name: user?.lembagaName || 'Pesantren Al-Ikhlas',
+    name: user?.institutionName || 'Pesantren Al-Ikhlas',
     address: 'Jl. Pesantren No. 123, Kota',
     phone: '021-1234567',
     email: 'info@pesantren-alikhlas.id',
@@ -69,7 +69,7 @@ export function PengaturanPage() {
       variants={fadeInUp}
       className="space-y-6"
     >
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div className="flex items-center gap-3">
           <div className="rounded-lg bg-purple-500/20 p-2">
             <Settings className="h-6 w-6 text-purple-400" />
@@ -84,7 +84,7 @@ export function PengaturanPage() {
         <Button
           onClick={handleSave}
           disabled={isSaving}
-          className="gap-2 bg-emerald-600 hover:bg-emerald-700"
+          className="gap-2 bg-emerald-600 hover:bg-emerald-700 w-full sm:w-auto"
         >
           <Save size={18} />
           {isSaving ? 'Menyimpan...' : 'Simpan Perubahan'}
