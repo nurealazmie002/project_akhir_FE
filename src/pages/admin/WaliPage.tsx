@@ -34,11 +34,8 @@ import {
 } from 'lucide-react'
 
 const waliSchema = z.object({
-  name: z.string().min(3, 'Nama minimal 3 karakter'),
+  username: z.string().min(3, 'Username minimal 3 karakter'),
   email: z.string().email('Email tidak valid'),
-  phone: z.string().min(10, 'Nomor telepon minimal 10 digit'),
-  address: z.string().optional(),
-  occupation: z.string().optional(),
   password: z.string().min(6, 'Password minimal 6 karakter').optional().or(z.literal('')),
 })
 
@@ -68,10 +65,8 @@ export function WaliPage() {
     try {
       const response = await waliService.getAll()
       setWaliList(response.data)
-      console.log('📚 Fetched wali:', response.data)
     } catch (err: any) {
       setError(err.response?.data?.message || 'Gagal memuat data wali')
-      console.error('Failed to fetch wali:', err)
     } finally {
       setIsLoading(false)
     }
@@ -97,7 +92,6 @@ export function WaliPage() {
         const updateData: any = { ...data }
         if (!updateData.password) delete updateData.password
         await waliService.update(String(editingWali.id), updateData)
-        console.log('✏️ Updated wali')
       } else {
         if (!data.password) {
           setError('Password wajib diisi untuk akun baru')
@@ -105,7 +99,6 @@ export function WaliPage() {
           return
         }
         await waliService.create(data as any)
-        console.log('✅ Created new wali')
       }
       await fetchWali()
       setShowModal(false)
@@ -121,11 +114,8 @@ export function WaliPage() {
   const handleEdit = (wali: Wali) => {
     setEditingWali(wali)
     reset({
-      name: wali.name,
+      username: wali.username || wali.name || '',
       email: wali.email,
-      phone: wali.phone,
-      address: wali.address || '',
-      occupation: wali.occupation || '',
       password: '',
     })
     setShowModal(true)
@@ -141,7 +131,6 @@ export function WaliPage() {
     setIsLoading(true)
     try {
       await waliService.delete(String(deletingWali.id))
-      console.log('🗑️ Deleted wali:', deletingWali.id)
       await fetchWali()
       setDeletingWali(null)
     } catch (err: any) {
@@ -154,11 +143,8 @@ export function WaliPage() {
   const openAddModal = () => {
     setEditingWali(null)
     reset({
-      name: '',
+      username: '',
       email: '',
-      phone: '',
-      address: '',
-      occupation: '',
       password: '',
     })
     setShowModal(true)
@@ -288,7 +274,7 @@ export function WaliPage() {
                         <div className="h-8 w-8 rounded-full bg-purple-500/20 flex items-center justify-center">
                           <User className="h-4 w-4 text-purple-400" />
                         </div>
-                        {wali.name}
+                        {wali.username || wali.name || '-'}
                       </div>
                     </TableCell>
                     <TableCell className="text-muted-foreground">
@@ -362,15 +348,15 @@ export function WaliPage() {
               <div className="space-y-2">
                 <label className="text-sm font-medium text-muted-foreground">
                   <User className="inline h-4 w-4 mr-1" />
-                  Nama Lengkap <span className="text-red-400">*</span>
+                  Username <span className="text-red-400">*</span>
                 </label>
                 <Input
-                  placeholder="Nama lengkap wali"
-                  {...register('name')}
+                  placeholder="Username wali"
+                  {...register('username')}
                 />
-                {errors.name && (
+                {errors.username && (
                   <Badge variant="destructive" className="text-xs">
-                    {errors.name.message}
+                    {errors.username.message}
                   </Badge>
                 )}
               </div>
@@ -392,42 +378,6 @@ export function WaliPage() {
                     </Badge>
                   )}
                 </div>
-
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-muted-foreground">
-                    <Phone className="inline h-4 w-4 mr-1" />
-                    Telepon <span className="text-red-400">*</span>
-                  </label>
-                  <Input
-                    placeholder="08123456789"
-                    {...register('phone')}
-                  />
-                  {errors.phone && (
-                    <Badge variant="destructive" className="text-xs">
-                      {errors.phone.message}
-                    </Badge>
-                  )}
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-muted-foreground">
-                  Alamat
-                </label>
-                <Input
-                  placeholder="Alamat lengkap"
-                  {...register('address')}
-                />
-              </div>
-
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-muted-foreground">
-                  Pekerjaan
-                </label>
-                <Input
-                  placeholder="Pekerjaan wali"
-                  {...register('occupation')}
-                />
               </div>
 
               <div className="space-y-2">

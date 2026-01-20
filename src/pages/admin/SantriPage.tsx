@@ -35,7 +35,6 @@ const santriSchema = z.object({
   nis: z.string().min(1, 'NIS wajib diisi'),
   kelas: z.string().min(1, 'Kelas wajib diisi'),
   gender: z.enum(['Laki-laki', 'Perempuan'], { message: 'Pilih jenis kelamin' }),
-  institutionName: z.string().min(1, 'Nama Lembaga wajib diisi'),
   waliName: z.string().min(1, 'Nama Wali wajib diisi'),
 })
 
@@ -64,16 +63,10 @@ export function SantriPage() {
   const fetchSantri = async () => {
     setIsLoading(true)
     try {
-      const params: any = {}
-      if (user?.institutionName) {
-        params.institutionName = user.institutionName
-      }
-      const response = await santriService.getAll(params)
+      const response = await santriService.getAll()
       setSantriList(response.data)
-      console.log(' Fetched santri:', response.data)
     } catch (err: any) {
       setError(err.response?.data?.message || 'Gagal memuat data santri')
-      console.error('Failed to fetch santri:', err)
     } finally {
       setIsLoading(false)
     }
@@ -98,18 +91,12 @@ export function SantriPage() {
 
     try {
       if (editingSantri) {
-
-        const updatedSantri = await santriService.update(String(editingSantri.id), data)
-        console.log('✏️ Updated santri:', updatedSantri)
+        await santriService.update(String(editingSantri.id), data)
       } else {
-
-        const newSantri = await santriService.create(data)
-        console.log('➕ Created santri:', newSantri)
+        await santriService.create(data)
       }
 
-
       await fetchSantri()
-
       setShowModal(false)
       reset()
       setEditingSantri(null)
@@ -127,7 +114,6 @@ export function SantriPage() {
       nis: santri.nis,
       kelas: santri.kelas,
       gender: santri.gender,
-      institutionName: santri.institutionName || '',
       waliName: santri.waliName,
     })
     setShowModal(true)
@@ -161,7 +147,6 @@ export function SantriPage() {
       nis: '',
       kelas: '',
       gender: 'Laki-laki',
-      institutionName: '',
       waliName: '',
     })
     setShowModal(true)
@@ -466,38 +451,20 @@ export function SantriPage() {
                 )}
               </div>
 
-              <div className="grid gap-4 md:grid-cols-2">
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-muted-foreground">
-                    Nama Lembaga <span className="text-red-400">*</span>
-                  </label>
-                  <Input
-                    placeholder="Pesantren Al-Ikhlas"
-                    className="border-border bg-card text-foreground placeholder:text-muted-foreground"
-                    {...register('institutionName')}
-                  />
-                  {errors.institutionName && (
-                    <Badge variant="destructive" className="text-xs">
-                      {errors.institutionName.message}
-                    </Badge>
-                  )}
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-muted-foreground">
-                    Nama Wali <span className="text-red-400">*</span>
-                  </label>
-                  <Input
-                    placeholder="Nama lengkap wali santri"
-                    className="border-border bg-card text-foreground placeholder:text-muted-foreground"
-                    {...register('waliName')}
-                  />
-                  {errors.waliName && (
-                    <Badge variant="destructive" className="text-xs">
-                      {errors.waliName.message}
-                    </Badge>
-                  )}
-                </div>
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-muted-foreground">
+                  Nama Wali <span className="text-red-400">*</span>
+                </label>
+                <Input
+                  placeholder="Nama lengkap wali santri"
+                  className="border-border bg-card text-foreground placeholder:text-muted-foreground"
+                  {...register('waliName')}
+                />
+                {errors.waliName && (
+                  <Badge variant="destructive" className="text-xs">
+                    {errors.waliName.message}
+                  </Badge>
+                )}
               </div>
 
               <div className="flex justify-end gap-3 pt-4">

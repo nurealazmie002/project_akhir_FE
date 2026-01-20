@@ -20,7 +20,6 @@ export function Header({ title, subtitle, onMenuClick }: HeaderProps) {
   return (
     <header className="sticky top-0 z-30 border-b border-border/50 bg-background/80 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60">
       <div className="flex items-center gap-4 px-4 sm:px-6 lg:px-8 py-4">
-        {/* Hamburger Menu - Only visible on mobile */}
         <Button
           variant="ghost"
           size="icon"
@@ -30,7 +29,6 @@ export function Header({ title, subtitle, onMenuClick }: HeaderProps) {
           <Menu size={22} />
         </Button>
 
-        {/* Title Section */}
         <div className="flex-1 min-w-0">
           <h1 className="text-lg sm:text-xl lg:text-2xl font-bold text-foreground tracking-tight">{title}</h1>
           {subtitle && (
