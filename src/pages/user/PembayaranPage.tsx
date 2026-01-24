@@ -92,7 +92,7 @@ export function PembayaranPage() {
         </Badge>
       )}
 
-      {/* Summary Cards */}
+
       <div className="grid gap-4 md:grid-cols-2">
         <Card className="border-border bg-card">
           <CardContent className="flex items-center gap-4 p-4">
@@ -118,7 +118,7 @@ export function PembayaranPage() {
         </Card>
       </div>
 
-      {/* Search */}
+
       <Card className="border-border bg-card">
         <CardContent className="p-4">
           <div className="relative">
@@ -133,7 +133,7 @@ export function PembayaranPage() {
         </CardContent>
       </Card>
 
-      {/* Table */}
+
       <Card className="border-border bg-card">
         <CardHeader>
           <CardTitle className="text-foreground">Riwayat Pembayaran</CardTitle>

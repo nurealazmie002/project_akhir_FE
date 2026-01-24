@@ -38,7 +38,7 @@ export const userService = {
   },
 
   async getPembayaran(): Promise<PembayaranListResponse> {
-    const response = await api.get<PembayaranListResponse>('/user/pembayaran')
+    const response = await api.get<PembayaranListResponse>('/transaction')
     return response.data
   },
 

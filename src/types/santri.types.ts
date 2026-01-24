@@ -4,8 +4,9 @@ export interface Santri {
   nis: string
   kelas: string
   gender: 'Laki-laki' | 'Perempuan'
-  institutionId?: string
+  institutionId?: number | string
   institutionName?: string
+  waliId?: number | string
   waliName: string
   isActive?: boolean
   status?: 'ACTIVE' | 'INACTIVE' | 'GRADUATED'
@@ -18,7 +19,6 @@ export interface CreateSantriRequest {
   nis: string
   kelas: string
   gender: 'Laki-laki' | 'Perempuan'
-  institutionName: string
   waliName: string
 }
 
@@ -27,9 +27,26 @@ export interface UpdateSantriRequest extends Partial<CreateSantriRequest> {
   isActive?: boolean
 }
 
-export interface SantriListResponse {
-  data: Santri[]
-  total: number
+export interface SantriListMeta {
   page: number
   limit: number
+  total: number
+  totalPages: number
+}
+
+export interface SantriListResponse {
+  data: Santri[]
+  meta: SantriListMeta
+}
+
+export interface BackendSantriResponse {
+  success: boolean
+  message: string
+  data: SantriListResponse
+}
+
+export interface BackendSingleSantriResponse {
+  success: boolean
+  message: string
+  data: Santri
 }

@@ -1,26 +1,28 @@
 export interface Wali {
   id: string | number
-  name: string
+  name?: string
+  username?: string 
   email: string
-  phone: string
+  phone?: string
   address?: string
   occupation?: string
+  role?: string
   isActive?: boolean
-  createdAt: string
-  
+  createdAt?: string
   updatedAt?: string
 }
 
 export interface CreateWaliRequest {
-  name: string
+  name?: string
+  username?: string
   email: string
-  phone: string
-  address?: string
-  occupation?: string
   password: string
 }
 
-export interface UpdateWaliRequest extends Partial<Omit<CreateWaliRequest, 'password'>> {
+export interface UpdateWaliRequest {
+  name?: string
+  username?: string
+  email?: string
   isActive?: boolean
   password?: string
 }
