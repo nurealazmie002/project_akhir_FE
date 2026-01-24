@@ -73,7 +73,7 @@ export function SantriDetailPage() {
         </Button>
       </Link>
 
-      {/* Profile Header */}
+
       <Card className="border-border bg-card">
         <CardContent className="p-6">
           <div className="flex items-start gap-6">
@@ -98,7 +98,7 @@ export function SantriDetailPage() {
         </CardContent>
       </Card>
 
-      {/* Info Cards */}
+
       <div className="grid gap-4 md:grid-cols-2">
         <Card className="border-border bg-card">
           <CardHeader>

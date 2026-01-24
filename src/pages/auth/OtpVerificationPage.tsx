@@ -48,7 +48,6 @@ export function OtpVerificationPage() {
     newOtp[index] = value
     setOtp(newOtp)
 
-    // Clear messages when user starts typing
     if (error) setError(null)
     if (success) setSuccess(null)
 
@@ -74,7 +73,6 @@ export function OtpVerificationPage() {
     })
     setOtp(newOtp)
 
-    // Clear messages
     if (error) setError(null)
     if (success) setSuccess(null)
 

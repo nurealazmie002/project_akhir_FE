@@ -1,6 +1,7 @@
 import { Card, CardContent } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
 import { ArrowDown, ArrowUp, AlertTriangle, CheckCircle, TrendingUp, TrendingDown } from 'lucide-react'
+import { useEffect, useState } from 'react'
 
 interface StatCardProps {
   title: string
@@ -11,6 +12,52 @@ interface StatCardProps {
   icon?: 'up' | 'down' | 'warning' | 'check'
 }
 
+function useAnimatedCounter(endValue: string, duration: number = 1000) {
+  const [displayValue, setDisplayValue] = useState('0')
+  
+  useEffect(() => {
+    const numericMatch = endValue.match(/[\d.,]+/)
+    if (!numericMatch) {
+      setDisplayValue(endValue)
+      return
+    }
+    
+    const numericStr = numericMatch[0].replace(/\./g, '').replace(/,/g, '')
+    const numericValue = parseInt(numericStr, 10)
+    
+    if (isNaN(numericValue)) {
+      setDisplayValue(endValue)
+      return
+    }
+    
+    const startTime = Date.now()
+    const startValue = 0
+    
+    const animate = () => {
+      const elapsed = Date.now() - startTime
+      const progress = Math.min(elapsed / duration, 1)
+      
+      const easeOutQuart = 1 - Math.pow(1 - progress, 4)
+      const currentValue = Math.floor(startValue + (numericValue - startValue) * easeOutQuart)
+      
+      const formattedNumber = new Intl.NumberFormat('id-ID').format(currentValue)
+      const newValue = endValue.replace(numericMatch[0], formattedNumber)
+      
+      setDisplayValue(newValue)
+      
+      if (progress < 1) {
+        requestAnimationFrame(animate)
+      } else {
+        setDisplayValue(endValue)
+      }
+    }
+    
+    requestAnimationFrame(animate)
+  }, [endValue, duration])
+  
+  return displayValue
+}
+
 export function StatCard({
   title,
   value,
@@ -19,6 +66,8 @@ export function StatCard({
   variant = 'default',
   icon,
 }: StatCardProps) {
+  const animatedValue = useAnimatedCounter(value, 800)
+  
   const IconComponent = {
     up: TrendingDown,
     down: TrendingUp,
@@ -36,17 +85,17 @@ export function StatCard({
   return (
     <Card
       className={cn(
-        'group border border-border/50 bg-card hover:shadow-lg hover:shadow-primary/5 transition-all duration-300 overflow-hidden',
+        'group border border-border/50 bg-card hover:shadow-xl hover:shadow-primary/10 hover:-translate-y-1 transition-all duration-300 overflow-hidden',
         variant === 'warning' && 'border-amber-500/30 bg-gradient-to-br from-amber-500/5 to-transparent'
       )}
     >
       <CardContent className="p-5">
-        {/* Header: Title + Icon */}
+
         <div className="flex items-start justify-between mb-4">
           <p className="text-sm font-medium text-muted-foreground leading-tight">{title}</p>
           {icon && (
             <div className={cn(
-              'p-2.5 rounded-xl bg-gradient-to-br shadow-md group-hover:scale-105 transition-transform duration-300',
+              'p-2.5 rounded-xl bg-gradient-to-br shadow-md group-hover:scale-110 group-hover:rotate-3 transition-all duration-300',
               iconConfig[icon]
             )}>
               <IconComponent size={20} className="text-white" />
@@ -54,22 +103,22 @@ export function StatCard({
           )}
         </div>
 
-        {/* Value */}
+
         <p
           className={cn(
-            'text-2xl font-bold tracking-tight mb-2',
+            'text-2xl font-bold tracking-tight mb-2 transition-all duration-300',
             variant === 'warning' ? 'text-amber-500' : 'text-foreground'
           )}
         >
-          {value}
+          {animatedValue}
         </p>
 
-        {/* Change indicator */}
+
         {(change !== undefined || changeLabel) && (
           <div className="flex items-center gap-2 flex-wrap">
             {change !== undefined && (
               <span className={cn(
-                'inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full',
+                'inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full transition-all duration-300',
                 change > 0 
                   ? 'bg-emerald-500/10 text-emerald-500' 
                   : 'bg-rose-500/10 text-rose-500'

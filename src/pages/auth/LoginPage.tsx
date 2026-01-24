@@ -51,14 +51,13 @@ export function LoginPage() {
 
       login(response.user, response.token)
 
-      // Redirect based on role
       const role = response.user.role
       if (role === 'ADMIN') {
         navigate('/admin')
       } else if (role === 'WALI_SANTRI') {
-        navigate('/user')
+        navigate('/user/santri')
       } else {
-        navigate('/admin') // fallback
+        navigate('/admin')
       }
     } catch (err: any) {
       console.error('❌ Login gagal:', err.response?.data || err.message)

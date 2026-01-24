@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -29,7 +30,6 @@ import {
   User,
   Eye,
   EyeOff,
-  Phone,
   Mail
 } from 'lucide-react'
 
@@ -42,6 +42,7 @@ const waliSchema = z.object({
 type WaliFormData = z.infer<typeof waliSchema>
 
 export function WaliPage() {
+  const navigate = useNavigate()
   const [waliList, setWaliList] = useState<Wali[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
@@ -180,7 +181,7 @@ export function WaliPage() {
         </div>
         <Button
           onClick={openAddModal}
-          className="gap-2 bg-emerald-600 hover:bg-emerald-700 w-full sm:w-auto"
+          className="gap-2 bg-gradient-to-r from-purple-500 to-violet-500 hover:from-purple-600 hover:to-violet-600 text-white shadow-lg shadow-purple-500/25 hover:shadow-xl hover:shadow-purple-500/30 hover:-translate-y-0.5 transition-all duration-300 w-full sm:w-auto"
         >
           <Plus size={18} />
           Tambah Wali
@@ -193,24 +194,12 @@ export function WaliPage() {
         </Badge>
       )}
 
-      <div className="grid gap-4 md:grid-cols-4">
-        <Card className="border-border bg-card md:col-span-2">
+
+      <div className="grid gap-4 grid-cols-2 lg:grid-cols-3">
+        <Card className="border-border/50 bg-gradient-to-br from-purple-500/10 to-purple-600/5">
           <CardContent className="flex items-center gap-3 p-4">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <Input
-                placeholder="Cari nama, email, atau telepon..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10"
-              />
-            </div>
-          </CardContent>
-        </Card>
-        <Card className="border-border bg-card">
-          <CardContent className="flex items-center gap-3 p-4">
-            <div className="rounded-lg bg-purple-500/20 p-2">
-              <Users className="h-5 w-5 text-purple-400" />
+            <div className="rounded-xl bg-purple-500/20 p-2.5">
+              <Users className="h-5 w-5 text-purple-500" />
             </div>
             <div>
               <p className="text-2xl font-bold text-foreground">{waliList.length}</p>
@@ -218,10 +207,10 @@ export function WaliPage() {
             </div>
           </CardContent>
         </Card>
-        <Card className="border-border bg-card">
+        <Card className="border-border/50 bg-gradient-to-br from-emerald-500/10 to-emerald-600/5">
           <CardContent className="flex items-center gap-3 p-4">
-            <div className="rounded-lg bg-emerald-500/20 p-2">
-              <UserPlus className="h-5 w-5 text-emerald-400" />
+            <div className="rounded-xl bg-emerald-500/20 p-2.5">
+              <UserPlus className="h-5 w-5 text-emerald-500" />
             </div>
             <div>
               <p className="text-2xl font-bold text-foreground">
@@ -231,98 +220,135 @@ export function WaliPage() {
             </div>
           </CardContent>
         </Card>
+        <Card className="border-border/50 bg-gradient-to-br from-amber-500/10 to-amber-600/5 col-span-2 lg:col-span-1">
+          <CardContent className="flex items-center gap-3 p-4">
+            <div className="rounded-xl bg-amber-500/20 p-2.5">
+              <User className="h-5 w-5 text-amber-500" />
+            </div>
+            <div>
+              <p className="text-2xl font-bold text-foreground">
+                {waliList.filter(w => w.isActive === false).length}
+              </p>
+              <p className="text-xs text-muted-foreground">Wali Nonaktif</p>
+            </div>
+          </CardContent>
+        </Card>
       </div>
 
-      <Card className="border-border bg-card">
-        <CardHeader>
-          <CardTitle className="text-foreground">Daftar Wali</CardTitle>
+      <Card className="border-border/50 bg-card">
+        <CardHeader className="pb-4">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div>
+              <CardTitle className="text-foreground">Daftar Wali</CardTitle>
+              <p className="text-sm text-muted-foreground mt-1">
+                {filteredWali.length} dari {waliList.length} wali
+              </p>
+            </div>
+            <div className="relative w-full sm:w-64">
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                placeholder="Cari nama, email..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10 h-9 bg-muted/50 border-border/50 text-sm"
+              />
+            </div>
+          </div>
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-0">
           <div className="overflow-x-auto">
-          <Table className="min-w-[700px]">
-            <TableHeader>
-              <TableRow className="border-border hover:bg-transparent">
-                <TableHead className="text-muted-foreground">Nama</TableHead>
-                <TableHead className="text-muted-foreground">Email</TableHead>
-                <TableHead className="text-muted-foreground">Telepon</TableHead>
-                <TableHead className="text-muted-foreground">Pekerjaan</TableHead>
-                <TableHead className="text-muted-foreground">Status</TableHead>
-                <TableHead className="text-right text-muted-foreground">Aksi</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {isLoading ? (
-                <TableRow>
-                  <TableCell colSpan={6} className="text-center text-muted-foreground">
-                    Memuat data...
-                  </TableCell>
+            <Table>
+              <TableHeader>
+                <TableRow className="border-border bg-muted/30 hover:bg-muted/30">
+                  <TableHead className="text-xs font-semibold uppercase tracking-wider text-muted-foreground py-3 px-4">Nama</TableHead>
+                  <TableHead className="text-xs font-semibold uppercase tracking-wider text-muted-foreground py-3 px-4">Email</TableHead>
+                  <TableHead className="text-xs font-semibold uppercase tracking-wider text-muted-foreground py-3 px-4">Status</TableHead>
+                  <TableHead className="text-xs font-semibold uppercase tracking-wider text-muted-foreground py-3 px-4 text-right">Aksi</TableHead>
                 </TableRow>
-              ) : filteredWali.length === 0 ? (
-                <TableRow>
-                  <TableCell colSpan={6} className="text-center text-muted-foreground">
-                    {searchQuery ? 'Tidak ada hasil ditemukan' : 'Belum ada data wali'}
-                  </TableCell>
-                </TableRow>
-              ) : (
-                filteredWali.map((wali) => (
-                  <TableRow
-                    key={wali.id}
-                    className="border-border hover:bg-accent"
-                  >
-                    <TableCell className="text-foreground font-medium">
-                      <div className="flex items-center gap-2">
-                        <div className="h-8 w-8 rounded-full bg-purple-500/20 flex items-center justify-center">
-                          <User className="h-4 w-4 text-purple-400" />
-                        </div>
-                        {wali.username || wali.name || '-'}
-                      </div>
-                    </TableCell>
-                    <TableCell className="text-muted-foreground">
-                      <div className="flex items-center gap-1">
-                        <Mail className="h-3 w-3" />
-                        {wali.email}
-                      </div>
-                    </TableCell>
-                    <TableCell className="text-muted-foreground">
-                      <div className="flex items-center gap-1">
-                        <Phone className="h-3 w-3" />
-                        {wali.phone}
-                      </div>
-                    </TableCell>
-                    <TableCell className="text-muted-foreground">
-                      {wali.occupation || '-'}
-                    </TableCell>
-                    <TableCell>{getStatusBadge(wali.isActive)}</TableCell>
-                    <TableCell className="text-right">
-                      <div className="flex justify-end gap-1">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleEdit(wali)}
-                          className="h-8 w-8 p-0 text-muted-foreground hover:text-foreground"
-                        >
-                          <Edit size={16} />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleDelete(wali)}
-                          className="h-8 w-8 p-0 text-red-400 hover:text-red-300"
-                        >
-                          <Trash2 size={16} />
-                        </Button>
+              </TableHeader>
+              <TableBody>
+                {isLoading ? (
+                  <TableRow>
+                    <TableCell colSpan={4} className="h-32 text-center">
+                      <div className="flex flex-col items-center gap-2">
+                        <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent"></div>
+                        <p className="text-muted-foreground">Memuat data...</p>
                       </div>
                     </TableCell>
                   </TableRow>
-                ))
-              )}
-            </TableBody>
-          </Table>
+                ) : filteredWali.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={4} className="h-32 text-center">
+                      <div className="flex flex-col items-center gap-2">
+                        <div className="h-12 w-12 rounded-full bg-muted/50 flex items-center justify-center">
+                          <Search className="h-6 w-6 text-muted-foreground/50" />
+                        </div>
+                        <p className="text-muted-foreground">
+                          {searchQuery ? 'Tidak ada hasil ditemukan' : 'Belum ada data wali'}
+                        </p>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  filteredWali.map((wali, index) => (
+                    <TableRow
+                      key={wali.id}
+                      className={`border-border transition-colors hover:bg-muted/50 ${index % 2 === 0 ? 'bg-transparent' : 'bg-muted/20'}`}
+                    >
+                      <TableCell className="py-3 px-4">
+                        <div className="flex items-center gap-3">
+                          <div className="h-9 w-9 rounded-full bg-gradient-to-br from-purple-500 to-violet-500 flex items-center justify-center text-white text-sm font-medium">
+                            {(wali.username || wali.name || 'W').charAt(0).toUpperCase()}
+                          </div>
+                          <span className="font-medium text-foreground">{wali.username || wali.name || '-'}</span>
+                        </div>
+                      </TableCell>
+                      <TableCell className="py-3 px-4 text-muted-foreground">
+                        <div className="flex items-center gap-1.5">
+                          <Mail className="h-3.5 w-3.5" />
+                          <span className="text-sm">{wali.email}</span>
+                        </div>
+                      </TableCell>
+                      <TableCell className="py-3 px-4">{getStatusBadge(wali.isActive)}</TableCell>
+                      <TableCell className="py-3 px-4 text-right">
+                        <div className="flex justify-end gap-1">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => navigate(`/admin/santri?waliName=${encodeURIComponent(wali.username || wali.name || '')}`)}
+                            className="h-8 w-8 p-0 text-muted-foreground hover:text-emerald-400 hover:bg-emerald-500/10"
+                            title="Lihat Santri"
+                          >
+                            <Users size={15} />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleEdit(wali)}
+                            className="h-8 w-8 p-0 text-muted-foreground hover:text-primary hover:bg-primary/10"
+                          >
+                            <Edit size={15} />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleDelete(wali)}
+                            className="h-8 w-8 p-0 text-muted-foreground hover:text-red-400 hover:bg-red-500/10"
+                          >
+                            <Trash2 size={15} />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
+              </TableBody>
+            </Table>
           </div>
         </CardContent>
       </Card>
 
-      {/* Add/Edit Modal */}
+
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
           <motion.div
@@ -429,7 +455,7 @@ export function WaliPage() {
         </div>
       )}
 
-      {/* Delete Confirmation Modal */}
+
       {deletingWali && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
           <motion.div

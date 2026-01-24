@@ -3,9 +3,8 @@ import { AdminLayout, AuthLayout, UserLayout } from '@/components/layout'
 import { 
   DashboardPage, 
   SantriPage,
+  SantriTransaksiPage,
   WaliPage,
-  PemasukanPage, 
-  PengeluaranPage, 
   LaporanPage, 
   PengaturanPage 
 } from '@/pages/admin'
@@ -24,25 +23,26 @@ export function AppRouter() {
       <Routes>
         <Route path="/" element={<Navigate to="/login" replace />} />
 
-        {/* Auth Routes */}
+
         <Route element={<AuthLayout />}>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/verify-otp" element={<OtpVerificationPage />} />
         </Route>
 
-        {/* Admin Routes */}
+
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<DashboardPage />} />
           <Route path="santri" element={<SantriPage />} />
           <Route path="wali" element={<WaliPage />} />
-          <Route path="pemasukan" element={<PemasukanPage />} />
-          <Route path="pengeluaran" element={<PengeluaranPage />} />
           <Route path="laporan" element={<LaporanPage />} />
           <Route path="pengaturan" element={<PengaturanPage />} />
         </Route>
 
-        {/* User (Wali) Routes */}
+
+        <Route path="/admin/santri/:santriId/transaksi" element={<SantriTransaksiPage />} />
+
+
         <Route path="/user" element={<UserLayout />}>
           <Route index element={<UserDashboardPage />} />
           <Route path="santri" element={<SantriListPage />} />

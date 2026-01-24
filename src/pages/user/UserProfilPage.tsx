@@ -122,7 +122,7 @@ export function UserProfilPage() {
       )}
 
       <div className="grid gap-6 lg:grid-cols-2">
-        {/* Profile Info */}
+
         <Card className="border-border bg-card">
           <CardHeader>
             <CardTitle className="text-foreground">Informasi Profil</CardTitle>
@@ -192,7 +192,7 @@ export function UserProfilPage() {
           </CardContent>
         </Card>
 
-        {/* Change Password */}
+
         <Card className="border-border bg-card">
           <CardHeader>
             <CardTitle className="text-foreground flex items-center gap-2">

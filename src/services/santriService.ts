@@ -9,13 +9,18 @@ import type {
 } from '@/types/santri.types'
 
 export const santriService = {
-  async getAll(params?: { page?: number; limit?: number; search?: string; institutionId?: string; institutionName?: string }): Promise<SantriListResponse> {
+  async getAll(params?: { page?: number; limit?: number; search?: string; institutionId?: string; institutionName?: string; waliName?: string }): Promise<SantriListResponse> {
     const response = await api.get<BackendSantriResponse>('/santri', { params })
     return response.data.data
   },
 
   async getById(id: string): Promise<Santri> {
     const response = await api.get<BackendSingleSantriResponse>(`/santri/${id}`)
+    return response.data.data
+  },
+
+  async getByWaliId(id: string): Promise<SantriListResponse> {
+    const response = await api.get<BackendSantriResponse>(`/santri/wali/${id}`)
     return response.data.data
   },
 
@@ -30,7 +35,7 @@ export const santriService = {
   },
 
   async update(id: string, data: UpdateSantriRequest): Promise<Santri> {
-    const response = await api.patch<BackendSingleSantriResponse>(`/santri/${id}`, data)
+    const response = await api.put<BackendSingleSantriResponse>(`/santri/${id}`, data)
     return response.data.data
   },
 

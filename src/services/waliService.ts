@@ -41,7 +41,7 @@ export const waliService = {
   },
 
   async update(id: string, data: UpdateWaliRequest): Promise<Wali> {
-    const response = await api.patch<BackendResponse<Wali>>(`/users/${id}`, data)
+    const response = await api.put<BackendResponse<Wali>>(`/users/${id}`, data)
     return response.data.data
   },
 
