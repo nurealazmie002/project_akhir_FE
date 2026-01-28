@@ -6,7 +6,8 @@ import {
   SantriTransaksiPage,
   WaliPage,
   LaporanPage, 
-  PengaturanPage 
+  PengaturanPage,
+  InvoicePage
 } from '@/pages/admin'
 import { 
   UserDashboardPage,
@@ -16,6 +17,7 @@ import {
   UserProfilPage
 } from '@/pages/user'
 import { LoginPage, RegisterPage, OtpVerificationPage } from '@/pages/auth'
+import { PaymentResultPage } from '@/pages/payment'
 
 export function AppRouter() {
   return (
@@ -30,11 +32,17 @@ export function AppRouter() {
           <Route path="/verify-otp" element={<OtpVerificationPage />} />
         </Route>
 
+        {/* Payment Callback Routes */}
+        <Route path="/payment/success" element={<PaymentResultPage status="success" />} />
+        <Route path="/payment/failed" element={<PaymentResultPage status="failed" />} />
+        <Route path="/payment/pending" element={<PaymentResultPage status="pending" />} />
+
 
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<DashboardPage />} />
           <Route path="santri" element={<SantriPage />} />
           <Route path="wali" element={<WaliPage />} />
+          <Route path="invoice" element={<InvoicePage />} />
           <Route path="laporan" element={<LaporanPage />} />
           <Route path="pengaturan" element={<PengaturanPage />} />
         </Route>

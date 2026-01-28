@@ -1,8 +1,7 @@
 export function Skeleton({ className }: { className?: string }) {
   return (
     <div 
-      className={`animate-pulse bg-gradient-to-r from-muted/50 via-muted to-muted/50 bg-[length:200%_100%] rounded ${className || ''}`}
-      style={{ animation: 'shimmer 1.5s infinite' }}
+      className={`animate-pulse rounded-md bg-zinc-300 dark:bg-zinc-700 ${className || ''}`}
     />
   )
 }

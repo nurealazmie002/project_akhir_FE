@@ -38,8 +38,33 @@ export const userService = {
   },
 
   async getPembayaran(): Promise<PembayaranListResponse> {
-    const response = await api.get<PembayaranListResponse>('/transaction')
-    return response.data
+    try {
+      // Fetch invoices for the current user's santri
+      const response = await api.get('/invoice')
+      const invoices = response.data.data || []
+      
+      // Map invoices to PembayaranItem format
+      const pembayaranItems: PembayaranItem[] = invoices.map((inv: any) => ({
+        id: inv.id,
+        tanggal: new Date(inv.dueDate || inv.createdAt).toLocaleDateString('id-ID', {
+          day: '2-digit',
+          month: 'short',
+          year: 'numeric'
+        }),
+        jenis: inv.description || inv.items?.[0]?.description || 'Tagihan',
+        jumlah: typeof inv.totalAmount === 'string' ? parseFloat(inv.totalAmount) : inv.totalAmount,
+        status: inv.status === 'PAID' ? 'LUNAS' : inv.status === 'PENDING' || inv.status === 'UNPAID' ? 'PENDING' : 'GAGAL',
+        santriNis: inv.santri?.nis || '-',
+        santriName: inv.santri?.fullname || '-'
+      }))
+      
+      return { data: pembayaranItems, total: pembayaranItems.length }
+    } catch (error: any) {
+      if (error.response?.status === 404) {
+        return { data: [], total: 0 }
+      }
+      throw error
+    }
   },
 
   async updateProfile(data: { name?: string; phone?: string; address?: string }): Promise<any> {

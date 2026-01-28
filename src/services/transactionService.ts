@@ -75,6 +75,11 @@ export const transactionService = {
     })
     return response.data.data.data || []
   },
+
+  async createCategory(data: { name: string; type: TransactionType }): Promise<TransactionCategory> {
+    const response = await api.post<any>('/category', data)
+    return response.data.data
+  },
 }
 
 export default transactionService
