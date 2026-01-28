@@ -65,11 +65,11 @@ export const invoiceService = {
       santriName: invoice.santri?.fullname || 'Unknown',
       santriNis: invoice.santri?.nis || '-',
       institutionName,
-      items: invoice.items.map(item => ({
+      items: (invoice.items || []).map(item => ({
         description: item.description,
-        amount: item.amount * item.quantity
+        amount: Number(item.amount) * Number(item.quantity)
       })),
-      totalAmount: invoice.totalAmount,
+      totalAmount: Number(invoice.totalAmount),
       paidAt: invoice.paidAt || new Date().toISOString(),
       createdAt: invoice.createdAt
     }

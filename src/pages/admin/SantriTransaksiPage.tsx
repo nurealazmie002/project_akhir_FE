@@ -69,7 +69,7 @@ export function SantriTransaksiPage() {
   const [santri, setSantri] = useState<Santri | null>(null)
   const [wali, setWali] = useState<Wali | null>(null)
   const [transactionList, setTransactionList] = useState<Transaction[]>([])
-  const [categories, setCategories] = useState<TransactionCategory[]>([])
+  const [_categories, setCategories] = useState<TransactionCategory[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const [filterType, setFilterType] = useState<FilterType>('ALL')
@@ -108,12 +108,10 @@ export function SantriTransaksiPage() {
           setValue('categoryId', data[0].id, { shouldValidate: true })
         } else {
           try {
-            console.log('No categories found. Creating default for:', watchedType)
             const newCategory = await transactionService.createCategory({
               name: watchedType === 'PEMASUKAN' ? 'Pemasukan Umum' : 'Pengeluaran Umum',
               type: watchedType
             })
-            console.log('Default category created:', newCategory)
             
             // Set the new category immediately
             setCategories([newCategory])
