@@ -21,7 +21,8 @@ import { santriService } from '@/services/santriService'
 import { waliService } from '@/services/waliService'
 import type { 
   Transaction, 
-  TransactionType 
+  TransactionType,
+  TransactionCategory
 } from '@/types/transaction.types'
 import type { Santri } from '@/types'
 import type { Wali } from '@/types/wali.types'
@@ -51,6 +52,7 @@ import {
 
 const transactionSchema = z.object({
   type: z.enum(['PEMASUKAN', 'PENGELUARAN']),
+  categoryId: z.string().min(1, 'Kategori wajib dipilih'),
   description: z.string().optional(),
   amount: z.string().min(1, 'Jumlah wajib diisi'),
   transactionDate: z.string().min(1, 'Tanggal wajib diisi'),
@@ -67,6 +69,7 @@ export function SantriTransaksiPage() {
   const [santri, setSantri] = useState<Santri | null>(null)
   const [wali, setWali] = useState<Wali | null>(null)
   const [transactionList, setTransactionList] = useState<Transaction[]>([])
+  const [categories, setCategories] = useState<TransactionCategory[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const [filterType, setFilterType] = useState<FilterType>('ALL')
@@ -75,6 +78,9 @@ export function SantriTransaksiPage() {
   const [deletingTransaction, setDeletingTransaction] = useState<Transaction | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [selectedType, setSelectedType] = useState<TransactionType>('PEMASUKAN')
+  
+  // Collapsible state for mobile
+  const [isProfileExpanded, setIsProfileExpanded] = useState(false)
 
   const {
     register,
@@ -88,6 +94,45 @@ export function SantriTransaksiPage() {
   })
 
   const watchedType = watch('type')
+
+  // Fetch categories when type changes
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        console.log('Fetching categories for:', watchedType)
+        const data = await transactionService.getCategories(watchedType)
+        console.log('Categories fetched:', data)
+        setCategories(data)
+        
+        if (data.length > 0) {
+          setValue('categoryId', data[0].id, { shouldValidate: true })
+        } else {
+          try {
+            console.log('No categories found. Creating default for:', watchedType)
+            const newCategory = await transactionService.createCategory({
+              name: watchedType === 'PEMASUKAN' ? 'Pemasukan Umum' : 'Pengeluaran Umum',
+              type: watchedType
+            })
+            console.log('Default category created:', newCategory)
+            
+            // Set the new category immediately
+            setCategories([newCategory])
+            setValue('categoryId', newCategory.id, { shouldValidate: true })
+            if (error) setError(null)
+          } catch (createErr) {
+            console.error('Failed to auto-create category:', createErr)
+            setValue('categoryId', '') // Reset to empty if creation fails
+            // Optionally set an error message specific to category creation failure
+          }
+        }
+      } catch (err) {
+        console.error('Failed to fetch categories:', err)
+      }
+    }
+    if (showModal) {
+      fetchCategories()
+    }
+  }, [watchedType, showModal, setValue])
 
   const fetchSantri = async () => {
     if (!santriId) return
@@ -136,6 +181,12 @@ export function SantriTransaksiPage() {
         (item.description?.toLowerCase() || '').includes(searchQuery.toLowerCase()) ||
         (item.category?.name?.toLowerCase() || '').includes(searchQuery.toLowerCase())
     )
+    .sort((a, b) => {
+      const dateA = new Date(a.transactionDate).getTime()
+      const dateB = new Date(b.transactionDate).getTime()
+      if (dateA !== dateB) return dateB - dateA
+      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    })
 
   const totalIncome = transactionList
     .filter(t => t.type === 'PEMASUKAN')
@@ -160,6 +211,7 @@ export function SantriTransaksiPage() {
       const payload: any = {
         santriId: santriId,
         type: data.type,
+        categoryId: data.categoryId,
         amount: parseInt(data.amount),
         description: data.description || undefined,
         transactionDate: data.transactionDate,
@@ -168,6 +220,7 @@ export function SantriTransaksiPage() {
       if (editingTransaction) {
         await transactionService.update(editingTransaction.id, {
           type: data.type,
+          categoryId: data.categoryId,
           amount: parseInt(data.amount),
           description: data.description || undefined,
           transactionDate: data.transactionDate,
@@ -191,6 +244,7 @@ export function SantriTransaksiPage() {
     setSelectedType(item.type)
     reset({
       type: item.type,
+      categoryId: item.categoryId || '',
       description: item.description || '',
       amount: String(item.amount),
       transactionDate: item.transactionDate.split('T')[0],
@@ -222,6 +276,7 @@ export function SantriTransaksiPage() {
     setSelectedType(type)
     reset({
       type: type,
+      categoryId: '',
       description: '',
       amount: '',
       transactionDate: new Date().toISOString().split('T')[0],
@@ -309,29 +364,50 @@ export function SantriTransaksiPage() {
           className="grid gap-6 lg:grid-cols-2"
         >
 
-          <Card className="border-white/10 bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur">
+          <Card 
+            className="border-white/10 bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur cursor-pointer md:cursor-default transition-all duration-300"
+            onClick={() => setIsProfileExpanded(!isProfileExpanded)}
+          >
             <CardHeader className="pb-4">
-              <div className="flex items-center gap-3">
-                <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white text-lg font-bold shadow-lg shadow-blue-500/25">
-                  {santri?.fullname?.charAt(0)?.toUpperCase() || 'S'}
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white text-lg font-bold shadow-lg shadow-blue-500/25">
+                    {santri?.fullname?.charAt(0)?.toUpperCase() || 'S'}
+                  </div>
+                  <div>
+                    <CardTitle className="text-white text-lg">Profil Santri</CardTitle>
+                    <p className="text-sm text-slate-400">Informasi lengkap santri</p>
+                  </div>
                 </div>
-                <div>
-                  <CardTitle className="text-white text-lg">Profil Santri</CardTitle>
-                  <p className="text-sm text-slate-400">Informasi lengkap santri</p>
+                {/* Mobile Chevron */}
+                <div className="md:hidden text-slate-400">
+                  {isProfileExpanded ? <ArrowUpCircle size={20} /> : <ArrowDownCircle size={20} />}
                 </div>
               </div>
             </CardHeader>
             <CardContent className="space-y-4">
               {santri ? (
                 <>
-                  <div className="grid gap-4 sm:grid-cols-2">
-                    <div className="flex items-center gap-3 p-3 rounded-lg bg-white/5">
+                  {/* Name is always visible, but other details are collapsible on mobile */}
+                  <div className="flex items-center gap-3 p-3 rounded-lg bg-white/5 md:hidden">
+                    <User className="h-4 w-4 text-blue-400" />
+                    <div className="flex-1">
+                      <p className="text-xs text-slate-400">Nama Lengkap</p>
+                      <p className="font-medium text-white">{santri.fullname}</p>
+                    </div>
+                  </div>
+
+                  {/* Collapsible Content */}
+                  <div className={`grid gap-4 sm:grid-cols-2 ${isProfileExpanded ? 'block' : 'hidden md:grid'}`}>
+                    {/* Hidden on mobile duplicate name since shown above, visible on desktop */}
+                    <div className="hidden md:flex items-center gap-3 p-3 rounded-lg bg-white/5">
                       <User className="h-4 w-4 text-blue-400" />
                       <div>
                         <p className="text-xs text-slate-400">Nama Lengkap</p>
                         <p className="font-medium text-white">{santri.fullname}</p>
                       </div>
                     </div>
+
                     <div className="flex items-center gap-3 p-3 rounded-lg bg-white/5">
                       <GraduationCap className="h-4 w-4 text-purple-400" />
                       <div>
@@ -354,7 +430,9 @@ export function SantriTransaksiPage() {
                       </div>
                     </div>
                   </div>
-                  <div className="flex items-center gap-2 pt-2">
+
+                  {/* Status Badge - Collapsible on mobile */}
+                  <div className={`flex items-center gap-2 pt-2 ${isProfileExpanded ? 'flex' : 'hidden md:flex'}`}>
                     <span className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium ${
                       santri.isActive ? 'bg-emerald-500/20 text-emerald-400' : 'bg-amber-500/20 text-amber-400'
                     }`}>
@@ -367,6 +445,10 @@ export function SantriTransaksiPage() {
                       </span>
                     )}
                   </div>
+                  
+                  {!isProfileExpanded && (
+                    <p className="text-xs text-center text-slate-500 md:hidden pt-2">Ketuk untuk lihat detail</p>
+                  )}
                 </>
               ) : (
                 <div className="flex items-center justify-center h-32">
@@ -687,27 +769,24 @@ export function SantriTransaksiPage() {
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               <div>
                 <label className="text-sm font-medium text-slate-300">Tipe Transaksi</label>
-                <div className="flex gap-2 mt-2">
-                  <Button
-                    type="button"
-                    variant={watchedType === 'PEMASUKAN' ? 'default' : 'outline'}
-                    className={watchedType === 'PEMASUKAN' ? 'flex-1 bg-emerald-600 hover:bg-emerald-700 border-0' : 'flex-1 border-white/20 text-slate-300'}
-                    onClick={() => { setValue('type', 'PEMASUKAN'); setSelectedType('PEMASUKAN') }}
-                  >
-                    <ArrowDownCircle size={16} className="mr-2" />
-                    Pemasukan
-                  </Button>
-                  <Button
-                    type="button"
-                    variant={watchedType === 'PENGELUARAN' ? 'default' : 'outline'}
-                    className={watchedType === 'PENGELUARAN' ? 'flex-1 bg-red-600 hover:bg-red-700 border-0' : 'flex-1 border-white/20 text-slate-300'}
-                    onClick={() => { setValue('type', 'PENGELUARAN'); setSelectedType('PENGELUARAN') }}
-                  >
-                    <ArrowUpCircle size={16} className="mr-2" />
-                    Pengeluaran
-                  </Button>
-                </div>
+                <select 
+                  {...register('type', {
+                    onChange: (e) => setSelectedType(e.target.value)
+                  })}
+                  className="w-full mt-1 h-9 rounded-md bg-white/5 border border-white/10 text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 px-3 text-sm"
+                >
+                  <option value="PEMASUKAN" className="bg-slate-800 text-white">Pemasukan</option>
+                  <option value="PENGELUARAN" className="bg-slate-800 text-white">Pengeluaran</option>
+                </select>
               </div>
+
+              {/* Hidden category selection for backend requirement */}
+              <input type="hidden" {...register('categoryId')} />
+              {errors.categoryId && (
+                <p className="text-xs text-red-400 bg-red-500/10 p-2 rounded mt-1">
+                  Error: Kategori tidak ditemukan. Pastikan master data kategori sudah diisi.
+                </p>
+              )}
 
               <div>
                 <label className="text-sm font-medium text-slate-300">Keterangan</label>

@@ -8,6 +8,7 @@ import {
   Users,
   UserCheck,
   FileText,
+  Receipt,
   Settings,
   LogOut,
   X,
@@ -24,6 +25,7 @@ const navItems: NavItem[] = [
   { label: 'Dashboard', href: '/admin', icon: <LayoutDashboard size={20} /> },
   { label: 'Data Santri', href: '/admin/santri', icon: <Users size={20} /> },
   { label: 'Data Wali', href: '/admin/wali', icon: <UserCheck size={20} /> },
+  { label: 'Invoice', href: '/admin/invoice', icon: <Receipt size={20} /> },
   { label: 'Laporan', href: '/admin/laporan', icon: <FileText size={20} /> },
 ]
 

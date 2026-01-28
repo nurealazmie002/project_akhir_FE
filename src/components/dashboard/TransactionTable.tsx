@@ -9,15 +9,16 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Button } from '@/components/ui/button'
-import type { Transaction } from '@/types'
 import { cn } from '@/lib/utils'
-import { ArrowRight, Receipt } from 'lucide-react'
+import { ArrowRight, Receipt, Printer } from 'lucide-react'
+import type { DashboardTransaction } from '@/services/dashboardService'
 
 interface TransactionTableProps {
-  transactions: Transaction[]
+  transactions: DashboardTransaction[]
   title: string
   showViewAll?: boolean
   onViewAll?: () => void
+  onRowClick?: (transaction: DashboardTransaction) => void
 }
 
 export function TransactionTable({
@@ -25,12 +26,13 @@ export function TransactionTable({
   title,
   showViewAll = true,
   onViewAll,
+  onRowClick,
 }: TransactionTableProps) {
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('id-ID').format(amount)
   }
 
-  const getStatusConfig = (status: Transaction['status']) => {
+  const getStatusConfig = (status: DashboardTransaction['status']) => {
     switch (status) {
       case 'LUNAS':
         return {
@@ -78,47 +80,74 @@ export function TransactionTable({
         )}
       </CardHeader>
       <CardContent className="p-0">
-        <div className="overflow-x-auto">
-          <Table className="min-w-[500px]">
-            <TableHeader>
-              <TableRow className="border-border/50 hover:bg-transparent">
-                <TableHead className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Tanggal</TableHead>
-                <TableHead className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Santri</TableHead>
-                <TableHead className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Tipe</TableHead>
-                <TableHead className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Jumlah</TableHead>
-                <TableHead className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Status</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {transactions.map((tx, index) => {
-                const statusConfig = getStatusConfig(tx.status)
-                return (
-                  <TableRow 
-                    key={tx.id} 
-                    className={cn(
-                      'border-border/50 transition-colors',
-                      index % 2 === 0 ? 'bg-muted/20' : 'bg-transparent',
-                      'hover:bg-primary/5'
-                    )}
-                  >
-                    <TableCell className="text-sm text-muted-foreground font-medium">{tx.date}</TableCell>
-                    <TableCell className="text-sm font-medium text-foreground">{tx.studentName}</TableCell>
-                    <TableCell className="text-sm text-muted-foreground">{tx.type}</TableCell>
-                    <TableCell className="text-sm font-semibold text-emerald-500">+ Rp {formatCurrency(tx.amount)}</TableCell>
-                    <TableCell>
-                      <Badge 
-                        variant="outline"
-                        className={cn('font-medium border', statusConfig.className)}
-                      >
-                        {statusConfig.label}
-                      </Badge>
-                    </TableCell>
-                  </TableRow>
-                )
-              })}
-            </TableBody>
-          </Table>
-        </div>
+        {transactions.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-12 text-center">
+            <Receipt size={48} className="text-muted-foreground/30 mb-4" />
+            <p className="text-muted-foreground">Belum ada transaksi</p>
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <Table className="min-w-[500px]">
+              <TableHeader>
+                <TableRow className="border-border/50 hover:bg-transparent">
+                  <TableHead className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Tanggal</TableHead>
+                  <TableHead className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Santri</TableHead>
+                  <TableHead className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Tipe</TableHead>
+                  <TableHead className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Jumlah</TableHead>
+                  <TableHead className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Status</TableHead>
+                  {onRowClick && (
+                    <TableHead className="text-xs font-semibold text-muted-foreground uppercase tracking-wider w-16"></TableHead>
+                  )}
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {transactions.map((tx, index) => {
+                  const statusConfig = getStatusConfig(tx.status)
+                  return (
+                    <TableRow 
+                      key={tx.id} 
+                      className={cn(
+                        'border-border/50 transition-colors',
+                        index % 2 === 0 ? 'bg-muted/20' : 'bg-transparent',
+                        'hover:bg-primary/5',
+                        onRowClick && 'cursor-pointer'
+                      )}
+                      onClick={() => onRowClick?.(tx)}
+                    >
+                      <TableCell className="text-sm text-muted-foreground font-medium">{tx.date}</TableCell>
+                      <TableCell className="text-sm font-medium text-foreground">{tx.studentName}</TableCell>
+                      <TableCell className="text-sm text-muted-foreground">{tx.type}</TableCell>
+                      <TableCell className="text-sm font-semibold text-emerald-500">+ Rp {formatCurrency(tx.amount)}</TableCell>
+                      <TableCell>
+                        <Badge 
+                          variant="outline"
+                          className={cn('font-medium border', statusConfig.className)}
+                        >
+                          {statusConfig.label}
+                        </Badge>
+                      </TableCell>
+                      {onRowClick && (
+                        <TableCell>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-8 w-8 p-0 text-muted-foreground hover:text-primary"
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              onRowClick(tx)
+                            }}
+                          >
+                            <Printer size={16} />
+                          </Button>
+                        </TableCell>
+                      )}
+                    </TableRow>
+                  )
+                })}
+              </TableBody>
+            </Table>
+          </div>
+        )}
       </CardContent>
     </Card>
   )
