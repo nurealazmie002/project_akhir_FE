@@ -1,21 +1,15 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Wallet, Receipt, FileText, Loader2 } from 'lucide-react'
+import { Loader2 } from 'lucide-react'
 import { StatCard } from '@/components/dashboard/StatCard'
 import { CashFlowChart } from '@/components/dashboard/CashFlowChart'
 import { TransactionTable } from '@/components/dashboard/TransactionTable'
-import { QuickActions } from '@/components/dashboard/QuickActions'
 import { ReceiptModal } from '@/components/dashboard/ReceiptModal'
 import { motion } from 'framer-motion'
-import { dashboardService, type DashboardStats, type CashFlowData, type DashboardTransaction } from '@/services/dashboardService'
+import { dashboardService, type DashboardStats, type CashFlowData } from '@/services/dashboardService'
+import type { DashboardTransaction } from '@/types/dashboard.types'
 import { invoiceService } from '@/services/invoiceService'
 import type { Receipt as ReceiptType } from '@/types/invoice.types'
-
-const quickActions = [
-  { id: '1', label: 'Input Pembayaran', icon: <Wallet size={18} />, variant: 'primary' as const },
-  { id: '2', label: 'Input Pengeluaran', icon: <Receipt size={18} /> },
-  { id: '3', label: 'Buat Tagihan Baru', icon: <FileText size={18} /> },
-]
 
 export function DashboardPage() {
   const navigate = useNavigate()
@@ -87,22 +81,6 @@ export function DashboardPage() {
     }
   }
 
-  const handleQuickAction = (actionId: string) => {
-    switch (actionId) {
-      case '1':
-        navigate('/admin/santri')
-        break
-      case '2':
-        navigate('/admin/santri')
-        break
-      case '3':
-        navigate('/admin/invoice')
-        break
-      default:
-        break
-    }
-  }
-
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-[60vh]">
@@ -154,21 +132,12 @@ export function DashboardPage() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
-          <div className="lg:col-span-2 h-full">
+          <div className="lg:col-span-3 h-full">
             <CashFlowChart 
               data={cashFlowData} 
               title={`Arus Kas ${chartPeriod} Bulan Terakhir`}
               selectedPeriod={chartPeriod}
               onPeriodChange={handlePeriodChange}
-            />
-          </div>
-
-          <div className="h-full">
-            <QuickActions 
-              actions={quickActions.map(a => ({
-                ...a,
-                onClick: () => handleQuickAction(a.id)
-              }))}
             />
           </div>
         </div>

@@ -1,13 +1,15 @@
+import { useState, useEffect } from 'react'
 import { NavLink, useLocation, useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
-import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { cn } from '@/lib/utils'
 import { useAuthStore } from '@/stores/authStore'
+import { profileService } from '@/services/profileService'
 import {
   LayoutDashboard,
   Users,
   UserCheck,
-  FileText,
+
   Receipt,
   Settings,
   LogOut,
@@ -26,7 +28,7 @@ const navItems: NavItem[] = [
   { label: 'Data Santri', href: '/admin/santri', icon: <Users size={20} /> },
   { label: 'Data Wali', href: '/admin/wali', icon: <UserCheck size={20} /> },
   { label: 'Invoice', href: '/admin/invoice', icon: <Receipt size={20} /> },
-  { label: 'Laporan', href: '/admin/laporan', icon: <FileText size={20} /> },
+
 ]
 
 interface SidebarProps {
@@ -38,6 +40,24 @@ export function Sidebar({ isOpen = false, onClose }: SidebarProps) {
   const location = useLocation()
   const navigate = useNavigate()
   const { user, logout } = useAuthStore()
+  const [profilePicture, setProfilePicture] = useState<string | null>(null)
+  const [profileName, setProfileName] = useState<string | null>(null)
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const profile = await profileService.getMyProfile()
+        if (profile?.profile_picture_url) {
+          setProfilePicture(profile.profile_picture_url)
+        }
+        if (profile?.name) {
+          setProfileName(profile.name)
+        }
+      } catch (err) {
+      }
+    }
+    fetchProfile()
+  }, [location.pathname])
 
   const handleLogout = () => {
     logout()
@@ -79,12 +99,13 @@ export function Sidebar({ isOpen = false, onClose }: SidebarProps) {
         <div className="px-5 py-4 border-b border-white/5">
           <div className="flex items-center gap-3 p-3 rounded-xl bg-white/5 backdrop-blur">
             <Avatar className="h-10 w-10 ring-2 ring-emerald-500/30">
+              {profilePicture && <AvatarImage src={profilePicture} alt="Profile" />}
               <AvatarFallback className="bg-gradient-to-br from-emerald-500 to-teal-600 text-white font-semibold">
-                {user?.name?.charAt(0) || 'A'}
+                {(profileName || user?.name)?.charAt(0) || 'A'}
               </AvatarFallback>
             </Avatar>
             <div className="min-w-0 flex-1">
-              <p className="font-medium text-sm text-white truncate">{user?.name || 'Admin'}</p>
+              <p className="font-medium text-sm text-white truncate">{profileName || user?.name || 'Admin'}</p>
               <p className="text-xs text-slate-400 truncate">{user?.institutionName || 'Administrator'}</p>
             </div>
           </div>

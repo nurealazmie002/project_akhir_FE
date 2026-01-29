@@ -79,7 +79,6 @@ export function SantriTransaksiPage() {
   const [error, setError] = useState<string | null>(null)
   const [selectedType, setSelectedType] = useState<TransactionType>('PEMASUKAN')
   
-  // Collapsible state for mobile
   const [isProfileExpanded, setIsProfileExpanded] = useState(false)
 
   const {
@@ -95,7 +94,6 @@ export function SantriTransaksiPage() {
 
   const watchedType = watch('type')
 
-  // Fetch categories when type changes
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -113,14 +111,12 @@ export function SantriTransaksiPage() {
               type: watchedType
             })
             
-            // Set the new category immediately
             setCategories([newCategory])
             setValue('categoryId', newCategory.id, { shouldValidate: true })
             if (error) setError(null)
           } catch (createErr) {
             console.error('Failed to auto-create category:', createErr)
-            setValue('categoryId', '') // Reset to empty if creation fails
-            // Optionally set an error message specific to category creation failure
+            setValue('categoryId', '')
           }
         }
       } catch (err) {

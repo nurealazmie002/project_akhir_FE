@@ -1,5 +1,6 @@
 import api from './api'
 import type { Transaction } from '@/types/transaction.types'
+import type { DashboardTransaction } from '@/types/dashboard.types'
 
 export interface DashboardStats {
   totalIncome: number
@@ -19,16 +20,7 @@ export interface CashFlowData {
   expense: number
 }
 
-export interface DashboardTransaction {
-  id: string
-  date: string
-  studentName: string
-  studentNis: string
-  type: string
-  amount: number
-  status: 'LUNAS' | 'PENDING' | 'GAGAL'
-  originalTransaction?: Transaction
-}
+
 
 const monthNames = ['JAN', 'FEB', 'MAR', 'APR', 'MEI', 'JUN', 'JUL', 'AGU', 'SEP', 'OKT', 'NOV', 'DES']
 const monthNamesFull = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember']
@@ -110,7 +102,6 @@ export const dashboardService = {
       const transactions: Transaction[] = response.data.data || []
       const monthlyData: Map<string, CashFlowData> = new Map()
       
-      // Build month keys - current month on LEFT, older months to RIGHT
       const now = new Date()
       const orderedKeys: string[] = []
       
@@ -128,7 +119,6 @@ export const dashboardService = {
         })
       }
       
-      // Aggregate transactions into months
       transactions.forEach(t => {
         const date = new Date(t.transactionDate)
         const key = `${date.getFullYear()}-${date.getMonth()}`
@@ -144,7 +134,6 @@ export const dashboardService = {
         }
       })
       
-      // Return in order (oldest to newest, left to right)
       return orderedKeys.map(key => monthlyData.get(key)!)
     } catch (error) {
       console.error('Failed to fetch cash flow data:', error)

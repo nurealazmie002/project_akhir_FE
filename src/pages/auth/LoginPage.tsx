@@ -77,7 +77,6 @@ export function LoginPage() {
       setIsLoading(false)
       setIsError(true)
       
-      // Capture the actual error message from backend
       const errorMessage = err.response?.data?.message || err.message || 'Email atau password salah'
       setError(errorMessage)
     }

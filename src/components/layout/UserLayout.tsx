@@ -1,9 +1,10 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Outlet, NavLink, useNavigate, useLocation } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
-import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { cn } from '@/lib/utils'
 import { useAuthStore } from '@/stores/authStore'
+import { profileService } from '@/services/profileService'
 import {
   LayoutDashboard,
   Users,
@@ -30,8 +31,29 @@ const navItems: NavItem[] = [
 export function UserLayout() {
   const location = useLocation()
   const navigate = useNavigate()
-  const { user, logout } = useAuthStore()
+  const { user, updateUser, logout } = useAuthStore() // Add updateUser
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [profilePicture, setProfilePicture] = useState<string | null>(null)
+  
+  // Fetch profile data and sync auth store
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const profile = await profileService.getMyProfile()
+        if (profile) {
+          if (profile.profile_picture_url) {
+            setProfilePicture(profile.profile_picture_url)
+          }
+          // Sync profile name to auth store
+          if (profile.name) {
+            updateUser({ name: profile.name })
+          }
+        }
+      } catch (err) {
+      }
+    }
+    fetchProfile()
+  }, [location.pathname])
 
   const handleLogout = () => {
     logout()
@@ -54,12 +76,13 @@ export function UserLayout() {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <Avatar className="h-11 w-11 ring-2 ring-emerald-500/30">
+                {profilePicture && <AvatarImage src={profilePicture} alt="Profile" />}
                 <AvatarFallback className="bg-gradient-to-br from-emerald-500 to-teal-600 text-white font-semibold">
-                  {user?.username?.charAt(0)?.toUpperCase() || 'U'}
+                  {(user?.name || user?.username)?.charAt(0)?.toUpperCase() || 'U'}
                 </AvatarFallback>
               </Avatar>
               <div className="min-w-0">
-                <h2 className="font-bold text-white truncate">{user?.username || 'User'}</h2>
+                <h2 className="font-bold text-white truncate">{user?.name || user?.username || 'User'}</h2>
                 <p className="text-xs text-slate-400 truncate">Portal Wali Santri</p>
               </div>
             </div>
@@ -162,7 +185,7 @@ export function UserLayout() {
             </Button>
             <div className="flex-1 min-w-0">
               <h1 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white tracking-tight">Portal Wali Santri</h1>
-              <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">Selamat datang, <span className="text-emerald-600 dark:text-emerald-400 font-medium">{user?.username || 'User'}</span></p>
+              <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">Selamat datang, <span className="text-emerald-600 dark:text-emerald-400 font-medium">{user?.name || user?.username || 'User'}</span></p>
             </div>
           </div>
         </header>

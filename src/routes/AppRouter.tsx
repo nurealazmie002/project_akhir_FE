@@ -5,9 +5,8 @@ import {
   SantriPage,
   SantriTransaksiPage,
   WaliPage,
-  LaporanPage, 
-  PengaturanPage,
-  InvoicePage
+  InvoicePage,
+  PengaturanPage
 } from '@/pages/admin'
 import { 
   UserDashboardPage,
@@ -18,12 +17,13 @@ import {
 } from '@/pages/user'
 import { LoginPage, RegisterPage, OtpVerificationPage } from '@/pages/auth'
 import { PaymentResultPage } from '@/pages/payment'
+import { LandingPage } from '@/pages/LandingPage'
 
 export function AppRouter() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Navigate to="/login" replace />} />
+        <Route path="/" element={<LandingPage />} />
 
 
         <Route element={<AuthLayout />}>
@@ -43,7 +43,6 @@ export function AppRouter() {
           <Route path="santri" element={<SantriPage />} />
           <Route path="wali" element={<WaliPage />} />
           <Route path="invoice" element={<InvoicePage />} />
-          <Route path="laporan" element={<LaporanPage />} />
           <Route path="pengaturan" element={<PengaturanPage />} />
         </Route>
 

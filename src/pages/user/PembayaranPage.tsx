@@ -82,27 +82,22 @@ export function PembayaranPage() {
     setError(null)
     
     try {
-      // 1. Create payment to get Snap token
       const paymentData = await paymentService.createPayment({
         invoiceId: String(item.id),
         amount: item.jumlah
       })
 
-      // 2. Open Snap popup
       paymentService.openSnapPayment(paymentData.snapToken, {
         onSuccess: async (result) => {
           console.log('Payment success:', result)
-          // Redirect to success page
           window.location.href = '/payment/success?order_id=' + result.order_id
         },
         onPending: (result) => {
           console.log('Payment pending:', result)
-          // Redirect to pending page
           window.location.href = '/payment/pending?order_id=' + result.order_id
         },
         onError: (result) => {
           console.error('Payment error:', result)
-          // Redirect to failed page
           window.location.href = '/payment/failed?order_id=' + result.order_id
         },
         onClose: () => {

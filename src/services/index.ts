@@ -3,5 +3,5 @@ export { authService } from './authService'
 export { dashboardService } from './dashboardService'
 export { invoiceService } from './invoiceService'
 export { paymentService } from './paymentService'
-
-
+export { profileService } from './profileService'
+export { institutionService } from './institutionService'

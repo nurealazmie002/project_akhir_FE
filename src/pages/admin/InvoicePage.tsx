@@ -47,7 +47,6 @@ export function InvoicePage() {
   const [error, setError] = useState<string | null>(null)
   const [isProcessingPayment, setIsProcessingPayment] = useState(false)
 
-  // Form state
   const [formData, setFormData] = useState({
     santriId: '',
     items: [{ description: '', amount: 0, quantity: 1 }],
@@ -94,7 +93,6 @@ export function InvoicePage() {
     })
   }
 
-  // Helper to get santri name from santriList by ID
   const getSantriName = (invoice: Invoice): string => {
     if (invoice.santri?.fullname) return invoice.santri.fullname
     const santri = santriList.find(s => s.id === invoice.santriId)
@@ -152,14 +150,12 @@ export function InvoicePage() {
 
     setIsSaving(true)
     try {
-      // Ensure all amounts and quantities are numbers
       const parsedItems = formData.items.map(item => ({
         description: item.description,
         amount: typeof item.amount === 'string' ? parseFloat(item.amount) || 0 : Number(item.amount),
         quantity: typeof item.quantity === 'string' ? parseInt(item.quantity) || 1 : Number(item.quantity)
       }))
       
-      // Calculate total amount
       const totalAmount = parsedItems.reduce((sum, item) => sum + (item.amount * item.quantity), 0)
       
       await invoiceService.create({
@@ -201,7 +197,6 @@ export function InvoicePage() {
     setIsProcessingPayment(true)
     setError(null)
     try {
-      // Calculate amount - fallback to items sum if totalAmount is undefined
       let amount = 0
       if (invoice.totalAmount !== undefined && invoice.totalAmount !== null) {
         amount = typeof invoice.totalAmount === 'string' 
@@ -228,7 +223,6 @@ export function InvoicePage() {
         amount: amount
       })
       
-      // Open Midtrans Snap popup
       paymentService.openSnapPayment(paymentData.snapToken, {
         onSuccess: async (result) => {
           console.log('Payment success:', result)

@@ -11,7 +11,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { ArrowRight, Receipt, Printer } from 'lucide-react'
-import type { DashboardTransaction } from '@/services/dashboardService'
+import type { DashboardTransaction } from '@/types/dashboard.types'
 
 interface TransactionTableProps {
   transactions: DashboardTransaction[]

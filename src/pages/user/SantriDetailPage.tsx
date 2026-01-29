@@ -23,7 +23,6 @@ export function SantriDetailPage() {
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   
-  // Collapsible state for mobile
   const [isExpanded, setIsExpanded] = useState(false)
 
   useEffect(() => {

@@ -39,11 +39,9 @@ export const userService = {
 
   async getPembayaran(): Promise<PembayaranListResponse> {
     try {
-      // Fetch invoices for the current user's santri
       const response = await api.get('/invoice')
       const invoices = response.data.data || []
       
-      // Map invoices to PembayaranItem format
       const pembayaranItems: PembayaranItem[] = invoices.map((inv: any) => ({
         id: inv.id,
         tanggal: new Date(inv.dueDate || inv.createdAt).toLocaleDateString('id-ID', {
@@ -67,13 +65,20 @@ export const userService = {
     }
   },
 
-  async updateProfile(data: { name?: string; phone?: string; address?: string }): Promise<any> {
-    const response = await api.patch('/user/me', data)
+  async updateProfile(userId: string, data: { name?: string; phone?: string; address?: string }): Promise<any> {
+    const formData = new FormData()
+    if (data.name) formData.append('name', data.name)
+    if (data.address) formData.append('address', data.address)
+    if (data.phone) formData.append('phone', data.phone)
+    
+    const response = await api.put(`/profile/${userId}`, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    })
     return response.data
   },
 
   async changePassword(data: { currentPassword: string; newPassword: string }): Promise<any> {
-    const response = await api.patch('/user/password', data)
+    const response = await api.patch('/auth/change-password', data)
     return response.data
   },
 }

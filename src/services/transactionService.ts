@@ -31,7 +31,7 @@ export const transactionService = {
   async getAll(params?: GetTransactionsParams): Promise<TransactionListResult> {
     const response = await api.get<BackendTransactionResponse>('/transaction', { params })
     return {
-      data: response.data.data,
+      data: response.data.data || [],
       pagination: response.data.pagination
     }
   },
