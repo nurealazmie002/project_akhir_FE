@@ -234,8 +234,6 @@ export function UserProfilPage() {
 
               <div className="space-y-2">
                 <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-<<<<<<< HEAD
-=======
                   <User className="h-4 w-4" /> Jenis Kelamin
                 </label>
                 <select
@@ -254,19 +252,6 @@ export function UserProfilPage() {
 
               <div className="space-y-2">
                 <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-                  <Mail className="h-4 w-4" /> Email
-                </label>
-                <Input
-                  value={user?.email || ''}
-                  disabled
-                  className="opacity-60"
-                />
-                <p className="text-xs text-muted-foreground">Email tidak dapat diubah</p>
-              </div>
-
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">
->>>>>>> eff7022f5172357b0f37fb39bc879750952329a7
                   <Phone className="h-4 w-4" /> Telepon
                 </label>
                 <Input

@@ -307,8 +307,6 @@ export function PengaturanPage() {
                     />
                   </div>
                   <div className="space-y-2">
-<<<<<<< HEAD
-=======
                     <label className="text-sm font-medium text-muted-foreground">Jenis Kelamin</label>
                     <select
                       value={profilData.gender}
@@ -320,17 +318,6 @@ export function PengaturanPage() {
                     </select>
                   </div>
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-muted-foreground">Email</label>
-                    <Input
-                      type="email"
-                      value={user?.email || ''}
-                      disabled
-                      className="border-border bg-card text-foreground opacity-60"
-                    />
-                    <p className="text-xs text-muted-foreground">Email tidak dapat diubah</p>
-                  </div>
-                  <div className="space-y-2">
->>>>>>> eff7022f5172357b0f37fb39bc879750952329a7
                     <label className="text-sm font-medium text-muted-foreground">No. Telepon</label>
                     <Input
                       value={profilData.phone}
