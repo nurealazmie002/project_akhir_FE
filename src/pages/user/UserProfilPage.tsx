@@ -12,7 +12,6 @@ import { userService } from '@/services/userService'
 import { fadeInUp } from '@/lib/animations'
 import { 
   User, 
-  Mail,
   Phone,
   MapPin,
   Lock,
@@ -141,18 +140,6 @@ export function UserProfilPage() {
                     {profileForm.formState.errors.name.message}
                   </Badge>
                 )}
-              </div>
-
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-                  <Mail className="h-4 w-4" /> Email
-                </label>
-                <Input
-                  value={user?.email || ''}
-                  disabled
-                  className="opacity-60"
-                />
-                <p className="text-xs text-muted-foreground">Email tidak dapat diubah</p>
               </div>
 
               <div className="space-y-2">

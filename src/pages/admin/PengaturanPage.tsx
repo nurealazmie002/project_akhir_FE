@@ -157,15 +157,6 @@ export function PengaturanPage() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-muted-foreground">Email</label>
-                    <Input
-                      type="email"
-                      value={profilData.email}
-                      onChange={(e) => setProfilData({ ...profilData, email: e.target.value })}
-                      className="border-border bg-card text-foreground"
-                    />
-                  </div>
-                  <div className="space-y-2">
                     <label className="text-sm font-medium text-muted-foreground">No. Telepon</label>
                     <Input
                       value={profilData.phone}
