@@ -3,6 +3,7 @@ import { motion } from 'framer-motion'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
 import {
   Table,
   TableBody,
@@ -12,13 +13,16 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { userService, type PembayaranItem } from '@/services/userService'
+import { paymentService } from '@/services/paymentService'
 import { fadeInUp } from '@/lib/animations'
 import { 
   Receipt, 
   Search,
   CheckCircle,
   Clock,
-  XCircle
+  XCircle,
+  CreditCard,
+  Loader2
 } from 'lucide-react'
 
 export function PembayaranPage() {
@@ -26,19 +30,23 @@ export function PembayaranPage() {
   const [searchQuery, setSearchQuery] = useState('')
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [processingPaymentId, setProcessingPaymentId] = useState<string | number | null>(null)
+
+  const fetchData = async () => {
+    setIsLoading(true)
+    try {
+      const response = await userService.getPembayaran()
+      console.log('Pembayaran response:', response)
+      setPembayaranList(response.data)
+    } catch (err: any) {
+      console.error('Error fetching pembayaran:', err)
+      setError(err.response?.data?.message || 'Gagal memuat data')
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
   useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true)
-      try {
-        const response = await userService.getPembayaran()
-        setPembayaranList(response.data)
-      } catch (err: any) {
-        setError(err.response?.data?.message || 'Gagal memuat data')
-      } finally {
-        setIsLoading(false)
-      }
-    }
     fetchData()
   }, [])
 
@@ -69,6 +77,42 @@ export function PembayaranPage() {
     }
   }
 
+  const handlePay = async (item: PembayaranItem) => {
+    setProcessingPaymentId(item.id)
+    setError(null)
+    
+    try {
+      const paymentData = await paymentService.createPayment({
+        invoiceId: String(item.id),
+        amount: item.jumlah
+      })
+
+      paymentService.openSnapPayment(paymentData.snapToken, {
+        onSuccess: async (result) => {
+          console.log('Payment success:', result)
+          window.location.href = '/payment/success?order_id=' + result.order_id
+        },
+        onPending: (result) => {
+          console.log('Payment pending:', result)
+          window.location.href = '/payment/pending?order_id=' + result.order_id
+        },
+        onError: (result) => {
+          console.error('Payment error:', result)
+          window.location.href = '/payment/failed?order_id=' + result.order_id
+        },
+        onClose: () => {
+          console.log('Payment popup closed')
+          setProcessingPaymentId(null)
+          fetchData() // Refresh data when closed without finish
+        }
+      })
+    } catch (err: any) {
+      console.error('Payment creation failed:', err)
+      setError(err.response?.data?.message || 'Gagal memproses pembayaran')
+      setProcessingPaymentId(null)
+    }
+  }
+
   return (
     <motion.div
       initial="initial"
@@ -92,7 +136,7 @@ export function PembayaranPage() {
         </Badge>
       )}
 
-      {/* Summary Cards */}
+
       <div className="grid gap-4 md:grid-cols-2">
         <Card className="border-border bg-card">
           <CardContent className="flex items-center gap-4 p-4">
@@ -118,7 +162,7 @@ export function PembayaranPage() {
         </Card>
       </div>
 
-      {/* Search */}
+
       <Card className="border-border bg-card">
         <CardContent className="p-4">
           <div className="relative">
@@ -133,7 +177,7 @@ export function PembayaranPage() {
         </CardContent>
       </Card>
 
-      {/* Table */}
+
       <Card className="border-border bg-card">
         <CardHeader>
           <CardTitle className="text-foreground">Riwayat Pembayaran</CardTitle>
@@ -147,18 +191,19 @@ export function PembayaranPage() {
                 <TableHead className="text-muted-foreground">Jenis</TableHead>
                 <TableHead className="text-muted-foreground">Jumlah</TableHead>
                 <TableHead className="text-muted-foreground">Status</TableHead>
+                <TableHead className="text-muted-foreground text-right">Aksi</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {isLoading ? (
                 <TableRow>
-                  <TableCell colSpan={5} className="text-center text-muted-foreground">
+                  <TableCell colSpan={6} className="text-center text-muted-foreground">
                     Memuat data...
                   </TableCell>
                 </TableRow>
               ) : filteredPembayaran.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={5} className="text-center text-muted-foreground">
+                  <TableCell colSpan={6} className="text-center text-muted-foreground">
                     {searchQuery ? 'Tidak ada hasil ditemukan' : 'Belum ada riwayat pembayaran'}
                   </TableCell>
                 </TableRow>
@@ -187,6 +232,23 @@ export function PembayaranPage() {
                           {item.status}
                         </Badge>
                       </div>
+                    </TableCell>
+                    <TableCell className="text-right">
+                      {item.status === 'PENDING' && (
+                        <Button
+                          size="sm"
+                          className="bg-emerald-500 hover:bg-emerald-600 text-white"
+                          onClick={() => handlePay(item)}
+                          disabled={processingPaymentId === item.id}
+                        >
+                          {processingPaymentId === item.id ? (
+                            <Loader2 className="h-4 w-4 animate-spin" />
+                          ) : (
+                            <CreditCard className="h-4 w-4 mr-1" />
+                          )}
+                          Bayar
+                        </Button>
+                      )}
                     </TableCell>
                   </TableRow>
                 ))

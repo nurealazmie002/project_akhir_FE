@@ -1,10 +1,14 @@
-export interface Transaction {
+import type { Transaction } from './transaction.types'
+
+export interface DashboardTransaction {
   id: string
   date: string
   studentName: string
+  studentNis: string
   type: string
   amount: number
   status: 'LUNAS' | 'PENDING' | 'GAGAL'
+  originalTransaction?: Transaction
 }
 
 export interface CashFlowData {

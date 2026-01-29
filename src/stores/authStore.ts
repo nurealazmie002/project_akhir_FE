@@ -10,6 +10,10 @@ export const useAuthStore = create<AuthState>()(
       isAuthenticated: false,
       login: (user: User, token: string) =>
         set({ user, token, isAuthenticated: true }),
+      updateUser: (userData: Partial<User>) =>
+        set((state) => ({
+          user: state.user ? { ...state.user, ...userData } : null,
+        })),
       logout: () =>
         set({ user: null, token: null, isAuthenticated: false }),
     }),

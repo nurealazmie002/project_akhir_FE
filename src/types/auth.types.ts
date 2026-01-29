@@ -3,13 +3,15 @@ export type UserRole = 'ADMIN' | 'WALI_SANTRI'
 export type AccountStatus = 'ACTIVE' | 'BANNED' | 'SUSPENDED'
 
 export interface User {
-  id: string | number
+  id: string 
   email: string
-  name: string
+  name?: string
+  username?: string
   role: UserRole
   status?: AccountStatus
-  lembagaId?: string
+  institutionId?: string
   institutionName?: string
+  lembagaId?: string 
   createdAt?: string
   bannedUntil?: string
 }
@@ -37,5 +39,6 @@ export interface AuthState {
   token: string | null
   isAuthenticated: boolean
   login: (user: User, token: string) => void
+  updateUser: (user: Partial<User>) => void
   logout: () => void
 }

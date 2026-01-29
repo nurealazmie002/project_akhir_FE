@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import { useAuthStore } from '@/stores/authStore'
-import { userService } from '@/services/userService'
+import { profileService } from '@/services/profileService'
 import { fadeInUp } from '@/lib/animations'
 import { 
   User, 
@@ -22,8 +22,9 @@ import {
 
 const profileSchema = z.object({
   name: z.string().min(3, 'Nama minimal 3 karakter'),
-  phone: z.string().min(10, 'Nomor telepon minimal 10 digit'),
-  address: z.string().optional(),
+  gender: z.enum(['male', 'female']),
+  phone: z.string().optional(),
+  address: z.string().min(1, 'Alamat wajib diisi'),
 })
 
 const passwordSchema = z.object({
@@ -45,11 +46,24 @@ export function UserProfilPage() {
   const [showNewPassword, setShowNewPassword] = useState(false)
   const [successMessage, setSuccessMessage] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const [profileId, setProfileId] = useState<string | null>(null)
+  const [profilePicture, setProfilePicture] = useState<File | null>(null)
+  const [profilePreview, setProfilePreview] = useState<string | null>(null)
+  const profilePictureRef = useRef<HTMLInputElement>(null)
+
+  const handleProfilePictureChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file) {
+      setProfilePicture(file)
+      setProfilePreview(URL.createObjectURL(file))
+    }
+  }
 
   const profileForm = useForm<ProfileFormData>({
     resolver: zodResolver(profileSchema),
     defaultValues: {
       name: user?.name || '',
+      gender: 'male' as const,
       phone: '',
       address: '',
     }
@@ -59,31 +73,72 @@ export function UserProfilPage() {
     resolver: zodResolver(passwordSchema),
   })
 
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const profile = await profileService.getMyProfile()
+        if (profile) {
+          setProfileId(profile.id)
+          if (profile.profile_picture_url) {
+            setProfilePreview(profile.profile_picture_url)
+          }
+          profileForm.reset({
+            name: profile.name || user?.name || '',
+            gender: (profile.gender?.toLowerCase() as 'male' | 'female') || 'male',
+            phone: profile.phone || '',
+            address: profile.address || '',
+          })
+        }
+      } catch (err) {
+        console.log('No existing profile found')
+      }
+    }
+    fetchProfile()
+  }, [user])
+
   const onProfileSubmit = async (data: ProfileFormData) => {
     setIsLoading(true)
     setError(null)
     setSuccessMessage(null)
     try {
-      await userService.updateProfile(data)
+      if (profileId) {
+        await profileService.update(profileId, {
+          name: data.name,
+          address: data.address,
+          gender: data.gender,
+          phone: data.phone || undefined,
+        }, profilePicture || undefined)
+      } else {
+        if (!profilePicture) {
+          setError('Foto profil wajib diupload untuk profil baru')
+          setIsLoading(false)
+          return
+        }
+        const newProfile = await profileService.create({
+          name: data.name,
+          address: data.address,
+          gender: data.gender,
+          phone: data.phone || undefined,
+        }, profilePicture)
+        setProfileId(newProfile.id)
+      }
+      setProfilePicture(null) // Reset file after successful upload
       setSuccessMessage('Profil berhasil diperbarui')
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Gagal memperbarui profil')
+      console.error('Profile update error:', err)
+      const errorMsg = err.response?.data?.message || err.response?.data?.error || err.message || 'Gagal memperbarui profil'
+      setError(errorMsg)
     } finally {
       setIsLoading(false)
     }
   }
 
-  const onPasswordSubmit = async (data: PasswordFormData) => {
+  const onPasswordSubmit = async (_data: PasswordFormData) => {
     setIsLoading(true)
     setError(null)
     setSuccessMessage(null)
     try {
-      await userService.changePassword({
-        currentPassword: data.currentPassword,
-        newPassword: data.newPassword,
-      })
-      setSuccessMessage('Password berhasil diubah')
-      passwordForm.reset()
+      setError('Fitur ubah password belum tersedia')
     } catch (err: any) {
       setError(err.response?.data?.message || 'Gagal mengubah password')
     } finally {
@@ -121,13 +176,48 @@ export function UserProfilPage() {
       )}
 
       <div className="grid gap-6 lg:grid-cols-2">
-        {/* Profile Info */}
+
         <Card className="border-border bg-card">
           <CardHeader>
             <CardTitle className="text-foreground">Informasi Profil</CardTitle>
           </CardHeader>
           <CardContent>
             <form onSubmit={profileForm.handleSubmit(onProfileSubmit)} className="space-y-4">
+              {/* Profile Picture Upload */}
+              <div className="flex flex-col items-center gap-4 mb-6">
+                <div className="relative">
+                  {profilePreview ? (
+                    <img
+                      src={profilePreview}
+                      alt="Profile"
+                      className="h-24 w-24 rounded-full object-cover border-2 border-emerald-500"
+                    />
+                  ) : (
+                    <div className="h-24 w-24 rounded-full bg-emerald-600 flex items-center justify-center text-white text-3xl font-bold">
+                      {user?.name?.charAt(0) || 'U'}
+                    </div>
+                  )}
+                  <input
+                    type="file"
+                    ref={profilePictureRef}
+                    onChange={handleProfilePictureChange}
+                    accept="image/*"
+                    className="hidden"
+                  />
+                  <Button
+                    size="sm"
+                    type="button"
+                    onClick={() => profilePictureRef.current?.click()}
+                    className="absolute -bottom-2 -right-2 h-8 w-8 rounded-full bg-emerald-500 p-0 hover:bg-emerald-600"
+                  >
+                    <User size={14} className="text-white" />
+                  </Button>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  {profilePicture ? profilePicture.name : (profileId ? 'Klik untuk ubah foto' : 'Foto profil wajib diupload')}
+                </p>
+              </div>
+
               <div className="space-y-2">
                 <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">
                   <User className="h-4 w-4" /> Nama Lengkap
@@ -144,6 +234,39 @@ export function UserProfilPage() {
 
               <div className="space-y-2">
                 <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">
+<<<<<<< HEAD
+=======
+                  <User className="h-4 w-4" /> Jenis Kelamin
+                </label>
+                <select
+                  {...profileForm.register('gender')}
+                  className="w-full h-10 px-3 rounded-md border border-border bg-card text-foreground"
+                >
+                  <option value="male">Laki-laki</option>
+                  <option value="female">Perempuan</option>
+                </select>
+                {profileForm.formState.errors.gender && (
+                  <Badge variant="destructive" className="text-xs">
+                    {profileForm.formState.errors.gender.message}
+                  </Badge>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">
+                  <Mail className="h-4 w-4" /> Email
+                </label>
+                <Input
+                  value={user?.email || ''}
+                  disabled
+                  className="opacity-60"
+                />
+                <p className="text-xs text-muted-foreground">Email tidak dapat diubah</p>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">
+>>>>>>> eff7022f5172357b0f37fb39bc879750952329a7
                   <Phone className="h-4 w-4" /> Telepon
                 </label>
                 <Input
@@ -179,7 +302,7 @@ export function UserProfilPage() {
           </CardContent>
         </Card>
 
-        {/* Change Password */}
+
         <Card className="border-border bg-card">
           <CardHeader>
             <CardTitle className="text-foreground flex items-center gap-2">

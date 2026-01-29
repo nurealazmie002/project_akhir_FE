@@ -1,18 +1,20 @@
+import { useState, useEffect } from 'react'
 import { NavLink, useLocation, useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
-import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { cn } from '@/lib/utils'
 import { useAuthStore } from '@/stores/authStore'
+import { profileService } from '@/services/profileService'
 import {
   LayoutDashboard,
   Users,
   UserCheck,
-  ArrowDownCircle,
-  ArrowUpCircle,
-  FileText,
+
+  Receipt,
   Settings,
   LogOut,
   X,
+  Building2,
 } from 'lucide-react'
 
 interface NavItem {
@@ -25,9 +27,8 @@ const navItems: NavItem[] = [
   { label: 'Dashboard', href: '/admin', icon: <LayoutDashboard size={20} /> },
   { label: 'Data Santri', href: '/admin/santri', icon: <Users size={20} /> },
   { label: 'Data Wali', href: '/admin/wali', icon: <UserCheck size={20} /> },
-  { label: 'Pemasukan', href: '/admin/pemasukan', icon: <ArrowDownCircle size={20} /> },
-  { label: 'Pengeluaran', href: '/admin/pengeluaran', icon: <ArrowUpCircle size={20} /> },
-  { label: 'Laporan', href: '/admin/laporan', icon: <FileText size={20} /> },
+  { label: 'Invoice', href: '/admin/invoice', icon: <Receipt size={20} /> },
+
 ]
 
 interface SidebarProps {
@@ -39,6 +40,24 @@ export function Sidebar({ isOpen = false, onClose }: SidebarProps) {
   const location = useLocation()
   const navigate = useNavigate()
   const { user, logout } = useAuthStore()
+  const [profilePicture, setProfilePicture] = useState<string | null>(null)
+  const [profileName, setProfileName] = useState<string | null>(null)
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const profile = await profileService.getMyProfile()
+        if (profile?.profile_picture_url) {
+          setProfilePicture(profile.profile_picture_url)
+        }
+        if (profile?.name) {
+          setProfileName(profile.name)
+        }
+      } catch (err) {
+      }
+    }
+    fetchProfile()
+  }, [location.pathname])
 
   const handleLogout = () => {
     logout()
@@ -51,32 +70,25 @@ export function Sidebar({ isOpen = false, onClose }: SidebarProps) {
 
   return (
     <>
-      {/* Sidebar */}
       <aside className={cn(
-        "fixed left-0 top-0 z-40 flex h-screen w-72 flex-col bg-gradient-to-b from-card via-card to-card/95 border-r border-border/50 text-card-foreground transition-transform duration-300 ease-in-out lg:translate-x-0 shadow-xl",
+        "fixed left-0 top-0 z-40 flex h-screen w-72 flex-col bg-gradient-to-b from-slate-900 via-slate-900 to-slate-950 border-r border-white/5 text-white transition-transform duration-300 ease-in-out lg:translate-x-0 shadow-2xl",
         isOpen ? "translate-x-0" : "-translate-x-full"
       )}>
-        {/* Header with gradient background */}
-        <div className="relative border-b border-border/50 p-5 overflow-hidden">
-          {/* Subtle gradient overlay */}
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-transparent" />
-          
-          <div className="relative flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <Avatar className="h-12 w-12 ring-2 ring-primary/20 ring-offset-2 ring-offset-background">
-                <AvatarFallback className="bg-gradient-to-br from-primary to-primary/80 text-primary-foreground text-lg font-bold">
-                  {user?.name?.charAt(0) || 'A'}
-                </AvatarFallback>
-              </Avatar>
-              <div className="min-w-0">
-                <h2 className="font-semibold text-foreground truncate">{user?.name || 'Admin Keuangan'}</h2>
-                <p className="text-xs text-muted-foreground truncate">{user?.institutionName || 'Pesantren Al-Ikhlas'}</p>
+        <div className="relative border-b border-white/10 p-5">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 shadow-lg shadow-emerald-500/20">
+                <Building2 className="h-6 w-6 text-white" />
+              </div>
+              <div>
+                <h1 className="font-bold text-lg text-white tracking-tight">Pesantren</h1>
+                <p className="text-xs text-slate-400">Sistem Keuangan</p>
               </div>
             </div>
             <Button
               variant="ghost"
               size="icon"
-              className="lg:hidden shrink-0 hover:bg-destructive/10 hover:text-destructive"
+              className="lg:hidden shrink-0 hover:bg-white/10 text-slate-400 hover:text-white"
               onClick={onClose}
             >
               <X size={20} />
@@ -84,9 +96,23 @@ export function Sidebar({ isOpen = false, onClose }: SidebarProps) {
           </div>
         </div>
 
-        {/* Navigation */}
+        <div className="px-5 py-4 border-b border-white/5">
+          <div className="flex items-center gap-3 p-3 rounded-xl bg-white/5 backdrop-blur">
+            <Avatar className="h-10 w-10 ring-2 ring-emerald-500/30">
+              {profilePicture && <AvatarImage src={profilePicture} alt="Profile" />}
+              <AvatarFallback className="bg-gradient-to-br from-emerald-500 to-teal-600 text-white font-semibold">
+                {(profileName || user?.name)?.charAt(0) || 'A'}
+              </AvatarFallback>
+            </Avatar>
+            <div className="min-w-0 flex-1">
+              <p className="font-medium text-sm text-white truncate">{profileName || user?.name || 'Admin'}</p>
+              <p className="text-xs text-slate-400 truncate">{user?.institutionName || 'Administrator'}</p>
+            </div>
+          </div>
+        </div>
+
         <nav className="flex-1 p-4 overflow-y-auto">
-          <p className="px-3 mb-3 text-xs font-medium text-muted-foreground uppercase tracking-wider">Menu Utama</p>
+          <p className="px-3 mb-3 text-[11px] font-semibold text-slate-500 uppercase tracking-widest">Menu Utama</p>
           <div className="space-y-1">
             {navItems.map((item) => {
               const isActive = location.pathname === item.href
@@ -100,19 +126,36 @@ export function Sidebar({ isOpen = false, onClose }: SidebarProps) {
                     className={cn(
                       'group flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200',
                       isActive
-                        ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/25'
-                        : 'text-muted-foreground hover:bg-accent hover:text-foreground'
+                        ? 'bg-gradient-to-r from-emerald-500/20 to-teal-500/10 text-emerald-400'
+                        : 'text-slate-400 hover:bg-white/5 hover:text-white'
                     )}
                   >
                     <div className={cn(
+                      "absolute left-0 w-1 h-8 rounded-r-full bg-emerald-500 transition-all duration-200",
+                      isActive ? "opacity-100" : "opacity-0"
+                    )} />
+                    
+                    <div className={cn(
                       'flex items-center justify-center w-9 h-9 rounded-lg transition-all duration-200',
                       isActive 
-                        ? 'bg-primary-foreground/20' 
-                        : 'bg-muted/50 group-hover:bg-primary/10 group-hover:text-primary'
+                        ? 'bg-emerald-500/20 text-emerald-400' 
+                        : 'bg-white/5 text-slate-400 group-hover:bg-emerald-500/10 group-hover:text-emerald-400'
                     )}>
                       {item.icon}
                     </div>
-                    {item.label}
+                    <span>{item.label}</span>
+                    
+                    <svg 
+                      className={cn(
+                        "ml-auto w-4 h-4 transition-all duration-200",
+                        isActive ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-2 group-hover:opacity-50 group-hover:translate-x-0"
+                      )}
+                      fill="none" 
+                      viewBox="0 0 24 24" 
+                      stroke="currentColor"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
                   </div>
                 </NavLink>
               )
@@ -120,22 +163,21 @@ export function Sidebar({ isOpen = false, onClose }: SidebarProps) {
           </div>
         </nav>
 
-        {/* Footer */}
-        <div className="border-t border-border/50 p-4 space-y-1">
+        <div className="border-t border-white/5 p-4 space-y-1">
           <NavLink to="/admin/pengaturan" onClick={handleNavClick}>
             <div
               className={cn(
                 'group flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200',
                 location.pathname === '/admin/pengaturan'
-                  ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/25'
-                  : 'text-muted-foreground hover:bg-accent hover:text-foreground'
+                  ? 'bg-gradient-to-r from-emerald-500/20 to-teal-500/10 text-emerald-400'
+                  : 'text-slate-400 hover:bg-white/5 hover:text-white'
               )}
             >
               <div className={cn(
                 'flex items-center justify-center w-9 h-9 rounded-lg transition-all duration-200',
                 location.pathname === '/admin/pengaturan' 
-                  ? 'bg-primary-foreground/20' 
-                  : 'bg-muted/50 group-hover:bg-primary/10 group-hover:text-primary'
+                  ? 'bg-emerald-500/20 text-emerald-400' 
+                  : 'bg-white/5 text-slate-400 group-hover:bg-emerald-500/10 group-hover:text-emerald-400'
               )}>
                 <Settings size={20} />
               </div>
@@ -145,9 +187,9 @@ export function Sidebar({ isOpen = false, onClose }: SidebarProps) {
           
           <button 
             onClick={handleLogout}
-            className="w-full group flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-all duration-200"
+            className="w-full group flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:bg-red-500/10 hover:text-red-400 transition-all duration-200"
           >
-            <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-muted/50 group-hover:bg-destructive/20 transition-all duration-200">
+            <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-white/5 group-hover:bg-red-500/20 transition-all duration-200">
               <LogOut size={20} />
             </div>
             Keluar
@@ -155,10 +197,9 @@ export function Sidebar({ isOpen = false, onClose }: SidebarProps) {
         </div>
       </aside>
 
-      {/* Overlay for mobile */}
       {isOpen && (
         <div
-          className="fixed inset-0 z-30 bg-black/60 backdrop-blur-sm lg:hidden transition-opacity"
+          className="fixed inset-0 z-30 bg-black/70 backdrop-blur-sm lg:hidden transition-opacity"
           onClick={onClose}
         />
       )}

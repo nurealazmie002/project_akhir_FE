@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import { useParams, Link } from 'react-router-dom'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -12,7 +12,9 @@ import {
   ArrowLeft,
   User,
   Calendar,
-  MapPin
+  MapPin,
+  ChevronDown,
+  ChevronUp
 } from 'lucide-react'
 
 export function SantriDetailPage() {
@@ -20,6 +22,8 @@ export function SantriDetailPage() {
   const [santri, setSantri] = useState<Santri | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  
+  const [isExpanded, setIsExpanded] = useState(false)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -73,32 +77,71 @@ export function SantriDetailPage() {
         </Button>
       </Link>
 
-      {/* Profile Header */}
-      <Card className="border-border bg-card">
+
+      {/* Collapsible Profile Card */}
+      <Card 
+        className="border-border bg-card cursor-pointer md:cursor-default transition-colors hover:bg-accent/5 md:hover:bg-card"
+        onClick={() => setIsExpanded(!isExpanded)}
+      >
         <CardContent className="p-6">
-          <div className="flex items-start gap-6">
-            <div className="h-24 w-24 rounded-full bg-primary/20 flex items-center justify-center">
-              <GraduationCap className="h-12 w-12 text-primary" />
+          <div className="flex items-start gap-4 md:gap-6">
+            <div className="h-16 w-16 md:h-24 md:w-24 shrink-0 rounded-full bg-primary/20 flex items-center justify-center">
+              <GraduationCap className="h-8 w-8 md:h-12 md:w-12 text-primary" />
             </div>
-            <div className="flex-1">
+            <div className="flex-1 min-w-0">
               <div className="flex items-start justify-between">
                 <div>
-                  <h1 className="text-2xl font-bold text-foreground">{santri.fullname}</h1>
-                  <p className="text-muted-foreground">NIS: {santri.nis}</p>
+                  <h1 className="text-xl md:text-2xl font-bold text-foreground truncate max-w-[200px] md:max-w-none">{santri.fullname}</h1>
+                  
+                  <div className={`mt-1 md:block ${isExpanded ? 'block' : 'hidden'}`}>
+                    <p className="text-muted-foreground text-sm md:text-base">NIS: {santri.nis}</p>
+                    <div className="mt-2 md:mt-0 md:absolute md:top-6 md:right-6">
+                       <Badge className={santri.isActive !== false 
+                        ? 'bg-emerald-500/20 text-emerald-400'
+                        : 'bg-red-500/20 text-red-400'
+                      }>
+                        {santri.isActive !== false ? 'Aktif' : 'Nonaktif'}
+                      </Badge>
+                    </div>
+                  </div>
+
+                  {!isExpanded && (
+                     <p className="text-xs text-primary mt-1 md:hidden">Ketuk untuk lihat detail</p>
+                  )}
                 </div>
-                <Badge className={santri.isActive !== false 
-                  ? 'bg-emerald-500/20 text-emerald-400'
-                  : 'bg-red-500/20 text-red-400'
-                }>
-                  {santri.isActive !== false ? 'Aktif' : 'Nonaktif'}
-                </Badge>
+                
+                {/* Mobile chevron */}
+                <div className="md:hidden text-muted-foreground">
+                  {isExpanded ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+                </div>
               </div>
             </div>
           </div>
+
+          {/* Expanded Content for Mobile (Always visible on Desktop) */}
+          <AnimatePresence>
+            {(isExpanded || window.innerWidth >= 768) && (
+              <motion.div 
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: "auto", opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                className="md:hidden mt-4 pt-4 border-t border-border overflow-hidden"
+              >
+                  <p className="text-sm font-medium text-foreground mb-2">Status Santri</p>
+                  <Badge className={santri.isActive !== false 
+                    ? 'bg-emerald-500/20 text-emerald-400'
+                    : 'bg-red-500/20 text-red-400'
+                  }>
+                    {santri.isActive !== false ? 'Aktif' : 'Nonaktif'}
+                  </Badge>
+              </motion.div>
+            )}
+             {/* Note: Desktop layout handles layout differently, keeping simple for mobile first request */}
+          </AnimatePresence>
         </CardContent>
       </Card>
 
-      {/* Info Cards */}
+
       <div className="grid gap-4 md:grid-cols-2">
         <Card className="border-border bg-card">
           <CardHeader>

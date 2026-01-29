@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useSearchParams, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -27,7 +28,9 @@ import {
   X,
   Users,
   UserPlus,
-  User
+  User,
+  ArrowLeft,
+  Wallet
 } from 'lucide-react'
 
 const santriSchema = z.object({
@@ -35,14 +38,17 @@ const santriSchema = z.object({
   nis: z.string().min(1, 'NIS wajib diisi'),
   kelas: z.string().min(1, 'Kelas wajib diisi'),
   gender: z.enum(['Laki-laki', 'Perempuan'], { message: 'Pilih jenis kelamin' }),
-  institutionName: z.string().min(1, 'Nama Lembaga wajib diisi'),
   waliName: z.string().min(1, 'Nama Wali wajib diisi'),
 })
 
 type SantriFormData = z.infer<typeof santriSchema>
 
 export function SantriPage() {
-  const { user } = useAuthStore()
+  const [searchParams] = useSearchParams()
+  const navigate = useNavigate()
+  const waliNameFilter = searchParams.get('waliName') || ''
+  
+  const { user: _user } = useAuthStore()
   const [santriList, setSantriList] = useState<Santri[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
@@ -64,16 +70,10 @@ export function SantriPage() {
   const fetchSantri = async () => {
     setIsLoading(true)
     try {
-      const params: any = {}
-      if (user?.institutionName) {
-        params.institutionName = user.institutionName
-      }
-      const response = await santriService.getAll(params)
+      const response = await santriService.getAll()
       setSantriList(response.data)
-      console.log(' Fetched santri:', response.data)
     } catch (err: any) {
       setError(err.response?.data?.message || 'Gagal memuat data santri')
-      console.error('Failed to fetch santri:', err)
     } finally {
       setIsLoading(false)
     }
@@ -85,12 +85,17 @@ export function SantriPage() {
   }, [])
 
 
-  const filteredSantri = santriList.filter(
-    (santri) =>
-      (santri.fullname?.toLowerCase() || '').includes(searchQuery.toLowerCase()) ||
-      (santri.nis?.toString() || '').includes(searchQuery) ||
-      (santri.kelas?.toLowerCase() || '').includes(searchQuery.toLowerCase())
-  )
+  const filteredSantri = santriList
+    .filter((santri) => {
+      if (!waliNameFilter) return true
+      return santri.waliName?.toLowerCase() === waliNameFilter.toLowerCase()
+    })
+    .filter(
+      (santri) =>
+        (santri.fullname?.toLowerCase() || '').includes(searchQuery.toLowerCase()) ||
+        (santri.nis?.toString() || '').includes(searchQuery) ||
+        (santri.kelas?.toLowerCase() || '').includes(searchQuery.toLowerCase())
+    )
 
   const onSubmit = async (data: SantriFormData) => {
     setIsLoading(true)
@@ -98,18 +103,12 @@ export function SantriPage() {
 
     try {
       if (editingSantri) {
-
-        const updatedSantri = await santriService.update(String(editingSantri.id), data)
-        console.log('✏️ Updated santri:', updatedSantri)
+        await santriService.update(String(editingSantri.id), data)
       } else {
-
-        const newSantri = await santriService.create(data)
-        console.log('➕ Created santri:', newSantri)
+        await santriService.create(data)
       }
 
-
       await fetchSantri()
-
       setShowModal(false)
       reset()
       setEditingSantri(null)
@@ -127,7 +126,6 @@ export function SantriPage() {
       nis: santri.nis,
       kelas: santri.kelas,
       gender: santri.gender,
-      institutionName: santri.institutionName || '',
       waliName: santri.waliName,
     })
     setShowModal(true)
@@ -144,7 +142,7 @@ export function SantriPage() {
     try {
 
       await santriService.delete(String(deletingSantri.id))
-      console.log('🗑️ Deleted santri:', deletingSantri.id)
+      console.log('Deleted santri:', deletingSantri.id)
       await fetchSantri()
       setDeletingSantri(null)
     } catch (err: any) {
@@ -161,7 +159,6 @@ export function SantriPage() {
       nis: '',
       kelas: '',
       gender: 'Laki-laki',
-      institutionName: '',
       waliName: '',
     })
     setShowModal(true)
@@ -197,21 +194,44 @@ export function SantriPage() {
       className="space-y-6"
     >
 
+
+      {waliNameFilter && (
+        <div className="flex items-center gap-3 p-4 rounded-xl bg-purple-500/10 border border-purple-500/20">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => navigate('/admin/santri')}
+            className="h-9 w-9 p-0 text-purple-400 hover:bg-purple-500/20"
+          >
+            <ArrowLeft size={18} />
+          </Button>
+          <div className="flex-1">
+            <p className="text-sm text-purple-300">Menampilkan santri dari wali:</p>
+            <p className="font-semibold text-purple-400">{waliNameFilter}</p>
+          </div>
+          <Badge className="bg-purple-500/20 text-purple-400 border-0">
+            {filteredSantri.length} santri
+          </Badge>
+        </div>
+      )}
+
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div className="flex items-center gap-3">
           <div className="rounded-lg bg-emerald-500/20 p-2">
             <Users className="h-6 w-6 text-emerald-400" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-foreground">Data Santri</h1>
+            <h1 className="text-2xl font-bold text-foreground">
+              {waliNameFilter ? `Santri - ${waliNameFilter}` : 'Data Santri'}
+            </h1>
             <p className="text-sm text-muted-foreground">
-              Kelola data santri pesantren
+              {waliNameFilter ? `Daftar santri dengan wali ${waliNameFilter}` : 'Kelola data santri pesantren'}
             </p>
           </div>
         </div>
         <Button
           onClick={openAddModal}
-          className="gap-2 bg-emerald-600 hover:bg-emerald-700 w-full sm:w-auto"
+          className="gap-2 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white shadow-lg shadow-emerald-500/25 hover:shadow-xl hover:shadow-emerald-500/30 hover:-translate-y-0.5 transition-all duration-300 w-full sm:w-auto"
         >
           <Plus size={18} />
           Tambah Santri
@@ -219,24 +239,12 @@ export function SantriPage() {
       </div>
 
 
-      <div className="grid gap-4 md:grid-cols-4">
-        <Card className="border-border bg-card md:col-span-2">
-          <CardContent className="p-4">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <Input
-                placeholder="Cari nama, NIS, atau kelas..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="border-border bg-card pl-10 text-foreground placeholder:text-muted-foreground"
-              />
-            </div>
-          </CardContent>
-        </Card>
-        <Card className="border-border bg-card">
+
+      <div className="grid gap-4 grid-cols-2 lg:grid-cols-4">
+        <Card className="border-border/50 bg-gradient-to-br from-emerald-500/10 to-emerald-600/5">
           <CardContent className="flex items-center gap-3 p-4">
-            <div className="rounded-lg bg-emerald-500/20 p-2">
-              <Users className="h-5 w-5 text-emerald-400" />
+            <div className="rounded-xl bg-emerald-500/20 p-2.5">
+              <Users className="h-5 w-5 text-emerald-500" />
             </div>
             <div>
               <p className="text-2xl font-bold text-foreground">{santriList.length}</p>
@@ -244,16 +252,42 @@ export function SantriPage() {
             </div>
           </CardContent>
         </Card>
-        <Card className="border-border bg-card">
+        <Card className="border-border/50 bg-gradient-to-br from-blue-500/10 to-blue-600/5">
           <CardContent className="flex items-center gap-3 p-4">
-            <div className="rounded-lg bg-blue-500/20 p-2">
-              <UserPlus className="h-5 w-5 text-blue-400" />
+            <div className="rounded-xl bg-blue-500/20 p-2.5">
+              <UserPlus className="h-5 w-5 text-blue-500" />
             </div>
             <div>
               <p className="text-2xl font-bold text-foreground">
-                {santriList.filter((s) => s.status === 'ACTIVE').length}
+                {santriList.filter((s) => s.status === 'ACTIVE' || s.isActive).length}
               </p>
               <p className="text-xs text-muted-foreground">Santri Aktif</p>
+            </div>
+          </CardContent>
+        </Card>
+        <Card className="border-border/50 bg-gradient-to-br from-amber-500/10 to-amber-600/5">
+          <CardContent className="flex items-center gap-3 p-4">
+            <div className="rounded-xl bg-amber-500/20 p-2.5">
+              <User className="h-5 w-5 text-amber-500" />
+            </div>
+            <div>
+              <p className="text-2xl font-bold text-foreground">
+                {santriList.filter((s) => s.gender === 'Laki-laki').length}
+              </p>
+              <p className="text-xs text-muted-foreground">Laki-laki</p>
+            </div>
+          </CardContent>
+        </Card>
+        <Card className="border-border/50 bg-gradient-to-br from-pink-500/10 to-pink-600/5">
+          <CardContent className="flex items-center gap-3 p-4">
+            <div className="rounded-xl bg-pink-500/20 p-2.5">
+              <User className="h-5 w-5 text-pink-500" />
+            </div>
+            <div>
+              <p className="text-2xl font-bold text-foreground">
+                {santriList.filter((s) => s.gender === 'Perempuan').length}
+              </p>
+              <p className="text-xs text-muted-foreground">Perempuan</p>
             </div>
           </CardContent>
         </Card>
@@ -272,92 +306,136 @@ export function SantriPage() {
       )}
 
 
-      <Card className="border-border bg-card">
-        <CardHeader>
-          <CardTitle className="text-foreground">Daftar Santri</CardTitle>
+      <Card className="border-border/50 bg-card">
+        <CardHeader className="pb-4">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div>
+              <CardTitle className="text-foreground">Daftar Santri</CardTitle>
+              <p className="text-sm text-muted-foreground mt-1">
+                {filteredSantri.length} dari {santriList.length} santri
+              </p>
+            </div>
+            <div className="relative w-full sm:w-64">
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                placeholder="Cari nama, NIS, kelas..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10 h-9 bg-muted/50 border-border/50 text-sm"
+              />
+            </div>
+          </div>
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-0">
           <div className="overflow-x-auto">
-          <Table className="min-w-[800px]">
-            <TableHeader>
-              <TableRow className="border-border hover:bg-transparent">
-                <TableHead className="text-muted-foreground">NIS</TableHead>
-                <TableHead className="text-muted-foreground">Nama</TableHead>
-                <TableHead className="text-muted-foreground">Kelas</TableHead>
-                <TableHead className="text-muted-foreground">Gender</TableHead>
-                <TableHead className="text-muted-foreground">Institution ID</TableHead>
-                <TableHead className="text-muted-foreground">Nama Wali</TableHead>
-                <TableHead className="text-muted-foreground">Status</TableHead>
-                <TableHead className="text-right text-muted-foreground">Aksi</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredSantri.map((santri) => (
-                <TableRow
-                  key={santri.id}
-                  className="border-border hover:bg-card"
-                >
-                  <TableCell className="font-medium text-amber-400">
-                    {santri.nis}
-                  </TableCell>
-                  <TableCell className="text-foreground">{santri.fullname}</TableCell>
-                  <TableCell className="text-muted-foreground">{santri.kelas}</TableCell>
-                  <TableCell className="text-muted-foreground">
-                    {santri.gender}
-                  </TableCell>
-                  <TableCell className="text-muted-foreground text-xs">
-                    {santri.institutionName || santri.institutionId || '-'}
-                  </TableCell>
-                  <TableCell className="text-muted-foreground text-xs">
-                    {santri.waliName}
-                  </TableCell>
-                  <TableCell>
-                    {santri.isActive !== undefined ? (
-                      <span className={`rounded-full px-2 py-1 text-xs ${santri.isActive ? 'bg-emerald-500/20 text-emerald-400' : 'bg-yellow-500/20 text-yellow-400'}`}>
-                        {santri.isActive ? 'Aktif' : 'Tidak Aktif'}
-                      </span>
-                    ) : santri.status ? (
-                      getStatusBadge(santri.status)
-                    ) : (
-                      <span className="text-muted-foreground">-</span>
-                    )}
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <div className="flex justify-end gap-2">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleEdit(santri)}
-                        className="h-8 w-8 p-0 text-muted-foreground hover:text-foreground"
-                      >
-                        <Edit size={16} />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleDelete(santri)}
-                        className="h-8 w-8 p-0 text-muted-foreground hover:text-red-400"
-                      >
-                        <Trash2 size={16} />
-                      </Button>
-                    </div>
-                  </TableCell>
+            <Table>
+              <TableHeader>
+                <TableRow className="border-border bg-muted/30 hover:bg-muted/30">
+                  <TableHead className="text-xs font-semibold uppercase tracking-wider text-muted-foreground py-3 px-4">NIS</TableHead>
+                  <TableHead className="text-xs font-semibold uppercase tracking-wider text-muted-foreground py-3 px-4">Nama</TableHead>
+                  <TableHead className="text-xs font-semibold uppercase tracking-wider text-muted-foreground py-3 px-4">Kelas</TableHead>
+                  <TableHead className="text-xs font-semibold uppercase tracking-wider text-muted-foreground py-3 px-4">Gender</TableHead>
+                  <TableHead className="text-xs font-semibold uppercase tracking-wider text-muted-foreground py-3 px-4">Institusi</TableHead>
+                  <TableHead className="text-xs font-semibold uppercase tracking-wider text-muted-foreground py-3 px-4">Wali</TableHead>
+                  <TableHead className="text-xs font-semibold uppercase tracking-wider text-muted-foreground py-3 px-4">Status</TableHead>
+                  <TableHead className="text-xs font-semibold uppercase tracking-wider text-muted-foreground py-3 px-4 text-right">Aksi</TableHead>
                 </TableRow>
-              ))}
-              {filteredSantri.length === 0 && (
-                <TableRow>
-                  <TableCell
-                    colSpan={7}
-                    className="h-24 text-center text-muted-foreground"
+              </TableHeader>
+              <TableBody>
+                {filteredSantri.map((santri, index) => (
+                  <TableRow
+                    key={santri.id}
+                    className={`border-border transition-colors hover:bg-muted/50 ${index % 2 === 0 ? 'bg-transparent' : 'bg-muted/20'}`}
                   >
-                    {searchQuery
-                      ? 'Tidak ada santri yang ditemukan'
-                      : 'Belum ada data santri'}
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
+                    <TableCell className="py-3 px-4">
+                      <span className="font-mono text-sm font-medium text-primary">{santri.nis}</span>
+                    </TableCell>
+                    <TableCell className="py-3 px-4">
+                      <div className="flex items-center gap-2">
+                        <div className="h-8 w-8 rounded-full bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center text-white text-xs font-medium">
+                          {santri.fullname?.charAt(0)?.toUpperCase() || 'S'}
+                        </div>
+                        <span className="font-medium text-foreground">{santri.fullname}</span>
+                      </div>
+                    </TableCell>
+                    <TableCell className="py-3 px-4">
+                      <span className="inline-flex px-2 py-0.5 rounded text-xs font-medium bg-blue-500/10 text-blue-400">
+                        {santri.kelas || '-'}
+                      </span>
+                    </TableCell>
+                    <TableCell className="py-3 px-4 text-muted-foreground text-sm">
+                      {santri.gender || '-'}
+                    </TableCell>
+                    <TableCell className="py-3 px-4 text-muted-foreground text-sm max-w-[120px] truncate">
+                      {santri.institutionName || santri.institutionId || '-'}
+                    </TableCell>
+                    <TableCell className="py-3 px-4 text-muted-foreground text-sm">
+                      {santri.waliName || '-'}
+                    </TableCell>
+                    <TableCell className="py-3 px-4">
+                      {santri.isActive !== undefined ? (
+                        <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium ${santri.isActive ? 'bg-emerald-500/15 text-emerald-400' : 'bg-amber-500/15 text-amber-400'}`}>
+                          <span className={`h-1.5 w-1.5 rounded-full ${santri.isActive ? 'bg-emerald-400' : 'bg-amber-400'}`}></span>
+                          {santri.isActive ? 'Aktif' : 'Nonaktif'}
+                        </span>
+                      ) : santri.status ? (
+                        getStatusBadge(santri.status)
+                      ) : (
+                        <span className="text-muted-foreground">-</span>
+                      )}
+                    </TableCell>
+                    <TableCell className="py-3 px-4 text-right">
+                      <div className="flex justify-end gap-1">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => navigate(`/admin/santri/${santri.id}/transaksi`)}
+                          title="Lihat Transaksi"
+                          className="h-8 w-8 p-0 text-muted-foreground hover:text-blue-400 hover:bg-blue-500/10"
+                        >
+                          <Wallet size={15} />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleEdit(santri)}
+                          className="h-8 w-8 p-0 text-muted-foreground hover:text-primary hover:bg-primary/10"
+                        >
+                          <Edit size={15} />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleDelete(santri)}
+                          className="h-8 w-8 p-0 text-muted-foreground hover:text-red-400 hover:bg-red-500/10"
+                        >
+                          <Trash2 size={15} />
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+                {filteredSantri.length === 0 && (
+                  <TableRow>
+                    <TableCell
+                      colSpan={8}
+                      className="h-32 text-center"
+                    >
+                      <div className="flex flex-col items-center gap-2">
+                        <div className="h-12 w-12 rounded-full bg-muted/50 flex items-center justify-center">
+                          <Search className="h-6 w-6 text-muted-foreground/50" />
+                        </div>
+                        <p className="text-muted-foreground">
+                          {searchQuery
+                            ? 'Tidak ada santri yang ditemukan'
+                            : 'Belum ada data santri'}
+                        </p>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
           </div>
         </CardContent>
       </Card>
@@ -466,38 +544,20 @@ export function SantriPage() {
                 )}
               </div>
 
-              <div className="grid gap-4 md:grid-cols-2">
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-muted-foreground">
-                    Nama Lembaga <span className="text-red-400">*</span>
-                  </label>
-                  <Input
-                    placeholder="Pesantren Al-Ikhlas"
-                    className="border-border bg-card text-foreground placeholder:text-muted-foreground"
-                    {...register('institutionName')}
-                  />
-                  {errors.institutionName && (
-                    <Badge variant="destructive" className="text-xs">
-                      {errors.institutionName.message}
-                    </Badge>
-                  )}
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-muted-foreground">
-                    Nama Wali <span className="text-red-400">*</span>
-                  </label>
-                  <Input
-                    placeholder="Nama lengkap wali santri"
-                    className="border-border bg-card text-foreground placeholder:text-muted-foreground"
-                    {...register('waliName')}
-                  />
-                  {errors.waliName && (
-                    <Badge variant="destructive" className="text-xs">
-                      {errors.waliName.message}
-                    </Badge>
-                  )}
-                </div>
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-muted-foreground">
+                  Nama Wali <span className="text-red-400">*</span>
+                </label>
+                <Input
+                  placeholder="Nama lengkap wali santri"
+                  className="border-border bg-card text-foreground placeholder:text-muted-foreground"
+                  {...register('waliName')}
+                />
+                {errors.waliName && (
+                  <Badge variant="destructive" className="text-xs">
+                    {errors.waliName.message}
+                  </Badge>
+                )}
               </div>
 
               <div className="flex justify-end gap-3 pt-4">
