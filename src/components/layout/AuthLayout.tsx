@@ -69,9 +69,9 @@ export function AuthLayout() {
         </motion.div>
       </div>
       
-      <div className="relative z-10 flex w-full items-center justify-center p-8 lg:w-1/2">
+      <div className="relative z-10 flex w-full items-center justify-center px-4 py-6 sm:p-8 lg:w-1/2">
         <motion.div 
-          className="w-full max-w-md"
+          className="w-full max-w-[340px] sm:max-w-md"
           initial={{ opacity: 0, scale: 0.95, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}

@@ -198,7 +198,7 @@ export function OtpVerificationPage() {
                     onChange={(e) => handleChange(index, e.target.value)}
                     onKeyDown={(e) => handleKeyDown(index, e)}
                     onPaste={handlePaste}
-                    className="h-11 w-10 sm:h-14 sm:w-12 text-center text-xl sm:text-2xl font-bold p-0"
+                    className="h-10 w-9 sm:h-14 sm:w-12 text-center text-lg sm:text-2xl font-bold p-0"
                   />
                 </motion.div>
               ))}
