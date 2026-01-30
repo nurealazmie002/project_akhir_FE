@@ -95,12 +95,12 @@ export function DashboardPage() {
   return (
     <>
       <motion.div 
-        className="space-y-6" 
+        className="space-y-4 sm:space-y-6" 
         initial={{ opacity: 0, y: 20 }} 
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
       >
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
           <StatCard
             title="Total Pemasukan"
             value={`Rp ${formatCurrency(stats.totalIncome)}`}

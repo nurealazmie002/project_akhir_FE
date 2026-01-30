@@ -1,5 +1,11 @@
-import { useState } from 'react'
+import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts"
 import { Card, CardContent, CardHeader, CardTitle, CardAction } from '@/components/ui/card'
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+  type ChartConfig,
+} from "@/components/ui/chart"
 import type { CashFlowData } from '@/services/dashboardService'
 
 interface CashFlowChartProps {
@@ -9,18 +15,19 @@ interface CashFlowChartProps {
   onPeriodChange: (months: number) => void
 }
 
+const chartConfig = {
+  income: {
+    label: "Pemasukan",
+    color: "#10b981",
+  },
+  expense: {
+    label: "Pengeluaran",
+    color: "#f43f5e",
+  },
+} satisfies ChartConfig
+
 export function CashFlowChart({ data, title, selectedPeriod, onPeriodChange }: CashFlowChartProps) {
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
-  const rawMax = Math.max(...data.flatMap((d) => [d.income, d.expense]), 1)
-  const step = 50000
-  const maxValue = Math.ceil(rawMax / step) * step // Round up to nearest 50k
-
-  const getBarHeight = (value: number) => {
-    if (value === 0) return 0
-    return Math.max((value / maxValue) * 100, 2)
-  }
-
-  const formatValue = (value: number) => {
+  const formatCurrency = (value: number) => {
     if (value >= 1000000) {
       return `${(value / 1000000).toFixed(0)}jt`
     }
@@ -30,16 +37,8 @@ export function CashFlowChart({ data, title, selectedPeriod, onPeriodChange }: C
     return value.toLocaleString('id-ID')
   }
 
-  const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat('id-ID', {
-      style: 'currency',
-      currency: 'IDR',
-      minimumFractionDigits: 0
-    }).format(value)
-  }
-
   return (
-    <Card className="border-border/50 bg-card h-full flex flex-col hover:shadow-lg hover:shadow-primary/5 transition-all duration-300">
+    <Card className="border bg-card h-full flex flex-col">
       <CardHeader className="pb-2 sm:pb-4">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
           <CardTitle className="text-base sm:text-lg font-semibold text-foreground">{title}</CardTitle>
@@ -69,94 +68,89 @@ export function CashFlowChart({ data, title, selectedPeriod, onPeriodChange }: C
           </CardAction>
         </div>
       </CardHeader>
-      <CardContent className="flex-1 flex flex-col min-w-0 overflow-visible">
-        <div className="flex flex-1 min-w-[280px] overflow-visible">
-          {/* Y-axis - 50k increments */}
-          {(() => {
-            const maxTicks = Math.ceil(maxValue / step)
-            const ticks = []
-            for (let i = maxTicks; i >= 0; i--) {
-              ticks.push(i * step)
-            }
-            return (
-              <div className="flex w-14 flex-col justify-between pr-3 text-right text-xs text-muted-foreground py-1 shrink-0">
-                {ticks.map((tick, i) => (
-                  <span key={i}>{formatValue(tick)}</span>
-                ))}
-              </div>
-            )
-          })()}
-
-          {/* Bars */}
-          <div className="flex flex-1 items-end justify-between gap-2 border-l border-b border-border/50 pl-3 pb-2 overflow-visible">
-            {data.map((item, index) => (
-              <div 
-                key={`${item.month}-${index}`} 
-                className="flex flex-1 flex-col items-center gap-3 min-w-0 relative group"
-                onMouseEnter={() => setHoveredIndex(index)}
-                onMouseLeave={() => setHoveredIndex(null)}
-              >
-                <div className="flex h-40 w-full items-end justify-center gap-1 relative">
-                  {/* Tooltip - positioned inside the bar container */}
-                  {hoveredIndex === index && (
-                    <div 
-                      className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 z-50"
-                      style={{ pointerEvents: 'none' }}
-                    >
-                      <div className="bg-slate-900 text-white text-xs px-3 py-2.5 rounded-lg shadow-2xl min-w-[150px] border border-slate-700">
-                        <div className="font-semibold text-center mb-2 text-white border-b border-slate-700 pb-1.5">
-                          {item.monthFull} {item.year}
-                        </div>
-                        <div className="space-y-1.5">
-                          <div className="flex items-center justify-between gap-3">
-                            <div className="flex items-center gap-1.5">
-                              <div className="w-2 h-2 rounded-full bg-emerald-400" />
-                              <span className="text-slate-300">Masuk</span>
-                            </div>
-                            <span className="font-semibold text-emerald-400">{formatCurrency(item.income)}</span>
-                          </div>
-                          <div className="flex items-center justify-between gap-3">
-                            <div className="flex items-center gap-1.5">
-                              <div className="w-2 h-2 rounded-full bg-rose-400" />
-                              <span className="text-slate-300">Keluar</span>
-                            </div>
-                            <span className="font-semibold text-rose-400">{formatCurrency(item.expense)}</span>
-                          </div>
-                        </div>
-                      </div>
-                      {/* Arrow */}
-                      <div className="absolute left-1/2 -translate-x-1/2 -bottom-1.5 w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[6px] border-t-slate-900" />
+      <CardContent className="flex-1">
+        <ChartContainer config={chartConfig} className="h-[200px] sm:h-[250px] w-full">
+          <AreaChart
+            accessibilityLayer
+            data={data}
+            margin={{
+              left: 0,
+              right: 12,
+              top: 12,
+              bottom: 0,
+            }}
+          >
+            <CartesianGrid vertical={false} strokeDasharray="3 3" stroke="hsl(var(--border))" />
+            <XAxis
+              dataKey="month"
+              tickLine={false}
+              axisLine={false}
+              tickMargin={8}
+              tick={{ fontSize: 11 }}
+            />
+            <YAxis
+              tickLine={false}
+              axisLine={false}
+              tickMargin={8}
+              tickFormatter={formatCurrency}
+              tick={{ fontSize: 10 }}
+              width={45}
+            />
+            <ChartTooltip
+              cursor={false}
+              content={
+                <ChartTooltipContent
+                  formatter={(value, name) => (
+                    <div className="flex items-center justify-between gap-4">
+                      <span className="text-muted-foreground">
+                        {name === 'income' ? 'Pemasukan' : 'Pengeluaran'}
+                      </span>
+                      <span className="font-semibold">
+                        Rp {Number(value).toLocaleString('id-ID')}
+                      </span>
                     </div>
                   )}
-
-                  {/* Income bar - rounded pill style */}
-                  <div
-                    className="w-4 rounded-full bg-gradient-to-t from-emerald-500 to-emerald-400 cursor-pointer"
-                    style={{ height: `${getBarHeight(item.income)}%` }}
-                  />
-                  {/* Expense bar - rounded pill style */}
-                  <div
-                    className="w-4 rounded-full bg-gradient-to-t from-rose-500 to-rose-400 cursor-pointer"
-                    style={{ height: `${getBarHeight(item.expense)}%` }}
-                  />
-                </div>
-                <span className={`text-xs font-medium transition-colors ${
-                  hoveredIndex === index ? 'text-foreground' : 'text-muted-foreground'
-                }`}>{item.month}</span>
-              </div>
-            ))}
-          </div>
-        </div>
+                />
+              }
+            />
+            <defs>
+              <linearGradient id="fillIncome" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="#10b981" stopOpacity={0.8} />
+                <stop offset="95%" stopColor="#10b981" stopOpacity={0.1} />
+              </linearGradient>
+              <linearGradient id="fillExpense" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="#f43f5e" stopOpacity={0.8} />
+                <stop offset="95%" stopColor="#f43f5e" stopOpacity={0.1} />
+              </linearGradient>
+            </defs>
+            <Area
+              dataKey="expense"
+              type="monotone"
+              fill="url(#fillExpense)"
+              fillOpacity={0.4}
+              stroke="#f43f5e"
+              strokeWidth={2}
+            />
+            <Area
+              dataKey="income"
+              type="monotone"
+              fill="url(#fillIncome)"
+              fillOpacity={0.4}
+              stroke="#10b981"
+              strokeWidth={2}
+            />
+          </AreaChart>
+        </ChartContainer>
 
         {/* Legend */}
-        <div className="mt-6 flex items-center justify-center gap-8">
-          <div className="flex items-center gap-2">
-            <div className="h-3 w-3 rounded-full bg-emerald-500" />
-            <span className="text-sm font-medium text-muted-foreground">Pemasukan</span>
+        <div className="mt-4 flex items-center justify-center gap-4 sm:gap-6">
+          <div className="flex items-center gap-1.5">
+            <div className="h-2.5 w-2.5 sm:h-3 sm:w-3 rounded-full bg-emerald-500" />
+            <span className="text-[10px] sm:text-sm font-medium text-muted-foreground">Pemasukan</span>
           </div>
-          <div className="flex items-center gap-2">
-            <div className="h-3 w-3 rounded-full bg-rose-500" />
-            <span className="text-sm font-medium text-muted-foreground">Pengeluaran</span>
+          <div className="flex items-center gap-1.5">
+            <div className="h-2.5 w-2.5 sm:h-3 sm:w-3 rounded-full bg-rose-500" />
+            <span className="text-[10px] sm:text-sm font-medium text-muted-foreground">Pengeluaran</span>
           </div>
         </div>
       </CardContent>

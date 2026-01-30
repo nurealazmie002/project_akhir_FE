@@ -1,61 +1,14 @@
 import { Card, CardContent } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
-import { ArrowDown, ArrowUp, AlertTriangle, CheckCircle, TrendingUp, TrendingDown } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { ArrowUp, ArrowDown, TrendingUp, TrendingDown, AlertTriangle, CheckCircle } from 'lucide-react'
 
-interface StatCardProps {
+export interface StatCardProps {
   title: string
   value: string
   change?: number
   changeLabel?: string
-  variant?: 'default' | 'warning' | 'success' | 'danger'
+  variant?: 'default' | 'warning'
   icon?: 'up' | 'down' | 'warning' | 'check'
-}
-
-function useAnimatedCounter(endValue: string, duration: number = 1000) {
-  const [displayValue, setDisplayValue] = useState('0')
-  
-  useEffect(() => {
-    const numericMatch = endValue.match(/[\d.,]+/)
-    if (!numericMatch) {
-      setDisplayValue(endValue)
-      return
-    }
-    
-    const numericStr = numericMatch[0].replace(/\./g, '').replace(/,/g, '')
-    const numericValue = parseInt(numericStr, 10)
-    
-    if (isNaN(numericValue)) {
-      setDisplayValue(endValue)
-      return
-    }
-    
-    const startTime = Date.now()
-    const startValue = 0
-    
-    const animate = () => {
-      const elapsed = Date.now() - startTime
-      const progress = Math.min(elapsed / duration, 1)
-      
-      const easeOutQuart = 1 - Math.pow(1 - progress, 4)
-      const currentValue = Math.floor(startValue + (numericValue - startValue) * easeOutQuart)
-      
-      const formattedNumber = new Intl.NumberFormat('id-ID').format(currentValue)
-      const newValue = endValue.replace(numericMatch[0], formattedNumber)
-      
-      setDisplayValue(newValue)
-      
-      if (progress < 1) {
-        requestAnimationFrame(animate)
-      } else {
-        setDisplayValue(endValue)
-      }
-    }
-    
-    requestAnimationFrame(animate)
-  }, [endValue, duration])
-  
-  return displayValue
 }
 
 export function StatCard({
@@ -66,8 +19,6 @@ export function StatCard({
   variant = 'default',
   icon,
 }: StatCardProps) {
-  const animatedValue = useAnimatedCounter(value, 800)
-  
   const IconComponent = {
     up: TrendingDown,
     down: TrendingUp,
@@ -75,59 +26,49 @@ export function StatCard({
     check: CheckCircle,
   }[icon || 'check']
 
-  const iconConfig = {
-    up: 'from-rose-500 to-rose-600',
-    down: 'from-emerald-500 to-emerald-600',
-    warning: 'from-amber-500 to-orange-500',
-    check: 'from-emerald-500 to-teal-500',
+  const iconColors = {
+    up: 'bg-rose-100 text-rose-600 dark:bg-rose-500/20 dark:text-rose-400',
+    down: 'bg-emerald-100 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-400',
+    warning: 'bg-amber-100 text-amber-600 dark:bg-amber-500/20 dark:text-amber-400',
+    check: 'bg-emerald-100 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-400',
   }
 
   return (
-    <Card
-      className={cn(
-        'group border border-border/50 bg-card hover:shadow-xl hover:shadow-primary/10 hover:-translate-y-1 transition-all duration-300 overflow-hidden',
-        variant === 'warning' && 'border-amber-500/30 bg-gradient-to-br from-amber-500/5 to-transparent'
-      )}
-    >
-      <CardContent className="p-5">
-
-        <div className="flex items-start justify-between mb-4">
-          <p className="text-sm font-medium text-muted-foreground leading-tight">{title}</p>
+    <Card className={cn(
+      'border bg-card transition-shadow duration-200 hover:shadow-md',
+      variant === 'warning' && 'border-amber-200 dark:border-amber-500/30'
+    )}>
+      <CardContent className="p-3 sm:p-4">
+        <div className="flex items-start justify-between gap-2 mb-2">
+          <p className="text-xs sm:text-sm font-medium text-muted-foreground leading-tight">{title}</p>
           {icon && (
-            <div className={cn(
-              'p-2.5 rounded-xl bg-gradient-to-br shadow-md group-hover:scale-110 group-hover:rotate-3 transition-all duration-300',
-              iconConfig[icon]
-            )}>
-              <IconComponent size={20} className="text-white" />
+            <div className={cn('p-1.5 sm:p-2 rounded-lg shrink-0', iconColors[icon])}>
+              <IconComponent className="h-4 w-4 sm:h-[18px] sm:w-[18px]" />
             </div>
           )}
         </div>
 
-
-        <p
-          className={cn(
-            'text-2xl font-bold tracking-tight mb-2 transition-all duration-300',
-            variant === 'warning' ? 'text-amber-500' : 'text-foreground'
-          )}
-        >
-          {animatedValue}
+        <p className={cn(
+          'text-xl sm:text-2xl font-bold tracking-tight mb-1.5',
+          variant === 'warning' ? 'text-amber-600 dark:text-amber-400' : 'text-foreground'
+        )}>
+          {value}
         </p>
 
-
         {(change !== undefined || changeLabel) && (
-          <div className="flex items-center gap-2 flex-wrap">
+          <div className="flex items-center gap-1.5 flex-wrap">
             {change !== undefined && (
               <span className={cn(
-                'inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full transition-all duration-300',
+                'inline-flex items-center gap-0.5 text-[10px] sm:text-xs font-medium px-1.5 py-0.5 rounded-full',
                 change > 0 
-                  ? 'bg-emerald-500/10 text-emerald-500' 
-                  : 'bg-rose-500/10 text-rose-500'
+                  ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-400' 
+                  : 'bg-rose-100 text-rose-700 dark:bg-rose-500/20 dark:text-rose-400'
               )}>
-                {change > 0 ? <ArrowUp size={12} /> : <ArrowDown size={12} />}
+                {change > 0 ? <ArrowUp className="h-2.5 w-2.5" /> : <ArrowDown className="h-2.5 w-2.5" /> }
                 {change > 0 ? '+' : ''}{change}%
               </span>
             )}
-            <span className="text-xs text-muted-foreground">{changeLabel}</span>
+            <span className="text-[10px] sm:text-xs text-muted-foreground">{changeLabel}</span>
           </div>
         )}
       </CardContent>

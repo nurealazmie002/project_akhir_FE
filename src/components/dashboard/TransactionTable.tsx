@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader, CardTitle, CardAction } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import {
   Table,
@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/table'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
-import { ArrowRight, Receipt, Printer } from 'lucide-react'
+import { ArrowRight, Printer } from 'lucide-react'
 import type { DashboardTransaction } from '@/types/dashboard.types'
 
 interface TransactionTableProps {
@@ -36,17 +36,17 @@ export function TransactionTable({
     switch (status) {
       case 'LUNAS':
         return {
-          className: 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20',
+          className: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-400',
           label: 'Lunas'
         }
       case 'PENDING':
         return {
-          className: 'bg-amber-500/10 text-amber-500 border-amber-500/20',
+          className: 'bg-amber-100 text-amber-700 dark:bg-amber-500/20 dark:text-amber-400',
           label: 'Pending'
         }
       case 'GAGAL':
         return {
-          className: 'bg-rose-500/10 text-rose-500 border-rose-500/20',
+          className: 'bg-rose-100 text-rose-700 dark:bg-rose-500/20 dark:text-rose-400',
           label: 'Gagal'
         }
       default:
@@ -58,86 +58,76 @@ export function TransactionTable({
   }
 
   return (
-    <Card className="border-border/50 bg-card hover:shadow-lg hover:shadow-primary/5 transition-all duration-300">
-      <CardHeader className="pb-4">
-        <div className="flex items-center gap-2">
-          <div className="p-2 rounded-lg bg-primary/10">
-            <Receipt size={18} className="text-primary" />
-          </div>
-          <CardTitle className="text-lg font-semibold text-foreground">{title}</CardTitle>
-        </div>
-        {showViewAll && (
-          <CardAction>
+    <Card className="border bg-card">
+      <CardHeader className="px-3 sm:px-6 pb-2 sm:pb-3">
+        <div className="flex items-center justify-between">
+          <CardTitle className="text-sm sm:text-base font-semibold">{title}</CardTitle>
+          {showViewAll && (
             <Button 
               variant="ghost" 
+              size="sm"
               onClick={onViewAll} 
-              className="text-primary hover:text-primary hover:bg-primary/10 gap-1 group"
+              className="text-primary hover:text-primary gap-1 h-7 sm:h-8 text-xs sm:text-sm px-2"
             >
               Lihat Semua
-              <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
+              <ArrowRight className="h-3 w-3 sm:h-4 sm:w-4" />
             </Button>
-          </CardAction>
-        )}
+          )}
+        </div>
       </CardHeader>
       <CardContent className="p-0">
         {transactions.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-12 text-center">
-            <Receipt size={48} className="text-muted-foreground/30 mb-4" />
-            <p className="text-muted-foreground">Belum ada transaksi</p>
+          <div className="flex flex-col items-center justify-center py-8 sm:py-10 text-center text-muted-foreground">
+            <p className="text-xs sm:text-sm">Belum ada transaksi</p>
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <Table className="min-w-[500px]">
+            <Table>
               <TableHeader>
-                <TableRow className="border-border/50 hover:bg-transparent">
-                  <TableHead className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Tanggal</TableHead>
-                  <TableHead className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Santri</TableHead>
-                  <TableHead className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Tipe</TableHead>
-                  <TableHead className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Jumlah</TableHead>
-                  <TableHead className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Status</TableHead>
-                  {onRowClick && (
-                    <TableHead className="text-xs font-semibold text-muted-foreground uppercase tracking-wider w-16"></TableHead>
-                  )}
+                <TableRow className="hover:bg-transparent">
+                  <TableHead className="text-[10px] sm:text-xs font-medium text-muted-foreground pl-3 sm:pl-6">Tanggal</TableHead>
+                  <TableHead className="text-[10px] sm:text-xs font-medium text-muted-foreground">Santri</TableHead>
+                  <TableHead className="text-[10px] sm:text-xs font-medium text-muted-foreground hidden sm:table-cell">Tipe</TableHead>
+                  <TableHead className="text-[10px] sm:text-xs font-medium text-muted-foreground">Jumlah</TableHead>
+                  <TableHead className="text-[10px] sm:text-xs font-medium text-muted-foreground hidden sm:table-cell">Status</TableHead>
+                  {onRowClick && <TableHead className="w-10 sm:w-12"></TableHead>}
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {transactions.map((tx, index) => {
+                {transactions.map((tx) => {
                   const statusConfig = getStatusConfig(tx.status)
                   return (
                     <TableRow 
                       key={tx.id} 
                       className={cn(
-                        'border-border/50 transition-colors',
-                        index % 2 === 0 ? 'bg-muted/20' : 'bg-transparent',
-                        'hover:bg-primary/5',
-                        onRowClick && 'cursor-pointer'
+                        'transition-colors',
+                        onRowClick && 'cursor-pointer hover:bg-muted/50'
                       )}
                       onClick={() => onRowClick?.(tx)}
                     >
-                      <TableCell className="text-sm text-muted-foreground font-medium">{tx.date}</TableCell>
-                      <TableCell className="text-sm font-medium text-foreground">{tx.studentName}</TableCell>
-                      <TableCell className="text-sm text-muted-foreground">{tx.type}</TableCell>
-                      <TableCell className="text-sm font-semibold text-emerald-500">+ Rp {formatCurrency(tx.amount)}</TableCell>
-                      <TableCell>
-                        <Badge 
-                          variant="outline"
-                          className={cn('font-medium border', statusConfig.className)}
-                        >
+                      <TableCell className="text-[11px] sm:text-sm text-muted-foreground pl-3 sm:pl-6 py-2 sm:py-3">{tx.date}</TableCell>
+                      <TableCell className="text-[11px] sm:text-sm font-medium py-2 sm:py-3 max-w-[100px] sm:max-w-none truncate">{tx.studentName}</TableCell>
+                      <TableCell className="text-[11px] sm:text-sm text-muted-foreground hidden sm:table-cell py-2 sm:py-3">{tx.type}</TableCell>
+                      <TableCell className="text-[11px] sm:text-sm font-medium text-emerald-600 dark:text-emerald-400 py-2 sm:py-3 whitespace-nowrap">
+                        +Rp {formatCurrency(tx.amount)}
+                      </TableCell>
+                      <TableCell className="hidden sm:table-cell py-2 sm:py-3">
+                        <Badge variant="secondary" className={cn('text-[10px] sm:text-xs font-medium', statusConfig.className)}>
                           {statusConfig.label}
                         </Badge>
                       </TableCell>
                       {onRowClick && (
-                        <TableCell>
+                        <TableCell className="py-2 sm:py-3 pr-3 sm:pr-6">
                           <Button
                             variant="ghost"
                             size="sm"
-                            className="h-8 w-8 p-0 text-muted-foreground hover:text-primary"
+                            className="h-6 w-6 sm:h-8 sm:w-8 p-0 text-muted-foreground hover:text-primary"
                             onClick={(e) => {
                               e.stopPropagation()
                               onRowClick(tx)
                             }}
                           >
-                            <Printer size={16} />
+                            <Printer className="h-3 w-3 sm:h-4 sm:w-4" />
                           </Button>
                         </TableCell>
                       )}

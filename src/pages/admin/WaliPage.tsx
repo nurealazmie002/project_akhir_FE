@@ -165,23 +165,23 @@ export function WaliPage() {
       initial="initial"
       animate="animate"
       variants={fadeInUp}
-      className="space-y-6"
+      className="space-y-4 sm:space-y-6"
     >
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div className="flex items-center gap-3">
-          <div className="rounded-lg bg-purple-500/20 p-2">
-            <Users className="h-6 w-6 text-purple-400" />
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <div className="flex items-center gap-2 sm:gap-3">
+          <div className="rounded-lg bg-purple-500/20 p-1.5 sm:p-2">
+            <Users className="h-5 w-5 sm:h-6 sm:w-6 text-purple-400" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-foreground">Data Wali</h1>
-            <p className="text-sm text-muted-foreground">
+            <h1 className="text-lg sm:text-2xl font-bold text-foreground">Data Wali</h1>
+            <p className="text-xs sm:text-sm text-muted-foreground hidden sm:block">
               Kelola akun wali santri
             </p>
           </div>
         </div>
         <Button
           onClick={openAddModal}
-          className="gap-2 bg-gradient-to-r from-purple-500 to-violet-500 hover:from-purple-600 hover:to-violet-600 text-white shadow-lg shadow-purple-500/25 hover:shadow-xl hover:shadow-purple-500/30 hover:-translate-y-0.5 transition-all duration-300 w-full sm:w-auto"
+          className="gap-2 bg-primary hover:bg-primary/90 w-full sm:w-auto"
         >
           <Plus size={18} />
           Tambah Wali
@@ -195,11 +195,11 @@ export function WaliPage() {
       )}
 
 
-      <div className="grid gap-4 grid-cols-2 lg:grid-cols-3">
-        <Card className="border-border/50 bg-gradient-to-br from-purple-500/10 to-purple-600/5">
+      <div className="grid gap-3 sm:gap-4 grid-cols-2 lg:grid-cols-3">
+        <Card className="border bg-card">
           <CardContent className="flex items-center gap-3 p-4">
-            <div className="rounded-xl bg-purple-500/20 p-2.5">
-              <Users className="h-5 w-5 text-purple-500" />
+            <div className="rounded-lg bg-purple-100 dark:bg-purple-500/20 p-2">
+              <Users className="h-5 w-5 text-purple-600 dark:text-purple-400" />
             </div>
             <div>
               <p className="text-2xl font-bold text-foreground">{waliList.length}</p>
@@ -207,10 +207,10 @@ export function WaliPage() {
             </div>
           </CardContent>
         </Card>
-        <Card className="border-border/50 bg-gradient-to-br from-emerald-500/10 to-emerald-600/5">
+        <Card className="border bg-card">
           <CardContent className="flex items-center gap-3 p-4">
-            <div className="rounded-xl bg-emerald-500/20 p-2.5">
-              <UserPlus className="h-5 w-5 text-emerald-500" />
+            <div className="rounded-lg bg-emerald-100 dark:bg-emerald-500/20 p-2">
+              <UserPlus className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
             </div>
             <div>
               <p className="text-2xl font-bold text-foreground">
@@ -220,10 +220,10 @@ export function WaliPage() {
             </div>
           </CardContent>
         </Card>
-        <Card className="border-border/50 bg-gradient-to-br from-amber-500/10 to-amber-600/5 col-span-2 lg:col-span-1">
+        <Card className="border bg-card col-span-2 lg:col-span-1">
           <CardContent className="flex items-center gap-3 p-4">
-            <div className="rounded-xl bg-amber-500/20 p-2.5">
-              <User className="h-5 w-5 text-amber-500" />
+            <div className="rounded-lg bg-amber-100 dark:bg-amber-500/20 p-2">
+              <User className="h-5 w-5 text-amber-600 dark:text-amber-400" />
             </div>
             <div>
               <p className="text-2xl font-bold text-foreground">
@@ -235,7 +235,7 @@ export function WaliPage() {
         </Card>
       </div>
 
-      <Card className="border-border/50 bg-card">
+      <Card className="border bg-card">
         <CardHeader className="pb-4">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>

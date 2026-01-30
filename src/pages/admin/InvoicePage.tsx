@@ -296,16 +296,16 @@ export function InvoicePage() {
   return (
     <>
       <motion.div
-        className="space-y-6"
+        className="space-y-4 sm:space-y-6"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
       >
         {/* Header */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
           <div>
-            <h1 className="text-2xl font-bold text-foreground">Invoice / Tagihan</h1>
-            <p className="text-muted-foreground">Kelola tagihan pembayaran santri</p>
+            <h1 className="text-lg sm:text-2xl font-bold text-foreground">Invoice / Tagihan</h1>
+            <p className="text-xs sm:text-sm text-muted-foreground hidden sm:block">Kelola tagihan pembayaran santri</p>
           </div>
           <Button
             onClick={() => setShowModal(true)}
@@ -317,7 +317,7 @@ export function InvoicePage() {
         </div>
 
         {/* Filters */}
-        <Card className="border-border/50">
+        <Card className="border bg-card">
           <CardContent className="p-4">
             <div className="flex flex-col sm:flex-row gap-4">
               <div className="relative flex-1">
@@ -346,16 +346,11 @@ export function InvoicePage() {
         </Card>
 
         {/* Invoice Table */}
-        <Card className="border-border/50">
-          <CardHeader className="pb-4">
-            <div className="flex items-center gap-2">
-              <div className="p-2 rounded-lg bg-primary/10">
-                <FileText size={18} className="text-primary" />
-              </div>
-              <CardTitle className="text-lg font-semibold text-foreground">
-                Daftar Invoice ({filteredInvoices.length})
-              </CardTitle>
-            </div>
+        <Card className="border bg-card">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-base font-semibold">
+              Daftar Invoice ({filteredInvoices.length})
+            </CardTitle>
           </CardHeader>
           <CardContent className="p-0">
             {filteredInvoices.length === 0 ? (

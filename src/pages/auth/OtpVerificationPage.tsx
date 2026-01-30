@@ -142,23 +142,23 @@ export function OtpVerificationPage() {
       transition={{ duration: 0.4 }}
     >
       <Card className="border-border bg-card">
-        <CardHeader className="space-y-1 text-center">
+        <CardHeader className="space-y-1 text-center px-4 sm:px-6">
           <motion.div
-            className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary/20"
+            className="mx-auto mb-3 sm:mb-4 flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-full bg-primary/20"
             initial={{ scale: 0, rotate: -180 }}
             animate={{ scale: 1, rotate: 0 }}
             transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
           >
-            <KeyRound className="h-6 w-6 text-primary" />
+            <KeyRound className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
           </motion.div>
-          <CardTitle className="text-2xl text-foreground">Verifikasi Email</CardTitle>
-          <CardDescription className="text-muted-foreground">
+          <CardTitle className="text-xl sm:text-2xl text-foreground">Verifikasi Email</CardTitle>
+          <CardDescription className="text-muted-foreground text-xs sm:text-sm">
             Masukkan 6 digit kode OTP yang dikirim ke<br />
-            <span className="text-primary">{email}</span>
+            <span className="text-primary break-all">{email}</span>
           </CardDescription>
         </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-6">
+        <CardContent className="px-4 sm:px-6">
+          <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
             {error && (
               <motion.div
                 initial={{ opacity: 0, y: -10 }}
@@ -181,7 +181,7 @@ export function OtpVerificationPage() {
               </motion.div>
             )}
 
-            <div className="flex justify-center gap-2">
+            <div className="flex justify-center gap-1.5 sm:gap-2">
               {otp.map((digit, index) => (
                 <motion.div
                   key={index}
@@ -198,7 +198,7 @@ export function OtpVerificationPage() {
                     onChange={(e) => handleChange(index, e.target.value)}
                     onKeyDown={(e) => handleKeyDown(index, e)}
                     onPaste={handlePaste}
-                    className="h-14 w-12 text-center text-2xl font-bold"
+                    className="h-11 w-10 sm:h-14 sm:w-12 text-center text-xl sm:text-2xl font-bold p-0"
                   />
                 </motion.div>
               ))}
@@ -220,7 +220,7 @@ export function OtpVerificationPage() {
           </form>
 
           <motion.div
-            className="mt-6 text-center text-sm text-muted-foreground"
+            className="mt-4 sm:mt-6 text-center text-xs sm:text-sm text-muted-foreground"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.7 }}
@@ -230,7 +230,7 @@ export function OtpVerificationPage() {
               <button
                 onClick={handleResend}
                 disabled={isLoading}
-                className="text-primary hover:underline"
+                className="text-primary hover:underline font-medium"
               >
                 Kirim ulang
               </button>
@@ -243,13 +243,13 @@ export function OtpVerificationPage() {
 
           <motion.button
             onClick={() => navigate('/register')}
-            className="mt-4 flex w-full items-center justify-center gap-2 text-sm text-muted-foreground hover:text-foreground"
+            className="mt-3 sm:mt-4 flex w-full items-center justify-center gap-2 text-xs sm:text-sm text-muted-foreground hover:text-foreground"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.8 }}
             whileHover={{ x: -5 }}
           >
-            <ArrowLeft size={16} />
+            <ArrowLeft size={14} className="sm:w-4 sm:h-4" />
             Kembali ke Register
           </motion.button>
         </CardContent>
