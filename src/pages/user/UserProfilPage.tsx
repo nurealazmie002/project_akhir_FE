@@ -9,9 +9,10 @@ import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import { useAuthStore } from '@/stores/authStore'
 import { profileService } from '@/services/profileService'
+import { userService } from '@/services/userService'
 import { fadeInUp } from '@/lib/animations'
-import { 
-  User, 
+import {
+  User,
   Phone,
   MapPin,
   Lock,
@@ -133,14 +134,21 @@ export function UserProfilPage() {
     }
   }
 
-  const onPasswordSubmit = async (_data: PasswordFormData) => {
+  const onPasswordSubmit = async (data: PasswordFormData) => {
     setIsLoading(true)
     setError(null)
     setSuccessMessage(null)
     try {
-      setError('Fitur ubah password belum tersedia')
+      await userService.changePassword({
+        currentPassword: data.currentPassword,
+        newPassword: data.newPassword
+      })
+      setSuccessMessage('Password berhasil diubah')
+      passwordForm.reset()
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Gagal mengubah password')
+      console.error('Password change error:', err)
+      const errorMsg = err.response?.data?.message || err.response?.data?.error || err.message || 'Gagal mengubah password'
+      setError(errorMsg)
     } finally {
       setIsLoading(false)
     }
