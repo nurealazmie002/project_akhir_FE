@@ -75,8 +75,8 @@ export function SantriListPage() {
   const femaleSantri = santriList.filter(s => s.gender?.toLowerCase() === 'perempuan').length
 
   const statCards = [
-    { title: 'Total Santri', value: totalSantri, icon: Users, color: 'from-teal-500 to-teal-600' },
-    { title: 'Santri Aktif', value: activeSantri, icon: UserCheck, color: 'from-emerald-500 to-emerald-600' },
+    { title: 'Total Santri', value: totalSantri, icon: Users, color: 'from-cyan-500 to-cyan-600' },
+    { title: 'Santri Aktif', value: activeSantri, icon: UserCheck, color: 'from-sky-500 to-sky-600' },
     { title: 'Laki-laki', value: maleSantri, icon: User, color: 'from-cyan-500 to-cyan-600' },
     { title: 'Perempuan', value: femaleSantri, icon: UserX, color: 'from-rose-400 to-rose-500' },
   ]
@@ -90,8 +90,8 @@ export function SantriListPage() {
     >
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div className="flex items-center gap-3">
-          <div className="rounded-lg bg-emerald-500/20 p-2">
-            <Wallet className="h-6 w-6 text-emerald-400" />
+          <div className="rounded-lg bg-sky-500/20 p-2">
+            <Wallet className="h-6 w-6 text-sky-400" />
           </div>
           <div>
             <h1 className="text-2xl font-bold text-foreground">Santri - {user?.name || 'Wali Santri'}</h1>
@@ -152,76 +152,135 @@ export function SantriListPage() {
             </div>
           </div>
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-0">
           {isLoading ? (
-            <p className="text-center text-muted-foreground py-8">Memuat data...</p>
-          ) : filteredSantri.length === 0 ? (
-            <p className="text-center text-muted-foreground py-8">
-              {searchQuery ? 'Tidak ada hasil ditemukan' : 'Belum ada data santri'}
-            </p>
-          ) : (
-            <div className="rounded-lg border border-border overflow-hidden">
-              <Table>
-                <TableHeader>
-                  <TableRow className="bg-muted/50 hover:bg-muted/50">
-                    <TableHead className="font-semibold text-foreground">NIS</TableHead>
-                    <TableHead className="font-semibold text-foreground">NAMA</TableHead>
-                    <TableHead className="font-semibold text-foreground">KELAS</TableHead>
-                    <TableHead className="font-semibold text-foreground">GENDER</TableHead>
-                    <TableHead className="font-semibold text-foreground">INSTITUSI</TableHead>
-                    <TableHead className="font-semibold text-foreground">STATUS</TableHead>
-                    <TableHead className="font-semibold text-foreground text-right">AKSI</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {filteredSantri.map((santri) => (
-                    <TableRow 
-                      key={santri.id} 
-                      className="hover:bg-muted/30 cursor-pointer transition-colors"
-                      onClick={() => navigate(`/admin/santri/${santri.id}/transaksi`)}
-                    >
-                      <TableCell className="font-mono text-sm">{santri.nis}</TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-2">
-                          <div className="h-8 w-8 rounded-full bg-gradient-to-br from-primary/60 to-primary flex items-center justify-center text-white text-xs font-medium">
-                            {santri.fullname?.charAt(0)?.toUpperCase() || 'S'}
-                          </div>
-                          <span className="font-medium">{santri.fullname}</span>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant="secondary" className="bg-primary/20 text-primary">
-                          {santri.kelas}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="text-muted-foreground">{santri.gender}</TableCell>
-                      <TableCell className="text-muted-foreground">{santri.institutionName || '-'}</TableCell>
-                      <TableCell>
-                        <Badge className={santri.isActive !== false 
-                          ? 'bg-emerald-500/20 text-emerald-400'
-                          : 'bg-red-500/20 text-red-400'
-                        }>
-                          {santri.isActive !== false ? '● Aktif' : '● Nonaktif'}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            navigate(`/admin/santri/${santri.id}/transaksi`)
-                          }}
-                          className="h-8 w-8 p-0 text-muted-foreground hover:text-emerald-400 hover:bg-emerald-500/10"
-                        >
-                          <Wallet size={16} />
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+            <div className="flex flex-col items-center gap-2 py-8">
+              <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent"></div>
+              <p className="text-muted-foreground">Memuat data...</p>
             </div>
+          ) : filteredSantri.length === 0 ? (
+            <div className="flex flex-col items-center gap-2 py-8">
+              <div className="h-12 w-12 rounded-full bg-muted/50 flex items-center justify-center">
+                <Search className="h-6 w-6 text-muted-foreground/50" />
+              </div>
+              <p className="text-muted-foreground">
+                {searchQuery ? 'Tidak ada hasil ditemukan' : 'Belum ada data santri'}
+              </p>
+            </div>
+          ) : (
+            <>
+              <div className="md:hidden divide-y divide-border/50">
+                {filteredSantri.map((santri) => (
+                  <div 
+                    key={santri.id} 
+                    className="p-4 hover:bg-muted/20 transition-colors cursor-pointer"
+                    onClick={() => navigate(`/user/santri/${santri.nis}`)}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="h-11 w-11 rounded-full bg-gradient-to-br from-sky-500 to-cyan-500 flex items-center justify-center text-white font-semibold text-sm shrink-0 shadow-sm">
+                        {santri.fullname?.charAt(0)?.toUpperCase() || 'S'}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2">
+                          <h3 className="font-semibold text-foreground truncate text-[15px]">
+                            {santri.fullname}
+                          </h3>
+                          <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-medium shrink-0 ${santri.isActive !== false ? 'bg-sky-500/15 text-sky-400' : 'bg-red-500/15 text-red-400'}`}>
+                            <span className={`h-1.5 w-1.5 rounded-full ${santri.isActive !== false ? 'bg-sky-400' : 'bg-red-400'}`}></span>
+                            {santri.isActive !== false ? 'Aktif' : 'Nonaktif'}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-2 mt-0.5">
+                          <span className="font-mono text-xs text-sky-400">{santri.nis}</span>
+                          <span className="text-muted-foreground/50">•</span>
+                          <span className="text-xs text-muted-foreground bg-muted/50 px-1.5 py-0.5 rounded">
+                            {santri.kelas}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-end gap-2 mt-3">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          navigate(`/user/santri/${santri.nis}`)
+                        }}
+                        className="w-full h-9 gap-1.5 text-xs rounded-lg bg-sky-500/10 text-sky-400 hover:bg-sky-500/20 hover:text-sky-300 justify-center"
+                      >
+                        <Wallet size={14} />
+                        Lihat Detail
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="hidden md:block rounded-lg border border-border overflow-hidden m-4">
+                <Table>
+                  <TableHeader>
+                    <TableRow className="bg-muted/50 hover:bg-muted/50">
+                      <TableHead className="font-semibold text-foreground">NIS</TableHead>
+                      <TableHead className="font-semibold text-foreground">NAMA</TableHead>
+                      <TableHead className="font-semibold text-foreground">KELAS</TableHead>
+                      <TableHead className="font-semibold text-foreground">GENDER</TableHead>
+                      <TableHead className="font-semibold text-foreground">INSTITUSI</TableHead>
+                      <TableHead className="font-semibold text-foreground">STATUS</TableHead>
+                      <TableHead className="font-semibold text-foreground text-right">AKSI</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {filteredSantri.map((santri) => (
+                      <TableRow 
+                        key={santri.id} 
+                        className="hover:bg-muted/30 cursor-pointer transition-colors"
+                        onClick={() => navigate(`/user/santri/${santri.nis}`)}
+                      >
+                        <TableCell className="font-mono text-sm">{santri.nis}</TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-2">
+                            <div className="h-8 w-8 rounded-full bg-gradient-to-br from-primary/60 to-primary flex items-center justify-center text-white text-xs font-medium">
+                              {santri.fullname?.charAt(0)?.toUpperCase() || 'S'}
+                            </div>
+                            <span className="font-medium">{santri.fullname}</span>
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <Badge variant="secondary" className="bg-primary/20 text-primary">
+                            {santri.kelas}
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="text-muted-foreground">{santri.gender}</TableCell>
+                        <TableCell className="text-muted-foreground">{santri.institutionName || '-'}</TableCell>
+                        <TableCell>
+                          <Badge className={santri.isActive !== false 
+                            ? 'bg-sky-500/20 text-sky-400'
+                            : 'bg-red-500/20 text-red-400'
+                          }>
+                            {santri.isActive !== false ? '● Aktif' : '● Nonaktif'}
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              navigate(`/user/santri/${santri.nis}`)
+                            }}
+                            className="h-8 w-8 p-0 text-muted-foreground hover:text-sky-400 hover:bg-sky-500/10"
+                          >
+                            <Wallet size={16} />
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            </>
           )}
         </CardContent>
       </Card>

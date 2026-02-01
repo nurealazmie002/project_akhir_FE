@@ -31,8 +31,8 @@ export function PaymentResultPage({ status: initialStatus }: { status: 'success'
   const config = {
     success: {
       icon: CheckCircle,
-      color: 'text-emerald-500',
-      bgColor: 'bg-emerald-500/10',
+      color: 'text-sky-500',
+      bgColor: 'bg-sky-500/10',
       title: 'Pembayaran Berhasil',
       description: 'Terima kasih, pembayaran Anda telah berhasil diverifikasi.',
       buttonText: 'Kembali ke Pembayaran'

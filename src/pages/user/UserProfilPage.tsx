@@ -123,7 +123,7 @@ export function UserProfilPage() {
         }, profilePicture)
         setProfileId(newProfile.id)
       }
-      setProfilePicture(null) // Reset file after successful upload
+      setProfilePicture(null) 
       setSuccessMessage('Profil berhasil diperbarui')
     } catch (err: any) {
       console.error('Profile update error:', err)
@@ -172,7 +172,7 @@ export function UserProfilPage() {
       </div>
 
       {successMessage && (
-        <Badge className="w-full justify-center py-2 bg-emerald-500/20 text-emerald-400">
+        <Badge className="w-full justify-center py-2 bg-sky-500/20 text-sky-400">
           {successMessage}
         </Badge>
       )}
@@ -191,17 +191,16 @@ export function UserProfilPage() {
           </CardHeader>
           <CardContent>
             <form onSubmit={profileForm.handleSubmit(onProfileSubmit)} className="space-y-4">
-              {/* Profile Picture Upload */}
               <div className="flex flex-col items-center gap-4 mb-6">
                 <div className="relative">
                   {profilePreview ? (
                     <img
                       src={profilePreview}
                       alt="Profile"
-                      className="h-24 w-24 rounded-full object-cover border-2 border-emerald-500"
+                      className="h-24 w-24 rounded-full object-cover border-2 border-sky-500"
                     />
                   ) : (
-                    <div className="h-24 w-24 rounded-full bg-emerald-600 flex items-center justify-center text-white text-3xl font-bold">
+                    <div className="h-24 w-24 rounded-full bg-sky-600 flex items-center justify-center text-white text-3xl font-bold">
                       {user?.name?.charAt(0) || 'U'}
                     </div>
                   )}
@@ -216,7 +215,7 @@ export function UserProfilPage() {
                     size="sm"
                     type="button"
                     onClick={() => profilePictureRef.current?.click()}
-                    className="absolute -bottom-2 -right-2 h-8 w-8 rounded-full bg-emerald-500 p-0 hover:bg-emerald-600"
+                    className="absolute -bottom-2 -right-2 h-8 w-8 rounded-full bg-sky-500 p-0 hover:bg-sky-600"
                   >
                     <User size={14} className="text-white" />
                   </Button>
@@ -286,7 +285,7 @@ export function UserProfilPage() {
               <Button
                 type="submit"
                 disabled={isLoading}
-                className="w-full gap-2 bg-emerald-600 hover:bg-emerald-700"
+                className="w-full gap-2 bg-sky-600 hover:bg-sky-700"
               >
                 <Save size={18} />
                 {isLoading ? 'Menyimpan...' : 'Simpan Perubahan'}

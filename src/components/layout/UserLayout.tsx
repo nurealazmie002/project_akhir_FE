@@ -31,11 +31,28 @@ const navItems: NavItem[] = [
 export function UserLayout() {
   const location = useLocation()
   const navigate = useNavigate()
-  const { user, updateUser, logout } = useAuthStore() // Add updateUser
+  const { user, updateUser, logout, isAuthenticated, _hasHydrated } = useAuthStore()
+  
+  useEffect(() => {
+    if (_hasHydrated && !isAuthenticated) {
+      navigate('/login')
+    }
+  }, [isAuthenticated, _hasHydrated, navigate])
+
+  if (!_hasHydrated) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-slate-50 dark:bg-slate-950">
+        <div className="text-center">
+            <div className="h-8 w-8 animate-spin rounded-full border-4 border-sky-500 border-t-transparent mx-auto mb-4" />
+            <p className="text-slate-500 dark:text-slate-400">Memuat sesi...</p>
+        </div>
+      </div>
+    )
+  }
+  
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [profilePicture, setProfilePicture] = useState<string | null>(null)
   
-  // Fetch profile data and sync auth store
   useEffect(() => {
     const fetchProfile = async () => {
       try {
@@ -44,7 +61,6 @@ export function UserLayout() {
           if (profile.profile_picture_url) {
             setProfilePicture(profile.profile_picture_url)
           }
-          // Sync profile name to auth store
           if (profile.name) {
             updateUser({ name: profile.name })
           }
@@ -75,9 +91,9 @@ export function UserLayout() {
         <div className="relative border-b border-white/10 p-5">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <Avatar className="h-11 w-11 ring-2 ring-emerald-500/30">
+              <Avatar className="h-11 w-11 ring-2 ring-sky-500/30">
                 {profilePicture && <AvatarImage src={profilePicture} alt="Profile" />}
-                <AvatarFallback className="bg-gradient-to-br from-emerald-500 to-teal-600 text-white font-semibold">
+                <AvatarFallback className="bg-gradient-to-br from-sky-500 to-cyan-600 text-white font-semibold">
                   {(user?.name || user?.username)?.charAt(0)?.toUpperCase() || 'U'}
                 </AvatarFallback>
               </Avatar>
@@ -115,20 +131,20 @@ export function UserLayout() {
                     className={cn(
                       'group flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200',
                       isActive
-                        ? 'bg-gradient-to-r from-emerald-500/20 to-teal-500/10 text-emerald-400'
+                        ? 'bg-gradient-to-r from-sky-500/20 to-cyan-500/10 text-sky-400'
                         : 'text-slate-400 hover:bg-white/5 hover:text-white'
                     )}
                   >
                     <div className={cn(
-                      "absolute left-0 w-1 h-8 rounded-r-full bg-emerald-500 transition-all duration-200",
+                      "absolute left-0 w-1 h-8 rounded-r-full bg-sky-500 transition-all duration-200",
                       isActive ? "opacity-100" : "opacity-0"
                     )} />
                     
                     <div className={cn(
                       'flex items-center justify-center w-9 h-9 rounded-lg transition-all duration-200',
                       isActive 
-                        ? 'bg-emerald-500/20 text-emerald-400' 
-                        : 'bg-white/5 text-slate-400 group-hover:bg-emerald-500/10 group-hover:text-emerald-400'
+                        ? 'bg-sky-500/20 text-sky-400' 
+                        : 'bg-white/5 text-slate-400 group-hover:bg-sky-500/10 group-hover:text-sky-400'
                     )}>
                       {item.icon}
                     </div>
@@ -178,14 +194,14 @@ export function UserLayout() {
             <Button
               variant="ghost"
               size="icon"
-              className="lg:hidden shrink-0 hover:bg-emerald-500/10"
+              className="lg:hidden shrink-0 hover:bg-sky-500/10"
               onClick={() => setSidebarOpen(true)}
             >
               <Menu size={22} />
             </Button>
             <div className="flex-1 min-w-0">
               <h1 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white tracking-tight">Portal Wali Santri</h1>
-              <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">Selamat datang, <span className="text-emerald-600 dark:text-emerald-400 font-medium">{user?.name || user?.username || 'User'}</span></p>
+              <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">Selamat datang, <span className="text-sky-600 dark:text-sky-400 font-medium">{user?.name || user?.username || 'User'}</span></p>
             </div>
           </div>
         </header>

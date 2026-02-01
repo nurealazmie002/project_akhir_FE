@@ -200,18 +200,15 @@ export function ReceiptModal({ receipt, isOpen, onClose }: ReceiptModalProps) {
               </div>
 
               <CardContent id="receipt-content" className="p-6">
-                {/* Header */}
                 <div className="text-center mb-6">
                   <h3 className="text-xl font-bold text-foreground">{receipt.institutionName}</h3>
                   <p className="text-sm text-muted-foreground">Kwitansi Pembayaran</p>
                 </div>
 
-                {/* Receipt Number */}
                 <div className="text-center mb-4 py-2 px-4 bg-muted/50 rounded-lg">
                   <p className="text-xs text-muted-foreground">No: {receipt.receiptNumber}</p>
                 </div>
 
-                {/* Info */}
                 <div className="space-y-2 mb-4">
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">Nama Santri</span>
@@ -229,7 +226,6 @@ export function ReceiptModal({ receipt, isOpen, onClose }: ReceiptModalProps) {
 
                 <Separator className="my-4" />
 
-                {/* Items */}
                 <div className="space-y-2 mb-4">
                   {receipt.items.map((item, index) => (
                     <div key={index} className="flex justify-between text-sm">
@@ -241,21 +237,18 @@ export function ReceiptModal({ receipt, isOpen, onClose }: ReceiptModalProps) {
 
                 <Separator className="my-4" />
 
-                {/* Total */}
                 <div className="flex justify-between items-center">
                   <span className="text-lg font-semibold text-foreground">Total</span>
-                  <span className="text-xl font-bold text-emerald-500">{formatCurrency(receipt.totalAmount)}</span>
+                  <span className="text-xl font-bold text-sky-500">{formatCurrency(receipt.totalAmount)}</span>
                 </div>
 
-                {/* Status */}
                 <div className="text-center mt-4">
-                  <span className="inline-block px-4 py-1.5 bg-emerald-500/10 text-emerald-500 rounded-full text-sm font-semibold">
+                  <span className="inline-block px-4 py-1.5 bg-sky-500/10 text-sky-500 rounded-full text-sm font-semibold">
                     ✓ LUNAS
                   </span>
                 </div>
               </CardContent>
 
-              {/* Actions */}
               <div className="flex gap-2 p-4 border-t border-border/50">
                 <Button
                   variant="outline"

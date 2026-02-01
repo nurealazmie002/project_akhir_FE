@@ -167,7 +167,7 @@ export function SantriPage() {
   const getStatusBadge = (status?: Santri['status']) => {
     if (!status) return <span className="text-muted-foreground">-</span>
     const variants = {
-      ACTIVE: 'bg-emerald-500/20 text-emerald-400',
+      ACTIVE: 'bg-sky-500/20 text-sky-400',
       INACTIVE: 'bg-yellow-500/20 text-yellow-400',
       GRADUATED: 'bg-blue-500/20 text-blue-400',
     }
@@ -217,8 +217,8 @@ export function SantriPage() {
 
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div className="flex items-center gap-2 sm:gap-3">
-          <div className="rounded-lg bg-emerald-500/20 p-1.5 sm:p-2">
-            <Users className="h-5 w-5 sm:h-6 sm:w-6 text-emerald-400" />
+          <div className="rounded-lg bg-sky-500/20 p-1.5 sm:p-2">
+            <Users className="h-5 w-5 sm:h-6 sm:w-6 text-sky-400" />
           </div>
           <div>
             <h1 className="text-lg sm:text-2xl font-bold text-foreground">
@@ -243,8 +243,8 @@ export function SantriPage() {
       <div className="grid gap-3 sm:gap-4 grid-cols-2 lg:grid-cols-4">
         <Card className="border bg-card">
           <CardContent className="flex items-center gap-3 p-4">
-            <div className="rounded-lg bg-emerald-100 dark:bg-emerald-500/20 p-2">
-              <Users className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
+            <div className="rounded-lg bg-sky-100 dark:bg-sky-500/20 p-2">
+              <Users className="h-5 w-5 text-sky-600 dark:text-sky-400" />
             </div>
             <div>
               <p className="text-2xl font-bold text-foreground">{santriList.length}</p>
@@ -327,7 +327,92 @@ export function SantriPage() {
           </div>
         </CardHeader>
         <CardContent className="p-0">
-          <div className="overflow-x-auto">
+          <div className="md:hidden">
+            {isLoading ? (
+              <div className="flex flex-col items-center gap-2 py-12">
+                <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent"></div>
+                <p className="text-muted-foreground text-sm">Memuat data...</p>
+              </div>
+            ) : filteredSantri.length === 0 ? (
+              <div className="flex flex-col items-center gap-3 py-12">
+                <div className="h-14 w-14 rounded-full bg-muted/50 flex items-center justify-center">
+                  <Search className="h-7 w-7 text-muted-foreground/50" />
+                </div>
+                <p className="text-muted-foreground text-sm">
+                  {searchQuery ? 'Tidak ada hasil ditemukan' : 'Belum ada data santri'}
+                </p>
+              </div>
+            ) : (
+              <div className="divide-y divide-border/50">
+                {filteredSantri.map((santri) => (
+                  <div key={santri.id} className="p-4 hover:bg-muted/20 transition-colors">
+                    <div className="flex items-center gap-3">
+                      <div className="h-11 w-11 rounded-full bg-gradient-to-br from-sky-500 to-cyan-500 flex items-center justify-center text-white font-semibold text-sm shrink-0 shadow-sm">
+                        {santri.fullname?.charAt(0)?.toUpperCase() || 'S'}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2">
+                          <h3 className="font-semibold text-foreground truncate text-[15px]">
+                            {santri.fullname}
+                          </h3>
+                          {santri.isActive !== undefined && (
+                            <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-medium shrink-0 ${santri.isActive ? 'bg-sky-500/15 text-sky-400' : 'bg-amber-500/15 text-amber-400'}`}>
+                              <span className={`h-1.5 w-1.5 rounded-full ${santri.isActive ? 'bg-sky-400' : 'bg-amber-400'}`}></span>
+                              {santri.isActive ? 'Aktif' : 'Nonaktif'}
+                            </span>
+                          )}
+                        </div>
+                        <div className="flex items-center gap-2 mt-0.5">
+                          <span className="font-mono text-xs text-sky-400">{santri.nis}</span>
+                          <span className="text-muted-foreground/50">•</span>
+                          <span className="text-xs text-muted-foreground bg-muted/50 px-1.5 py-0.5 rounded">
+                            {santri.kelas || '-'}
+                          </span>
+                        </div>
+                        {santri.waliName && (
+                          <p className="text-xs text-muted-foreground mt-1">
+                            Wali: <span className="text-foreground/70">{santri.waliName}</span>
+                          </p>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-3 gap-2 mt-3">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => navigate(`/admin/santri/${santri.id}/transaksi`)}
+                        className="h-9 gap-1.5 text-xs rounded-lg bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 hover:text-blue-300 justify-center"
+                      >
+                        <Wallet size={14} />
+                        Transaksi
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleEdit(santri)}
+                        className="h-9 gap-1.5 text-xs rounded-lg bg-muted/50 text-muted-foreground hover:bg-primary/10 hover:text-primary justify-center"
+                      >
+                        <Edit size={14} />
+                        Edit
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleDelete(santri)}
+                        className="h-9 gap-1.5 text-xs rounded-lg bg-muted/50 text-muted-foreground hover:bg-red-500/10 hover:text-red-400 justify-center"
+                      >
+                      <Trash2 size={14} />
+                        Hapus
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <div className="hidden md:block overflow-x-auto">
             <Table>
               <TableHeader>
                 <TableRow className="border-border bg-muted/30 hover:bg-muted/30">
@@ -352,7 +437,7 @@ export function SantriPage() {
                     </TableCell>
                     <TableCell className="py-3 px-4">
                       <div className="flex items-center gap-2">
-                        <div className="h-8 w-8 rounded-full bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center text-white text-xs font-medium">
+                        <div className="h-8 w-8 rounded-full bg-gradient-to-br from-sky-500 to-cyan-500 flex items-center justify-center text-white text-xs font-medium">
                           {santri.fullname?.charAt(0)?.toUpperCase() || 'S'}
                         </div>
                         <span className="font-medium text-foreground">{santri.fullname}</span>
@@ -374,8 +459,8 @@ export function SantriPage() {
                     </TableCell>
                     <TableCell className="py-3 px-4">
                       {santri.isActive !== undefined ? (
-                        <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium ${santri.isActive ? 'bg-emerald-500/15 text-emerald-400' : 'bg-amber-500/15 text-amber-400'}`}>
-                          <span className={`h-1.5 w-1.5 rounded-full ${santri.isActive ? 'bg-emerald-400' : 'bg-amber-400'}`}></span>
+                        <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium ${santri.isActive ? 'bg-sky-500/15 text-sky-400' : 'bg-amber-500/15 text-amber-400'}`}>
+                          <span className={`h-1.5 w-1.5 rounded-full ${santri.isActive ? 'bg-sky-400' : 'bg-amber-400'}`}></span>
                           {santri.isActive ? 'Aktif' : 'Nonaktif'}
                         </span>
                       ) : santri.status ? (
@@ -571,7 +656,7 @@ export function SantriPage() {
                 </Button>
                 <Button
                   type="submit"
-                  className="bg-emerald-600 hover:bg-emerald-700"
+                  className="bg-sky-600 hover:bg-sky-700"
                   disabled={isLoading}
                 >
                   {isLoading

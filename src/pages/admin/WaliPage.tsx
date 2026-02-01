@@ -154,7 +154,7 @@ export function WaliPage() {
   const getStatusBadge = (isActive?: boolean) => {
     if (isActive === undefined) return <span className="text-muted-foreground">-</span>
     return isActive ? (
-      <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30">Aktif</Badge>
+      <Badge className="bg-sky-500/20 text-sky-400 border-sky-500/30">Aktif</Badge>
     ) : (
       <Badge className="bg-red-500/20 text-red-400 border-red-500/30">Nonaktif</Badge>
     )
@@ -209,8 +209,8 @@ export function WaliPage() {
         </Card>
         <Card className="border bg-card">
           <CardContent className="flex items-center gap-3 p-4">
-            <div className="rounded-lg bg-emerald-100 dark:bg-emerald-500/20 p-2">
-              <UserPlus className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
+            <div className="rounded-lg bg-sky-100 dark:bg-sky-500/20 p-2">
+              <UserPlus className="h-5 w-5 text-sky-600 dark:text-sky-400" />
             </div>
             <div>
               <p className="text-2xl font-bold text-foreground">
@@ -256,7 +256,84 @@ export function WaliPage() {
           </div>
         </CardHeader>
         <CardContent className="p-0">
-          <div className="overflow-x-auto">
+          <div className="md:hidden">
+            {isLoading ? (
+              <div className="flex flex-col items-center gap-2 py-12">
+                <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent"></div>
+                <p className="text-muted-foreground text-sm">Memuat data...</p>
+              </div>
+            ) : filteredWali.length === 0 ? (
+              <div className="flex flex-col items-center gap-3 py-12">
+                <div className="h-14 w-14 rounded-full bg-muted/50 flex items-center justify-center">
+                  <Search className="h-7 w-7 text-muted-foreground/50" />
+                </div>
+                <p className="text-muted-foreground text-sm">
+                  {searchQuery ? 'Tidak ada hasil ditemukan' : 'Belum ada data wali'}
+                </p>
+              </div>
+            ) : (
+              <div className="divide-y divide-border/50">
+                {filteredWali.map((wali) => (
+                  <div key={wali.id} className="p-4 hover:bg-muted/20 transition-colors">
+                    <div className="flex items-center gap-3">
+                      <div className="h-11 w-11 rounded-full bg-gradient-to-br from-purple-500 to-violet-500 flex items-center justify-center text-white font-semibold text-sm shrink-0 shadow-sm">
+                        {(wali.username || wali.name || 'W').charAt(0).toUpperCase()}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2">
+                          <h3 className="font-semibold text-foreground truncate text-[15px]">
+                            {wali.username || wali.name || '-'}
+                          </h3>
+                          {wali.isActive !== undefined && (
+                            <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-medium shrink-0 ${wali.isActive !== false ? 'bg-sky-500/15 text-sky-400' : 'bg-red-500/15 text-red-400'}`}>
+                              <span className={`h-1.5 w-1.5 rounded-full ${wali.isActive !== false ? 'bg-sky-400' : 'bg-red-400'}`}></span>
+                              {wali.isActive !== false ? 'Aktif' : 'Nonaktif'}
+                            </span>
+                          )}
+                        </div>
+                        <div className="flex items-center gap-1.5 mt-0.5">
+                          <Mail className="h-3 w-3 text-muted-foreground/70 shrink-0" />
+                          <span className="text-xs text-muted-foreground truncate">{wali.email}</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-3 gap-2 mt-3">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => navigate(`/admin/santri?waliName=${encodeURIComponent(wali.username || wali.name || '')}`)}
+                        className="h-9 gap-1.5 text-xs rounded-lg bg-sky-500/10 text-sky-400 hover:bg-sky-500/20 hover:text-sky-300 justify-center"
+                      >
+                        <Users size={14} />
+                        Santri
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleEdit(wali)}
+                        className="h-9 gap-1.5 text-xs rounded-lg bg-muted/50 text-muted-foreground hover:bg-primary/10 hover:text-primary justify-center"
+                      >
+                        <Edit size={14} />
+                        Edit
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleDelete(wali)}
+                        className="h-9 gap-1.5 text-xs rounded-lg bg-muted/50 text-muted-foreground hover:bg-red-500/10 hover:text-red-400 justify-center"
+                      >
+                        <Trash2 size={14} />
+                        Hapus
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <div className="hidden md:block overflow-x-auto">
             <Table>
               <TableHeader>
                 <TableRow className="border-border bg-muted/30 hover:bg-muted/30">
@@ -316,7 +393,7 @@ export function WaliPage() {
                             variant="ghost"
                             size="sm"
                             onClick={() => navigate(`/admin/santri?waliName=${encodeURIComponent(wali.username || wali.name || '')}`)}
-                            className="h-8 w-8 p-0 text-muted-foreground hover:text-emerald-400 hover:bg-emerald-500/10"
+                            className="h-8 w-8 p-0 text-muted-foreground hover:text-sky-400 hover:bg-sky-500/10"
                             title="Lihat Santri"
                           >
                             <Users size={15} />
@@ -445,7 +522,7 @@ export function WaliPage() {
                 <Button
                   type="submit"
                   disabled={isLoading}
-                  className="bg-emerald-600 hover:bg-emerald-700"
+                  className="bg-sky-600 hover:bg-sky-700"
                 >
                   {isLoading ? 'Menyimpan...' : editingWali ? 'Update' : 'Simpan'}
                 </Button>

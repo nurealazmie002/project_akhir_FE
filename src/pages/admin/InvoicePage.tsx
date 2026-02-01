@@ -103,7 +103,7 @@ export function InvoicePage() {
     switch (status) {
       case 'PAID':
         return {
-          className: 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20',
+          className: 'bg-sky-500/10 text-sky-500 border-sky-500/20',
           label: 'Lunas',
           icon: CheckCircle
         }
@@ -161,7 +161,7 @@ export function InvoicePage() {
       await invoiceService.create({
         santriId: formData.santriId,
         items: parsedItems,
-        amount: totalAmount, // Add amount at root level
+        amount: totalAmount, 
         dueDate: formData.dueDate,
         notes: formData.notes || undefined
       } as any)
@@ -301,7 +301,6 @@ export function InvoicePage() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
       >
-        {/* Header */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
           <div>
             <h1 className="text-lg sm:text-2xl font-bold text-foreground">Invoice / Tagihan</h1>
@@ -316,7 +315,6 @@ export function InvoicePage() {
           </Button>
         </div>
 
-        {/* Filters */}
         <Card className="border bg-card">
           <CardContent className="p-4">
             <div className="flex flex-col sm:flex-row gap-4">
@@ -345,7 +343,6 @@ export function InvoicePage() {
           </CardContent>
         </Card>
 
-        {/* Invoice Table */}
         <Card className="border bg-card">
           <CardHeader className="pb-3">
             <CardTitle className="text-base font-semibold">
@@ -363,91 +360,175 @@ export function InvoicePage() {
                 </p>
               </div>
             ) : (
-              <div className="overflow-x-auto">
-                <Table>
-                  <TableHeader>
-                    <TableRow className="border-border/50 hover:bg-transparent">
-                      <TableHead className="text-xs font-semibold text-muted-foreground uppercase">No. Invoice</TableHead>
-                      <TableHead className="text-xs font-semibold text-muted-foreground uppercase">Santri</TableHead>
-                      <TableHead className="text-xs font-semibold text-muted-foreground uppercase">Total</TableHead>
-                      <TableHead className="text-xs font-semibold text-muted-foreground uppercase">Jatuh Tempo</TableHead>
-                      <TableHead className="text-xs font-semibold text-muted-foreground uppercase">Status</TableHead>
-                      <TableHead className="text-xs font-semibold text-muted-foreground uppercase">Aksi</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {filteredInvoices.map((invoice, index) => {
-                      const statusConfig = getStatusConfig(invoice.status)
-                      const StatusIcon = statusConfig.icon
-                      return (
-                        <TableRow 
-                          key={invoice.id}
-                          className={cn(
-                            'border-border/50 transition-colors',
-                            index % 2 === 0 ? 'bg-muted/20' : 'bg-transparent',
-                            'hover:bg-primary/5'
-                          )}
-                        >
-                          <TableCell className="font-medium text-foreground">{invoice.invoiceNumber || invoice.id.slice(-8).toUpperCase()}</TableCell>
-                          <TableCell className="text-foreground">{getSantriName(invoice)}</TableCell>
-                          <TableCell className="font-semibold text-emerald-500">{formatCurrency(invoice.totalAmount)}</TableCell>
-                          <TableCell className="text-muted-foreground">{formatDate(invoice.dueDate)}</TableCell>
-                          <TableCell>
-                            <Badge 
-                              variant="outline"
-                              className={cn('font-medium border gap-1', statusConfig.className)}
-                            >
-                              <StatusIcon size={12} />
-                              {statusConfig.label}
-                            </Badge>
-                          </TableCell>
-                          <TableCell>
-                            <div className="flex items-center gap-1">
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                className="h-8 w-8 p-0 text-muted-foreground hover:text-primary hover:bg-primary/10"
-                                onClick={() => handleViewDetail(invoice)}
-                                title="Lihat Detail"
+              <>
+                <div className="md:hidden divide-y divide-border/50">
+                  {filteredInvoices.map((invoice) => {
+                    const statusConfig = getStatusConfig(invoice.status)
+                    return (
+                      <div key={invoice.id} className="p-4 hover:bg-muted/20 transition-colors">
+                        <div className="flex items-start gap-3">
+                          <div className="h-11 w-11 rounded-1.5xl bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center text-white shrink-0 shadow-sm rounded-xl">
+                            <FileText size={20} />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center justify-between gap-2">
+                              <h3 className="font-semibold text-foreground truncate text-[15px]">
+                                {invoice.invoiceNumber || invoice.id.slice(-8).toUpperCase()}
+                              </h3>
+                              <Badge 
+                                variant="outline"
+                                className={cn('h-5 px-1.5 text-[10px] font-medium border gap-1 rounded-md', statusConfig.className)}
                               >
-                                <Eye size={16} />
-                              </Button>
-                              {invoice.status === 'PENDING' && (
-                                <Button
-                                  variant="ghost"
-                                  size="sm"
-                                  className="h-8 w-8 p-0 text-emerald-500 hover:text-emerald-600 hover:bg-emerald-500/10"
-                                  onClick={() => handlePayInvoice(invoice)}
-                                  title="Bayar Sekarang"
-                                >
-                                  <CreditCard size={16} />
-                                </Button>
-                              )}
-                              {invoice.status === 'PAID' && (
-                                <Button
-                                  variant="ghost"
-                                  size="sm"
-                                  className="h-8 w-8 p-0 text-primary hover:text-primary hover:bg-primary/10"
-                                  onClick={() => handlePrintReceipt(invoice)}
-                                  title="Cetak Kwitansi"
-                                >
-                                  <Printer size={16} />
-                                </Button>
-                              )}
+                                {statusConfig.label}
+                              </Badge>
                             </div>
-                          </TableCell>
-                        </TableRow>
-                      )
-                    })}
-                  </TableBody>
-                </Table>
-              </div>
+                            
+                            <p className="text-xs text-muted-foreground mt-0.5 truncate">
+                              {getSantriName(invoice)}
+                            </p>
+
+                            <div className="flex items-center gap-3 mt-2">
+                              <div className="flex items-center gap-1.5">
+                                <CreditCard size={12} className="text-sky-500" />
+                                <span className="text-sm font-bold text-sky-500">
+                                  {formatCurrency(invoice.totalAmount)}
+                                </span>
+                              </div>
+                              <div className="flex items-center gap-1.5">
+                                <Clock size={12} className="text-muted-foreground" />
+                                <span className="text-xs text-muted-foreground">
+                                  JG: {formatDate(invoice.dueDate)}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-3 gap-2 mt-3">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleViewDetail(invoice)}
+                            className="h-9 gap-1.5 text-xs rounded-lg bg-indigo-500/10 text-indigo-400 hover:bg-indigo-500/20 hover:text-indigo-300 justify-center"
+                          >
+                            <Eye size={14} />
+                            Detail
+                          </Button>
+                          
+                          {invoice.status === 'PENDING' ? (
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => handlePayInvoice(invoice)}
+                              className="h-9 gap-1.5 text-xs rounded-lg bg-sky-500/10 text-sky-400 hover:bg-sky-500/20 hover:text-sky-300 justify-center col-span-2"
+                            >
+                              <CreditCard size={14} />
+                              Bayar Sekarang
+                            </Button>
+                          ) : invoice.status === 'PAID' ? (
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => handlePrintReceipt(invoice)}
+                              className="h-9 gap-1.5 text-xs rounded-lg bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 hover:text-emerald-300 justify-center col-span-2"
+                            >
+                              <Printer size={14} />
+                              Cetak Kwitansi
+                            </Button>
+                          ) : (
+                            <div className="col-span-2"></div>
+                          )}
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+
+                <div className="hidden md:block overflow-x-auto">
+                  <Table>
+                    <TableHeader>
+                      <TableRow className="border-border/50 hover:bg-transparent">
+                        <TableHead className="text-xs font-semibold text-muted-foreground uppercase">No. Invoice</TableHead>
+                        <TableHead className="text-xs font-semibold text-muted-foreground uppercase">Santri</TableHead>
+                        <TableHead className="text-xs font-semibold text-muted-foreground uppercase">Total</TableHead>
+                        <TableHead className="text-xs font-semibold text-muted-foreground uppercase">Jatuh Tempo</TableHead>
+                        <TableHead className="text-xs font-semibold text-muted-foreground uppercase">Status</TableHead>
+                        <TableHead className="text-xs font-semibold text-muted-foreground uppercase">Aksi</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {filteredInvoices.map((invoice, index) => {
+                        const statusConfig = getStatusConfig(invoice.status)
+                        const StatusIcon = statusConfig.icon
+                        return (
+                          <TableRow 
+                            key={invoice.id}
+                            className={cn(
+                              'border-border/50 transition-colors',
+                              index % 2 === 0 ? 'bg-muted/20' : 'bg-transparent',
+                              'hover:bg-primary/5'
+                            )}
+                          >
+                            <TableCell className="font-medium text-foreground">{invoice.invoiceNumber || invoice.id.slice(-8).toUpperCase()}</TableCell>
+                            <TableCell className="text-foreground">{getSantriName(invoice)}</TableCell>
+                            <TableCell className="font-semibold text-sky-500">{formatCurrency(invoice.totalAmount)}</TableCell>
+                            <TableCell className="text-muted-foreground">{formatDate(invoice.dueDate)}</TableCell>
+                            <TableCell>
+                              <Badge 
+                                variant="outline"
+                                className={cn('font-medium border gap-1', statusConfig.className)}
+                              >
+                                <StatusIcon size={12} />
+                                {statusConfig.label}
+                              </Badge>
+                            </TableCell>
+                            <TableCell>
+                              <div className="flex items-center gap-1">
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  className="h-8 w-8 p-0 text-muted-foreground hover:text-primary hover:bg-primary/10"
+                                  onClick={() => handleViewDetail(invoice)}
+                                  title="Lihat Detail"
+                                >
+                                  <Eye size={16} />
+                                </Button>
+                                {invoice.status === 'PENDING' && (
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    className="h-8 w-8 p-0 text-sky-500 hover:text-sky-600 hover:bg-sky-500/10"
+                                    onClick={() => handlePayInvoice(invoice)}
+                                    title="Bayar Sekarang"
+                                  >
+                                    <CreditCard size={16} />
+                                  </Button>
+                                )}
+                                {invoice.status === 'PAID' && (
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    className="h-8 w-8 p-0 text-primary hover:text-primary hover:bg-primary/10"
+                                    onClick={() => handlePrintReceipt(invoice)}
+                                    title="Cetak Kwitansi"
+                                  >
+                                    <Printer size={16} />
+                                  </Button>
+                                )}
+                              </div>
+                            </TableCell>
+                          </TableRow>
+                        )
+                      })}
+                    </TableBody>
+                  </Table>
+                </div>
+              </>
             )}
           </CardContent>
         </Card>
       </motion.div>
 
-      {/* Create Invoice Modal */}
       <AnimatePresence>
         {showModal && (
           <motion.div
@@ -480,7 +561,6 @@ export function InvoicePage() {
                     </div>
                   )}
 
-                  {/* Santri Selection */}
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-foreground">Santri</label>
                     <select
@@ -497,7 +577,6 @@ export function InvoicePage() {
                     </select>
                   </div>
 
-                  {/* Due Date */}
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-foreground">Jatuh Tempo</label>
                     <input
@@ -508,7 +587,6 @@ export function InvoicePage() {
                     />
                   </div>
 
-                  {/* Items */}
                   <div className="space-y-2">
                     <div className="flex justify-between items-center">
                       <label className="text-sm font-medium text-foreground">Item Tagihan</label>
@@ -548,13 +626,11 @@ export function InvoicePage() {
                     </div>
                   </div>
 
-                  {/* Total */}
                   <div className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
                     <span className="font-medium text-foreground">Total</span>
-                    <span className="text-lg font-bold text-emerald-500">{formatCurrency(totalAmount)}</span>
+                    <span className="text-lg font-bold text-sky-500">{formatCurrency(totalAmount)}</span>
                   </div>
 
-                  {/* Notes */}
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-foreground">Catatan (opsional)</label>
                     <textarea
@@ -600,7 +676,6 @@ export function InvoicePage() {
         )}
       </AnimatePresence>
 
-      {/* Invoice Detail Modal */}
       <AnimatePresence>
         {showDetailModal && selectedInvoice && (
           <motion.div
@@ -662,7 +737,7 @@ export function InvoicePage() {
 
                   <div className="flex justify-between items-center pt-4 border-t border-border/50">
                     <span className="text-lg font-semibold text-foreground">Total</span>
-                    <span className="text-xl font-bold text-emerald-500">{formatCurrency(selectedInvoice.totalAmount)}</span>
+                    <span className="text-xl font-bold text-sky-500">{formatCurrency(selectedInvoice.totalAmount)}</span>
                   </div>
                 </CardContent>
 
@@ -676,7 +751,7 @@ export function InvoicePage() {
                   </Button>
                   {selectedInvoice.status === 'PENDING' && (
                     <Button
-                      className="flex-1 bg-emerald-600 hover:bg-emerald-700 gap-2"
+                      className="flex-1 bg-sky-600 hover:bg-sky-700 gap-2"
                       onClick={() => handlePayInvoice(selectedInvoice)}
                       disabled={isProcessingPayment}
                     >
@@ -704,7 +779,6 @@ export function InvoicePage() {
         )}
       </AnimatePresence>
 
-      {/* Receipt Modal */}
       <ReceiptModal
         receipt={selectedReceipt}
         isOpen={showReceiptModal}

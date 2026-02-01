@@ -36,7 +36,7 @@ export function TransactionTable({
     switch (status) {
       case 'LUNAS':
         return {
-          className: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-400',
+          className: 'bg-sky-100 text-sky-700 dark:bg-sky-500/20 dark:text-sky-400',
           label: 'Lunas'
         }
       case 'PENDING':
@@ -108,7 +108,7 @@ export function TransactionTable({
                       <TableCell className="text-[11px] sm:text-sm text-muted-foreground pl-3 sm:pl-6 py-2 sm:py-3">{tx.date}</TableCell>
                       <TableCell className="text-[11px] sm:text-sm font-medium py-2 sm:py-3 max-w-[100px] sm:max-w-none truncate">{tx.studentName}</TableCell>
                       <TableCell className="text-[11px] sm:text-sm text-muted-foreground hidden sm:table-cell py-2 sm:py-3">{tx.type}</TableCell>
-                      <TableCell className="text-[11px] sm:text-sm font-medium text-emerald-600 dark:text-emerald-400 py-2 sm:py-3 whitespace-nowrap">
+                      <TableCell className="text-[11px] sm:text-sm font-medium text-sky-600 dark:text-sky-400 py-2 sm:py-3 whitespace-nowrap">
                         +Rp {formatCurrency(tx.amount)}
                       </TableCell>
                       <TableCell className="hidden sm:table-cell py-2 sm:py-3">

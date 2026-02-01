@@ -77,7 +77,7 @@ export function Sidebar({ isOpen = false, onClose }: SidebarProps) {
         <div className="relative border-b border-white/10 p-5">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 shadow-lg shadow-emerald-500/20">
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-sky-500 to-cyan-600 shadow-lg shadow-sky-500/20">
                 <Building2 className="h-6 w-6 text-white" />
               </div>
               <div>
@@ -98,9 +98,9 @@ export function Sidebar({ isOpen = false, onClose }: SidebarProps) {
 
         <div className="px-5 py-4 border-b border-white/5">
           <div className="flex items-center gap-3 p-3 rounded-xl bg-white/5 backdrop-blur">
-            <Avatar className="h-10 w-10 ring-2 ring-emerald-500/30">
+            <Avatar className="h-10 w-10 ring-2 ring-sky-500/30">
               {profilePicture && <AvatarImage src={profilePicture} alt="Profile" />}
-              <AvatarFallback className="bg-gradient-to-br from-emerald-500 to-teal-600 text-white font-semibold">
+              <AvatarFallback className="bg-gradient-to-br from-sky-500 to-cyan-600 text-white font-semibold">
                 {(profileName || user?.name)?.charAt(0) || 'A'}
               </AvatarFallback>
             </Avatar>
@@ -126,20 +126,20 @@ export function Sidebar({ isOpen = false, onClose }: SidebarProps) {
                     className={cn(
                       'group flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200',
                       isActive
-                        ? 'bg-gradient-to-r from-emerald-500/20 to-teal-500/10 text-emerald-400'
+                        ? 'bg-gradient-to-r from-sky-500/20 to-cyan-500/10 text-sky-400'
                         : 'text-slate-400 hover:bg-white/5 hover:text-white'
                     )}
                   >
                     <div className={cn(
-                      "absolute left-0 w-1 h-8 rounded-r-full bg-emerald-500 transition-all duration-200",
+                      "absolute left-0 w-1 h-8 rounded-r-full bg-sky-500 transition-all duration-200",
                       isActive ? "opacity-100" : "opacity-0"
                     )} />
                     
                     <div className={cn(
                       'flex items-center justify-center w-9 h-9 rounded-lg transition-all duration-200',
                       isActive 
-                        ? 'bg-emerald-500/20 text-emerald-400' 
-                        : 'bg-white/5 text-slate-400 group-hover:bg-emerald-500/10 group-hover:text-emerald-400'
+                        ? 'bg-sky-500/20 text-sky-400' 
+                        : 'bg-white/5 text-slate-400 group-hover:bg-sky-500/10 group-hover:text-sky-400'
                     )}>
                       {item.icon}
                     </div>
@@ -169,15 +169,15 @@ export function Sidebar({ isOpen = false, onClose }: SidebarProps) {
               className={cn(
                 'group flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200',
                 location.pathname === '/admin/pengaturan'
-                  ? 'bg-gradient-to-r from-emerald-500/20 to-teal-500/10 text-emerald-400'
+                  ? 'bg-gradient-to-r from-sky-500/20 to-cyan-500/10 text-sky-400'
                   : 'text-slate-400 hover:bg-white/5 hover:text-white'
               )}
             >
               <div className={cn(
                 'flex items-center justify-center w-9 h-9 rounded-lg transition-all duration-200',
                 location.pathname === '/admin/pengaturan' 
-                  ? 'bg-emerald-500/20 text-emerald-400' 
-                  : 'bg-white/5 text-slate-400 group-hover:bg-emerald-500/10 group-hover:text-emerald-400'
+                  ? 'bg-sky-500/20 text-sky-400' 
+                  : 'bg-white/5 text-slate-400 group-hover:bg-sky-500/10 group-hover:text-sky-400'
               )}>
                 <Settings size={20} />
               </div>

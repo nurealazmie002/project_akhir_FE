@@ -71,7 +71,7 @@ export function PembayaranPage() {
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'LUNAS': return <CheckCircle className="h-4 w-4 text-emerald-400" />
+      case 'LUNAS': return <CheckCircle className="h-4 w-4 text-sky-400" />
       case 'PENDING': return <Clock className="h-4 w-4 text-amber-400" />
       default: return <XCircle className="h-4 w-4 text-red-400" />
     }
@@ -103,7 +103,7 @@ export function PembayaranPage() {
         onClose: () => {
           console.log('Payment popup closed')
           setProcessingPaymentId(null)
-          fetchData() // Refresh data when closed without finish
+          fetchData() 
         }
       })
     } catch (err: any) {
@@ -121,8 +121,8 @@ export function PembayaranPage() {
       className="space-y-6"
     >
       <div className="flex items-center gap-3">
-        <div className="rounded-lg bg-emerald-500/20 p-2">
-          <Receipt className="h-6 w-6 text-emerald-400" />
+        <div className="rounded-lg bg-sky-500/20 p-2">
+          <Receipt className="h-6 w-6 text-sky-400" />
         </div>
         <div>
           <h1 className="text-2xl font-bold text-foreground">Pembayaran</h1>
@@ -151,8 +151,8 @@ export function PembayaranPage() {
         </Card>
         <Card className="border-border bg-card">
           <CardContent className="flex items-center gap-4 p-4">
-            <div className="rounded-lg bg-emerald-500/20 p-3">
-              <CheckCircle className="h-6 w-6 text-emerald-400" />
+            <div className="rounded-lg bg-sky-500/20 p-3">
+              <CheckCircle className="h-6 w-6 text-sky-400" />
             </div>
             <div>
               <p className="text-2xl font-bold text-foreground">Rp {formatCurrency(totalLunas)}</p>
@@ -225,7 +225,7 @@ export function PembayaranPage() {
                       <div className="flex items-center gap-2">
                         {getStatusIcon(item.status)}
                         <Badge className={
-                          item.status === 'LUNAS' ? 'bg-emerald-500/20 text-emerald-400' :
+                          item.status === 'LUNAS' ? 'bg-sky-500/20 text-sky-400' :
                           item.status === 'PENDING' ? 'bg-amber-500/20 text-amber-400' :
                           'bg-red-500/20 text-red-400'
                         }>
@@ -237,7 +237,7 @@ export function PembayaranPage() {
                       {item.status === 'PENDING' && (
                         <Button
                           size="sm"
-                          className="bg-emerald-500 hover:bg-emerald-600 text-white"
+                          className="bg-sky-500 hover:bg-sky-600 text-white"
                           onClick={() => handlePay(item)}
                           disabled={processingPaymentId === item.id}
                         >

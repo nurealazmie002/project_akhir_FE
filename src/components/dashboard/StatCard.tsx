@@ -28,9 +28,9 @@ export function StatCard({
 
   const iconColors = {
     up: 'bg-rose-100 text-rose-600 dark:bg-rose-500/20 dark:text-rose-400',
-    down: 'bg-emerald-100 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-400',
+    down: 'bg-sky-100 text-sky-600 dark:bg-sky-500/20 dark:text-sky-400',
     warning: 'bg-amber-100 text-amber-600 dark:bg-amber-500/20 dark:text-amber-400',
-    check: 'bg-emerald-100 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-400',
+    check: 'bg-sky-100 text-sky-600 dark:bg-sky-500/20 dark:text-sky-400',
   }
 
   return (
@@ -61,7 +61,7 @@ export function StatCard({
               <span className={cn(
                 'inline-flex items-center gap-0.5 text-[10px] sm:text-xs font-medium px-1.5 py-0.5 rounded-full',
                 change > 0 
-                  ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-400' 
+                  ? 'bg-sky-100 text-sky-700 dark:bg-sky-500/20 dark:text-sky-400' 
                   : 'bg-rose-100 text-rose-700 dark:bg-rose-500/20 dark:text-rose-400'
               )}>
                 {change > 0 ? <ArrowUp className="h-2.5 w-2.5" /> : <ArrowDown className="h-2.5 w-2.5" /> }

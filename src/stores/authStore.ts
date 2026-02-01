@@ -16,9 +16,20 @@ export const useAuthStore = create<AuthState>()(
         })),
       logout: () =>
         set({ user: null, token: null, isAuthenticated: false }),
+      _hasHydrated: false,
+      setHasHydrated: (state) => set({ _hasHydrated: state }),
     }),
     {
       name: 'auth-storage',
+      onRehydrateStorage: () => (state) => {
+        console.log(' [AuthStore] Hydration finished. User:', state?.user?.email)
+        state?.setHasHydrated(true)
+      },
+      partialize: (state) => ({ 
+        user: state.user, 
+        token: state.token, 
+        isAuthenticated: state.isAuthenticated 
+      }),
     }
   )
 )

@@ -210,7 +210,7 @@ export function PengaturanPage() {
         <Button
           onClick={handleSave}
           disabled={isSaving || isLoading}
-          className="gap-2 bg-emerald-600 hover:bg-emerald-700 w-full sm:w-auto"
+          className="gap-2 bg-sky-600 hover:bg-sky-700 w-full sm:w-auto"
         >
           <Save size={18} />
           {isSaving ? 'Menyimpan...' : 'Simpan Perubahan'}
@@ -229,7 +229,7 @@ export function PengaturanPage() {
                     variant={activeTab === tab.id ? 'default' : 'ghost'}
                     className={`w-full justify-start gap-3 ${
                       activeTab === tab.id
-                        ? 'bg-emerald-600 text-foreground'
+                        ? 'bg-sky-600 text-foreground'
                         : 'text-muted-foreground hover:text-foreground hover:bg-card'
                     }`}
                     onClick={() => setActiveTab(tab.id)}
@@ -253,7 +253,7 @@ export function PengaturanPage() {
             {activeTab === 'profil' && (
               <>
                 {message && (
-                  <Badge className={`w-full justify-center py-2 ${message.type === 'success' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-red-500/20 text-red-400'}`}>
+                  <Badge className={`w-full justify-center py-2 ${message.type === 'success' ? 'bg-sky-500/20 text-sky-400' : 'bg-red-500/20 text-red-400'}`}>
                     {message.text}
                   </Badge>
                 )}
@@ -267,7 +267,7 @@ export function PengaturanPage() {
                         className="h-24 w-24 rounded-full object-cover"
                       />
                     ) : (
-                      <div className="h-24 w-24 rounded-full bg-emerald-600 flex items-center justify-center text-foreground text-3xl font-bold">
+                      <div className="h-24 w-24 rounded-full bg-sky-600 flex items-center justify-center text-foreground text-3xl font-bold">
                         {profilData.name.charAt(0) || 'A'}
                       </div>
                     )}
@@ -290,7 +290,7 @@ export function PengaturanPage() {
                   <div>
                     <h3 className="text-lg font-semibold text-foreground">{profilData.name || user?.name}</h3>
                     <p className="text-sm text-muted-foreground">{user?.email}</p>
-                    <Badge className="mt-2 bg-emerald-500/20 text-emerald-400">{user?.role || 'Admin'}</Badge>
+                    <Badge className="mt-2 bg-sky-500/20 text-sky-400">{user?.role || 'Admin'}</Badge>
                   </div>
                 </div>
 
@@ -351,12 +351,11 @@ export function PengaturanPage() {
             {activeTab === 'lembaga' && (
               <>
                 {message && (
-                  <Badge className={`w-full justify-center py-2 ${message.type === 'success' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-red-500/20 text-red-400'}`}>
+                  <Badge className={`w-full justify-center py-2 ${message.type === 'success' ? 'bg-sky-500/20 text-sky-400' : 'bg-red-500/20 text-red-400'}`}>
                     {message.text}
                   </Badge>
                 )}
                 
-                {/* Logo Upload */}
                 <div className="flex items-center gap-6 mb-4">
                   <div className="relative">
                     {logoPreview ? (
@@ -366,7 +365,7 @@ export function PengaturanPage() {
                         className="h-20 w-20 rounded-xl object-cover border border-border"
                       />
                     ) : (
-                      <div className="h-20 w-20 rounded-xl bg-emerald-600/20 flex items-center justify-center text-emerald-400">
+                      <div className="h-20 w-20 rounded-xl bg-sky-600/20 flex items-center justify-center text-sky-400">
                         <Building size={32} />
                       </div>
                     )}

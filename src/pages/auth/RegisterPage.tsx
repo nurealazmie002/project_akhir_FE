@@ -46,11 +46,11 @@ export function RegisterPage() {
         password: data.password,
         institution: data.institution,
       })
-      console.log('✅ Register berhasil:', registerResponse)
+      console.log('Register berhasil:', registerResponse)
 
       navigate('/verify-otp', { state: { email: data.email } })
     } catch (err: any) {
-      console.error('❌ Register gagal:', err.response?.data || err.message)
+      console.error('Register gagal:', err.response?.data || err.message)
       setError(err.response?.data?.message || 'Registrasi gagal. Silakan coba lagi.')
     } finally {
       setIsLoading(false)

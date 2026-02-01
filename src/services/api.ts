@@ -27,6 +27,8 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
+      console.error(' [API] 401 Unauthorized from:', error.config?.url)
+      console.warn(' [API] Clearing auth-storage and redirecting to login...')
       localStorage.removeItem('auth-storage')
       window.location.href = '/login'
     }

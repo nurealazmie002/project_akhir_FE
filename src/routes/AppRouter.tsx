@@ -32,7 +32,6 @@ export function AppRouter() {
           <Route path="/verify-otp" element={<OtpVerificationPage />} />
         </Route>
 
-        {/* Payment Callback Routes */}
         <Route path="/payment/success" element={<PaymentResultPage status="success" />} />
         <Route path="/payment/failed" element={<PaymentResultPage status="failed" />} />
         <Route path="/payment/pending" element={<PaymentResultPage status="pending" />} />

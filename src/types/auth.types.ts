@@ -41,4 +41,6 @@ export interface AuthState {
   login: (user: User, token: string) => void
   updateUser: (user: Partial<User>) => void
   logout: () => void
+  _hasHydrated: boolean
+  setHasHydrated: (state: boolean) => void
 }

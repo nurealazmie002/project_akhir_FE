@@ -73,14 +73,14 @@ export function UserDashboardPage() {
       description: `${totalSantri} santri terdaftar`,
       icon: Users,
       href: '/user/santri',
-      color: 'from-teal-500 to-teal-600'
+      color: 'from-cyan-500 to-cyan-600'
     },
     {
       title: 'Total Pemasukan',
       description: formatCurrency(totalIncome),
       icon: TrendingDown,
       href: '/user/santri',
-      color: 'from-emerald-500 to-emerald-600'
+      color: 'from-sky-500 to-sky-600'
     },
     {
       title: 'Total Pengeluaran',
@@ -105,7 +105,7 @@ export function UserDashboardPage() {
       transition={{ duration: 0.3 }}
       className="space-y-6"
     >
-      <div className="bg-gradient-to-r from-emerald-500/10 via-teal-500/5 to-transparent rounded-2xl p-6">
+      <div className="bg-gradient-to-r from-sky-500/10 via-cyan-500/5 to-transparent rounded-2xl p-6">
         <h1 className="text-2xl font-bold text-foreground mb-2">
           Selamat Datang, {user?.username || 'Wali Santri'}!
         </h1>
@@ -184,7 +184,7 @@ export function UserDashboardPage() {
                       </div>
                     </div>
                     <Badge className={santri.isActive !== false 
-                      ? 'bg-emerald-500/20 text-emerald-400'
+                      ? 'bg-sky-500/20 text-sky-400'
                       : 'bg-red-500/20 text-red-400'
                     }>
                       {santri.isActive !== false ? 'Aktif' : 'Nonaktif'}
@@ -219,11 +219,11 @@ export function UserDashboardPage() {
                     <div className="flex items-center gap-3">
                       <div className={`h-10 w-10 rounded-full flex items-center justify-center ${
                         tx.type === 'PEMASUKAN' 
-                          ? 'bg-emerald-500/20' 
+                          ? 'bg-sky-500/20' 
                           : 'bg-red-500/20'
                       }`}>
                         {tx.type === 'PEMASUKAN' 
-                          ? <TrendingDown className="h-5 w-5 text-emerald-400" />
+                          ? <TrendingDown className="h-5 w-5 text-sky-400" />
                           : <TrendingUp className="h-5 w-5 text-red-400" />
                         }
                       </div>
@@ -235,7 +235,7 @@ export function UserDashboardPage() {
                       </div>
                     </div>
                     <span className={`font-semibold text-sm ${
-                      tx.type === 'PEMASUKAN' ? 'text-emerald-400' : 'text-red-400'
+                      tx.type === 'PEMASUKAN' ? 'text-sky-400' : 'text-red-400'
                     }`}>
                       {tx.type === 'PEMASUKAN' ? '+' : '-'}{formatCurrency(Number(tx.amount))}
                     </span>

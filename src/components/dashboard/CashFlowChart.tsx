@@ -142,10 +142,9 @@ export function CashFlowChart({ data, title, selectedPeriod, onPeriodChange }: C
           </AreaChart>
         </ChartContainer>
 
-        {/* Legend */}
         <div className="mt-4 flex items-center justify-center gap-4 sm:gap-6">
           <div className="flex items-center gap-1.5">
-            <div className="h-2.5 w-2.5 sm:h-3 sm:w-3 rounded-full bg-emerald-500" />
+            <div className="h-2.5 w-2.5 sm:h-3 sm:w-3 rounded-full bg-sky-500" />
             <span className="text-[10px] sm:text-sm font-medium text-muted-foreground">Pemasukan</span>
           </div>
           <div className="flex items-center gap-1.5">

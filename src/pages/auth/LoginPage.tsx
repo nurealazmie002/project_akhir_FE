@@ -113,7 +113,7 @@ export function LoginPage() {
                  animate={{ scale: 1, opacity: 1 }}
                  transition={{ type: "spring", stiffness: 300, damping: 20 }}
                >
-                 <CheckCircle2 className="h-8 w-8 text-emerald-500" />
+                 <CheckCircle2 className="h-8 w-8 text-sky-500" />
                </motion.div>
             ) : isError ? (
                 <motion.div
@@ -145,13 +145,13 @@ export function LoginPage() {
                 className="flex flex-col items-center justify-center py-8 space-y-4"
               >
                   <motion.div
-                    className="w-16 h-16 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center"
+                    className="w-16 h-16 rounded-full bg-sky-100 dark:bg-sky-900/30 flex items-center justify-center"
                     animate={{ scale: [1, 1.1, 1] }}
                     transition={{ repeat: Infinity, duration: 2 }}
                   >
-                    <CheckCircle2 className="h-10 w-10 text-emerald-500" />
+                    <CheckCircle2 className="h-10 w-10 text-sky-500" />
                   </motion.div>
-                  <p className="text-sm text-emerald-600 dark:text-emerald-400 font-medium">
+                  <p className="text-sm text-sky-600 dark:text-sky-400 font-medium">
                     Berhasil masuk, mohon tunggu...
                   </p>
               </motion.div>

@@ -17,7 +17,7 @@ export function AuthLayout() {
         >
           <div className="flex items-center gap-3">
             <motion.div 
-              className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 shadow-2xl shadow-emerald-500/30"
+              className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-sky-500 to-cyan-600 shadow-2xl shadow-sky-500/30"
               animate={{ 
                 boxShadow: [
                   '0 25px 50px -12px rgba(16, 185, 129, 0.3)',
@@ -31,7 +31,7 @@ export function AuthLayout() {
             </motion.div>
             <div>
               <h1 className="text-3xl font-bold text-white">Admin Keuangan</h1>
-              <p className="text-lg text-emerald-400">Pesantren Al-Ikhlas</p>
+              <p className="text-lg text-sky-400">Pesantren Al-Ikhlas</p>
             </div>
           </div>
         </motion.div>
@@ -46,8 +46,8 @@ export function AuthLayout() {
             "Sistem pengelolaan keuangan pesantren yang terintegrasi untuk memudahkan administrasi dan transparansi."
           </blockquote>
           <div className="flex items-center gap-4">
-            <Avatar className="h-16 w-16 ring-4 ring-emerald-500/30">
-              <AvatarFallback className="bg-gradient-to-br from-emerald-500 to-teal-600 text-white text-xl">
+            <Avatar className="h-16 w-16 ring-4 ring-sky-500/30">
+              <AvatarFallback className="bg-gradient-to-br from-sky-500 to-cyan-600 text-white text-xl">
                 <User className="h-8 w-8" />
               </AvatarFallback>
             </Avatar>
@@ -64,7 +64,7 @@ export function AuthLayout() {
           transition={{ delay: 0.5 }}
           className="flex items-center gap-2"
         >
-          <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+          <div className="h-2 w-2 rounded-full bg-sky-500 animate-pulse" />
           <p className="text-sm text-slate-500">© 2024 Pesantren Al-Ikhlas</p>
         </motion.div>
       </div>

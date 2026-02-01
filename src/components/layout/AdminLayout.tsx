@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Outlet } from 'react-router-dom'
+import { Outlet, useNavigate } from 'react-router-dom'
 import { Sidebar } from './Sidebar'
 import { Header } from './Header'
 import { useAuthStore } from '@/stores/authStore'
@@ -12,17 +12,32 @@ interface AdminLayoutProps {
 
 export function AdminLayout({ title = 'Selamat Datang, Admin', subtitle = 'Ringkasan keuangan pesantren hari ini,' }: AdminLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
-  const { user, updateUser } = useAuthStore()
+  const { user, updateUser, isAuthenticated, _hasHydrated } = useAuthStore()
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if (_hasHydrated && !isAuthenticated) {
+      navigate('/login')
+    }
+  }, [isAuthenticated, _hasHydrated, navigate])
+
+  if (!_hasHydrated) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-slate-50 dark:bg-slate-950">
+        <div className="text-center">
+            <div className="h-8 w-8 animate-spin rounded-full border-4 border-sky-500 border-t-transparent mx-auto mb-4" />
+            <p className="text-slate-500 dark:text-slate-400">Memuat sesi...</p>
+        </div>
+      </div>
+    )
+  }
+
   
-  // Sync profile data
   useEffect(() => {
     const syncData = async () => {
       try {
-        // Fetch User Profile
         const profile = await profileService.getMyProfile()
         
-        // Fetch Institution Profile (since admin manages institution)
-        // We import dynamically or rely on it being available
         const { institutionService } = await import('@/services/institutionService')
         const institution = await institutionService.get().catch(() => null)
 
@@ -33,11 +48,11 @@ export function AdminLayout({ title = 'Selamat Datang, Admin', subtitle = 'Ringk
           })
         }
       } catch (err) {
-        // Ignore error
+        
       }
     }
     syncData()
-  }, []) // Run once on mount
+  }, [])
 
   const displayTitle = title === 'Selamat Datang, Admin' && user?.name 
     ? `Selamat Datang, ${user.name}` 

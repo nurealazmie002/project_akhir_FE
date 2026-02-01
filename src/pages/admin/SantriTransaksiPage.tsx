@@ -281,7 +281,7 @@ export function SantriTransaksiPage() {
   const getTypeBadge = (type: TransactionType) => {
     if (type === 'PEMASUKAN') {
       return (
-        <span className="inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs bg-emerald-500/20 text-emerald-400">
+        <span className="inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs bg-sky-500/20 text-sky-400">
           <ArrowDownCircle size={12} />
           Pemasukan
         </span>
@@ -313,7 +313,7 @@ export function SantriTransaksiPage() {
               </Button>
               <div className="hidden sm:block h-6 w-px bg-white/20" />
               <div className="hidden sm:flex items-center gap-2">
-                <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center">
+                <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-sky-500 to-cyan-500 flex items-center justify-center">
                   <Wallet className="h-4 w-4 text-white" />
                 </div>
                 <span className="font-semibold text-white">Transaksi Santri</span>
@@ -323,7 +323,7 @@ export function SantriTransaksiPage() {
               <Button
                 onClick={() => openAddModal('PEMASUKAN')}
                 size="sm"
-                className="gap-1.5 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white shadow-lg shadow-emerald-500/25"
+                className="gap-1.5 bg-gradient-to-r from-sky-500 to-cyan-500 hover:from-sky-600 hover:to-cyan-600 text-white shadow-lg shadow-sky-500/25"
               >
                 <Plus size={14} />
                 <span className="hidden sm:inline">Pemasukan</span>
@@ -373,7 +373,6 @@ export function SantriTransaksiPage() {
                     <p className="text-sm text-slate-400">Informasi lengkap santri</p>
                   </div>
                 </div>
-                {/* Mobile Chevron */}
                 <div className="md:hidden text-slate-400">
                   {isProfileExpanded ? <ArrowUpCircle size={20} /> : <ArrowDownCircle size={20} />}
                 </div>
@@ -382,7 +381,6 @@ export function SantriTransaksiPage() {
             <CardContent className="space-y-4">
               {santri ? (
                 <>
-                  {/* Name is always visible, but other details are collapsible on mobile */}
                   <div className="flex items-center gap-3 p-3 rounded-lg bg-white/5 md:hidden">
                     <User className="h-4 w-4 text-blue-400" />
                     <div className="flex-1">
@@ -391,9 +389,7 @@ export function SantriTransaksiPage() {
                     </div>
                   </div>
 
-                  {/* Collapsible Content */}
                   <div className={`grid gap-4 sm:grid-cols-2 ${isProfileExpanded ? 'block' : 'hidden md:grid'}`}>
-                    {/* Hidden on mobile duplicate name since shown above, visible on desktop */}
                     <div className="hidden md:flex items-center gap-3 p-3 rounded-lg bg-white/5">
                       <User className="h-4 w-4 text-blue-400" />
                       <div>
@@ -410,7 +406,7 @@ export function SantriTransaksiPage() {
                       </div>
                     </div>
                     <div className="flex items-center gap-3 p-3 rounded-lg bg-white/5">
-                      <Building2 className="h-4 w-4 text-emerald-400" />
+                      <Building2 className="h-4 w-4 text-sky-400" />
                       <div>
                         <p className="text-xs text-slate-400">Kelas</p>
                         <p className="font-medium text-white">{santri.kelas}</p>
@@ -425,12 +421,11 @@ export function SantriTransaksiPage() {
                     </div>
                   </div>
 
-                  {/* Status Badge - Collapsible on mobile */}
                   <div className={`flex items-center gap-2 pt-2 ${isProfileExpanded ? 'flex' : 'hidden md:flex'}`}>
                     <span className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium ${
-                      santri.isActive ? 'bg-emerald-500/20 text-emerald-400' : 'bg-amber-500/20 text-amber-400'
+                      santri.isActive ? 'bg-sky-500/20 text-sky-400' : 'bg-amber-500/20 text-amber-400'
                     }`}>
-                      <span className={`h-1.5 w-1.5 rounded-full ${santri.isActive ? 'bg-emerald-400' : 'bg-amber-400'}`} />
+                      <span className={`h-1.5 w-1.5 rounded-full ${santri.isActive ? 'bg-sky-400' : 'bg-amber-400'}`} />
                       {santri.isActive ? 'Aktif' : 'Nonaktif'}
                     </span>
                     {santri.institutionName && (
@@ -484,7 +479,7 @@ export function SantriTransaksiPage() {
                   </div>
                   {wali.phone && (
                     <div className="flex items-center gap-3 p-3 rounded-lg bg-white/5">
-                      <Phone className="h-4 w-4 text-emerald-400" />
+                      <Phone className="h-4 w-4 text-sky-400" />
                       <div>
                         <p className="text-xs text-slate-400">Telepon</p>
                         <p className="font-medium text-white">{wali.phone}</p>
@@ -534,13 +529,13 @@ export function SantriTransaksiPage() {
           variants={fadeInUp}
           className="grid gap-4 grid-cols-1 sm:grid-cols-3"
         >
-          <Card className="border-white/10 bg-gradient-to-br from-emerald-500/10 to-emerald-600/5 backdrop-blur">
+          <Card className="border-white/10 bg-gradient-to-br from-sky-500/10 to-sky-600/5 backdrop-blur">
             <CardContent className="flex items-center gap-4 p-5">
-              <div className="rounded-xl bg-emerald-500/20 p-3">
-                <TrendingUp className="h-6 w-6 text-emerald-500" />
+              <div className="rounded-xl bg-sky-500/20 p-3">
+                <TrendingUp className="h-6 w-6 text-sky-500" />
               </div>
               <div>
-                <p className="text-2xl sm:text-3xl font-bold text-emerald-400">Rp {formatCurrency(totalIncome)}</p>
+                <p className="text-2xl sm:text-3xl font-bold text-sky-400">Rp {formatCurrency(totalIncome)}</p>
                 <p className="text-sm text-slate-400">Total Pemasukan</p>
               </div>
             </CardContent>
@@ -585,7 +580,7 @@ export function SantriTransaksiPage() {
             variant={filterType === 'PEMASUKAN' ? 'default' : 'outline'}
             size="sm"
             onClick={() => setFilterType('PEMASUKAN')}
-            className={filterType === 'PEMASUKAN' ? 'bg-emerald-600 hover:bg-emerald-700 border-0' : 'border-white/20 text-slate-300 hover:bg-white/10'}
+            className={filterType === 'PEMASUKAN' ? 'bg-sky-600 hover:bg-sky-700 border-0' : 'border-white/20 text-slate-300 hover:bg-white/10'}
           >
             <ArrowDownCircle size={14} className="mr-1.5" />
             Pemasukan
@@ -673,14 +668,14 @@ export function SantriTransaksiPage() {
                         <TableCell className="py-3 px-4">{getTypeBadge(item.type)}</TableCell>
                         <TableCell className="py-3 px-4">
                           <span className={`inline-flex px-2 py-0.5 rounded text-xs font-medium ${
-                            item.type === 'PEMASUKAN' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-red-500/10 text-red-400'
+                            item.type === 'PEMASUKAN' ? 'bg-sky-500/10 text-sky-400' : 'bg-red-500/10 text-red-400'
                           }`}>
                             {item.category?.name || '-'}
                           </span>
                         </TableCell>
                         <TableCell className="py-3 px-4 text-slate-300 max-w-[200px] truncate">{item.description || '-'}</TableCell>
                         <TableCell className={`py-3 px-4 font-semibold ${
-                          item.type === 'PEMASUKAN' ? 'text-emerald-400' : 'text-red-400'
+                          item.type === 'PEMASUKAN' ? 'text-sky-400' : 'text-red-400'
                         }`}>
                           {item.type === 'PEMASUKAN' ? '+' : '-'} Rp {formatCurrency(Number(item.amount))}
                         </TableCell>
@@ -730,9 +725,9 @@ export function SantriTransaksiPage() {
           >
             <div className="mb-6 flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className={`rounded-full p-2 ${selectedType === 'PEMASUKAN' ? 'bg-emerald-500/20' : 'bg-red-500/20'}`}>
+                <div className={`rounded-full p-2 ${selectedType === 'PEMASUKAN' ? 'bg-sky-500/20' : 'bg-red-500/20'}`}>
                   {selectedType === 'PEMASUKAN' ? (
-                    <ArrowDownCircle className="h-5 w-5 text-emerald-400" />
+                    <ArrowDownCircle className="h-5 w-5 text-sky-400" />
                   ) : (
                     <ArrowUpCircle className="h-5 w-5 text-red-400" />
                   )}
@@ -767,14 +762,13 @@ export function SantriTransaksiPage() {
                   {...register('type', {
                     onChange: (e) => setSelectedType(e.target.value)
                   })}
-                  className="w-full mt-1 h-9 rounded-md bg-white/5 border border-white/10 text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 px-3 text-sm"
+                  className="w-full mt-1 h-9 rounded-md bg-white/5 border border-white/10 text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-sky-500/50 px-3 text-sm"
                 >
                   <option value="PEMASUKAN" className="bg-slate-800 text-white">Pemasukan</option>
                   <option value="PENGELUARAN" className="bg-slate-800 text-white">Pengeluaran</option>
                 </select>
               </div>
 
-              {/* Hidden category selection for backend requirement */}
               <input type="hidden" {...register('categoryId')} />
               {errors.categoryId && (
                 <p className="text-xs text-red-400 bg-red-500/10 p-2 rounded mt-1">
@@ -806,7 +800,7 @@ export function SantriTransaksiPage() {
                 <Button
                   type="submit"
                   disabled={isLoading}
-                  className={`flex-1 ${selectedType === 'PEMASUKAN' ? 'bg-gradient-to-r from-emerald-500 to-teal-500' : 'bg-gradient-to-r from-rose-500 to-red-500'}`}
+                  className={`flex-1 ${selectedType === 'PEMASUKAN' ? 'bg-gradient-to-r from-sky-500 to-cyan-500' : 'bg-gradient-to-r from-rose-500 to-red-500'}`}
                 >
                   {isLoading ? 'Menyimpan...' : editingTransaction ? 'Update' : 'Simpan'}
                 </Button>

@@ -78,7 +78,6 @@ export function SantriDetailPage() {
       </Link>
 
 
-      {/* Collapsible Profile Card */}
       <Card 
         className="border-border bg-card cursor-pointer md:cursor-default transition-colors hover:bg-accent/5 md:hover:bg-card"
         onClick={() => setIsExpanded(!isExpanded)}
@@ -97,7 +96,7 @@ export function SantriDetailPage() {
                     <p className="text-muted-foreground text-sm md:text-base">NIS: {santri.nis}</p>
                     <div className="mt-2 md:mt-0 md:absolute md:top-6 md:right-6">
                        <Badge className={santri.isActive !== false 
-                        ? 'bg-emerald-500/20 text-emerald-400'
+                        ? 'bg-sky-500/20 text-sky-400'
                         : 'bg-red-500/20 text-red-400'
                       }>
                         {santri.isActive !== false ? 'Aktif' : 'Nonaktif'}
@@ -110,7 +109,6 @@ export function SantriDetailPage() {
                   )}
                 </div>
                 
-                {/* Mobile chevron */}
                 <div className="md:hidden text-muted-foreground">
                   {isExpanded ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
                 </div>
@@ -118,7 +116,6 @@ export function SantriDetailPage() {
             </div>
           </div>
 
-          {/* Expanded Content for Mobile (Always visible on Desktop) */}
           <AnimatePresence>
             {(isExpanded || window.innerWidth >= 768) && (
               <motion.div 
@@ -129,14 +126,13 @@ export function SantriDetailPage() {
               >
                   <p className="text-sm font-medium text-foreground mb-2">Status Santri</p>
                   <Badge className={santri.isActive !== false 
-                    ? 'bg-emerald-500/20 text-emerald-400'
+                    ? 'bg-sky-500/20 text-sky-400'
                     : 'bg-red-500/20 text-red-400'
                   }>
                     {santri.isActive !== false ? 'Aktif' : 'Nonaktif'}
                   </Badge>
               </motion.div>
             )}
-             {/* Note: Desktop layout handles layout differently, keeping simple for mobile first request */}
           </AnimatePresence>
         </CardContent>
       </Card>
@@ -167,8 +163,8 @@ export function SantriDetailPage() {
               </div>
             </div>
             <div className="flex items-center gap-3">
-              <div className="h-10 w-10 rounded-lg bg-emerald-500/20 flex items-center justify-center">
-                <MapPin className="h-5 w-5 text-emerald-400" />
+              <div className="h-10 w-10 rounded-lg bg-sky-500/20 flex items-center justify-center">
+                <MapPin className="h-5 w-5 text-sky-400" />
               </div>
               <div>
                 <p className="text-sm text-muted-foreground">Lembaga</p>

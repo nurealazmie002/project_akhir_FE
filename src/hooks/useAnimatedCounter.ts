@@ -5,7 +5,6 @@ export function useAnimatedCounter(endValue: string | number): string {
   const previousValue = useRef(endValue)
 
   useEffect(() => {
-    // Extract numeric value from string (e.g., "Rp 1,000,000" -> 1000000)
     const extractNumber = (val: string | number): number => {
       if (typeof val === 'number') return val
       const cleaned = val.replace(/[^\d.-]/g, '')
@@ -13,16 +12,13 @@ export function useAnimatedCounter(endValue: string | number): string {
     }
 
     const formatNumber = (num: number, template: string): string => {
-      // If template contains "Rp", format as Indonesian currency
       if (template.includes('Rp')) {
         const formatted = new Intl.NumberFormat('id-ID').format(Math.round(num))
         return template.replace(/[\d.,]+/, formatted)
       }
-      // If template contains "Santri" or other text, keep the format
       if (template.includes('Santri')) {
         return `${Math.round(num)} Santri`
       }
-      // Default: just format the number
       return new Intl.NumberFormat('id-ID').format(Math.round(num))
     }
 
@@ -34,7 +30,7 @@ export function useAnimatedCounter(endValue: string | number): string {
       return
     }
 
-    const duration = 600 // ms
+    const duration = 600 
     const steps = 30
     const stepDuration = duration / steps
     const increment = (endNum - startNum) / steps
