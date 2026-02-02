@@ -32,6 +32,7 @@ import { santriService } from '@/services/santriService'
 import { ReceiptModal } from '@/components/dashboard/ReceiptModal'
 import type { Invoice, InvoiceStatus, Receipt } from '@/types/invoice.types'
 import type { Santri } from '@/types/santri.types'
+import { useNotificationStore } from '@/stores/notificationStore'
 
 export function InvoicePage() {
   const [invoices, setInvoices] = useState<Invoice[]>([])
@@ -166,6 +167,7 @@ export function InvoicePage() {
         notes: formData.notes || undefined
       } as any)
       await fetchData()
+      await useNotificationStore.getState().fetchUnpaidInvoices()
       setShowModal(false)
       resetForm()
     } catch (err: any) {
@@ -187,7 +189,8 @@ export function InvoicePage() {
 
   const handlePrintReceipt = (invoice: Invoice) => {
     if (invoice.status === 'PAID') {
-      const receipt = invoiceService.generateReceiptFromInvoice(invoice, 'Pondok Pesantren')
+      const santri = santriList.find(s => s.id === invoice.santriId)
+      const receipt = invoiceService.generateReceiptFromInvoice(invoice, 'Pondok Pesantren', santri?.nis)
       setSelectedReceipt(receipt)
       setShowReceiptModal(true)
     }
@@ -227,6 +230,7 @@ export function InvoicePage() {
         onSuccess: async (result) => {
           console.log('Payment success:', result)
           await fetchData()
+          await useNotificationStore.getState().fetchUnpaidInvoices()
           setShowDetailModal(false)
         },
         onPending: (result) => {

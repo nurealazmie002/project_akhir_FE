@@ -39,9 +39,8 @@ interface SidebarProps {
 export function Sidebar({ isOpen = false, onClose }: SidebarProps) {
   const location = useLocation()
   const navigate = useNavigate()
-  const { user, logout } = useAuthStore()
+  const { user, logout, updateUser } = useAuthStore()
   const [profilePicture, setProfilePicture] = useState<string | null>(null)
-  const [profileName, setProfileName] = useState<string | null>(null)
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -51,7 +50,7 @@ export function Sidebar({ isOpen = false, onClose }: SidebarProps) {
           setProfilePicture(profile.profile_picture_url)
         }
         if (profile?.name) {
-          setProfileName(profile.name)
+          updateUser({ name: profile.name })
         }
       } catch (err) {
       }
@@ -101,11 +100,11 @@ export function Sidebar({ isOpen = false, onClose }: SidebarProps) {
             <Avatar className="h-10 w-10 ring-2 ring-sky-500/30">
               {profilePicture && <AvatarImage src={profilePicture} alt="Profile" />}
               <AvatarFallback className="bg-gradient-to-br from-sky-500 to-cyan-600 text-white font-semibold">
-                {(profileName || user?.name)?.charAt(0) || 'A'}
+                {(user?.name)?.charAt(0) || 'A'}
               </AvatarFallback>
             </Avatar>
             <div className="min-w-0 flex-1">
-              <p className="font-medium text-sm text-white truncate">{profileName || user?.name || 'Admin'}</p>
+              <p className="font-medium text-sm text-white truncate">{user?.name || 'Admin'}</p>
               <p className="text-xs text-slate-400 truncate">{user?.institutionName || 'Administrator'}</p>
             </div>
           </div>

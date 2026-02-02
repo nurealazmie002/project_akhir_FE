@@ -74,7 +74,8 @@ export function DashboardPage() {
     if (transaction.originalTransaction) {
       const receipt = invoiceService.generateReceiptFromTransaction(
         transaction.originalTransaction,
-        'Pondok Pesantren'
+        'Pondok Pesantren',
+        transaction.studentNis
       )
       setSelectedReceipt(receipt)
       setShowReceiptModal(true)

@@ -23,7 +23,7 @@ import {
 } from 'lucide-react'
 
 export function PengaturanPage() {
-  const { user } = useAuthStore()
+  const { user, updateUser } = useAuthStore()
   const { theme, setTheme } = useThemeStore()
   const [isSaving, setIsSaving] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
@@ -113,8 +113,9 @@ export function PengaturanPage() {
     setIsSaving(true)
     setMessage(null)
     try {
+      let updatedProfile;
       if (profileId) {
-        await profileService.update(profileId, {
+        updatedProfile = await profileService.update(profileId, {
           name: profilData.name,
           address: profilData.address,
           gender: profilData.gender || undefined,
@@ -122,15 +123,24 @@ export function PengaturanPage() {
           phone: profilData.phone || undefined,
         }, profilePicture || undefined)
       } else {
-        const newProfile = await profileService.create({
+        updatedProfile = await profileService.create({
           name: profilData.name,
           address: profilData.address,
           gender: profilData.gender || undefined,
           occupation: profilData.occupation || undefined,
           phone: profilData.phone || undefined,
         }, profilePicture || undefined)
-        setProfileId(newProfile.id)
+        setProfileId(updatedProfile.id)
       }
+      
+      // Update global store
+      updateUser({ 
+        name: profilData.name,
+        // If we had an avatar URL in the user object in store, we should update it too, 
+        // but currently authStore User type might only have name/email/role.
+        // Let's at least update the name.
+      })
+
       setMessage({ type: 'success', text: 'Profil berhasil disimpan!' })
       setProfilePicture(null)
     } catch (error: any) {

@@ -41,7 +41,7 @@ type ProfileFormData = z.infer<typeof profileSchema>
 type PasswordFormData = z.infer<typeof passwordSchema>
 
 export function UserProfilPage() {
-  const { user } = useAuthStore()
+  const { user, updateUser } = useAuthStore()
   const [isLoading, setIsLoading] = useState(false)
   const [showCurrentPassword, setShowCurrentPassword] = useState(false)
   const [showNewPassword, setShowNewPassword] = useState(false)
@@ -123,6 +123,10 @@ export function UserProfilPage() {
         }, profilePicture)
         setProfileId(newProfile.id)
       }
+      
+      // Update global store
+      updateUser({ name: data.name })
+
       setProfilePicture(null) 
       setSuccessMessage('Profil berhasil diperbarui')
     } catch (err: any) {

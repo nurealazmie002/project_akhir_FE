@@ -14,6 +14,7 @@ import {
   Menu,
   X
 } from 'lucide-react'
+import { NotificationBell } from '@/components/common/NotificationBell'
 
 interface NavItem {
   label: string
@@ -202,6 +203,10 @@ export function UserLayout() {
             <div className="flex-1 min-w-0">
               <h1 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white tracking-tight">Portal Wali Santri</h1>
               <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">Selamat datang, <span className="text-sky-600 dark:text-sky-400 font-medium">{user?.name || user?.username || 'User'}</span></p>
+            </div>
+            
+            <div className="flex items-center gap-2 shrink-0">
+              <NotificationBell basePath="/user" invoicePath="/pembayaran" />
             </div>
           </div>
         </header>

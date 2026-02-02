@@ -33,7 +33,7 @@ export const invoiceService = {
     return response.data.data
   },
 
-  generateReceiptFromTransaction(transaction: Transaction, institutionName: string = 'Pondok Pesantren'): Receipt {
+  generateReceiptFromTransaction(transaction: Transaction, institutionName: string = 'Pondok Pesantren', santriNis?: string): Receipt {
     const now = new Date()
     const receiptNumber = `RCP-${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}-${transaction.id.slice(-6).toUpperCase()}`
     
@@ -42,7 +42,7 @@ export const invoiceService = {
       receiptNumber,
       transactionId: transaction.id,
       santriName: transaction.santri?.fullname || 'Unknown',
-      santriNis: transaction.santri?.nis || '-',
+      santriNis: santriNis || transaction.santri?.nis || '-',
       institutionName,
       items: [{
         description: transaction.category?.name || transaction.description || transaction.type,
@@ -54,7 +54,7 @@ export const invoiceService = {
     }
   },
 
-  generateReceiptFromInvoice(invoice: Invoice, institutionName: string = 'Pondok Pesantren'): Receipt {
+  generateReceiptFromInvoice(invoice: Invoice, institutionName: string = 'Pondok Pesantren', santriNis?: string): Receipt {
     const now = new Date()
     const receiptNumber = `RCP-${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}-${invoice.id.slice(-6).toUpperCase()}`
     
@@ -63,7 +63,7 @@ export const invoiceService = {
       receiptNumber,
       invoiceId: invoice.id,
       santriName: invoice.santri?.fullname || 'Unknown',
-      santriNis: invoice.santri?.nis || '-',
+      santriNis: santriNis || invoice.santri?.nis || '-',
       institutionName,
       items: (invoice.items || []).map(item => ({
         description: item.description,
