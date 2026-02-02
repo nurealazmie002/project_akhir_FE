@@ -91,6 +91,14 @@ export function LandingPage() {
     }
   }, [isAuthenticated, user, _hasHydrated, navigate])
 
+  if (_hasHydrated && isAuthenticated && user) {
+    return (
+      <div className="min-h-screen bg-slate-950 flex items-center justify-center">
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-sky-500 border-t-transparent" />
+      </div>
+    )
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-sky-950 to-slate-950 overflow-hidden">
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
